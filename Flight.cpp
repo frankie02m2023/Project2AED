@@ -3,13 +3,12 @@
 //
 #include "Flight.h"
 
-Flight::Flight(Airport *destination, Airline airline, double distance) {
-    this->destination = destination;
+Flight::Flight(NetworkAirport *airport, Airline airline) {
+    this->destination = airport;
     this->airline = airline;
-    this->distance = distance;
 }
 
-Airport *Flight::getDestination() const {
+NetworkAirport *Flight::getDestination() const {
     return destination;
 }
 
@@ -25,6 +24,22 @@ void Flight::operator=(const Flight otherFlight){
 Flight::Flight(const Flight &otherFlight) {
     this->destination = otherFlight.destination;
     this->airline = otherFlight.airline;
+}
+
+bool Flight::operator==(const Flight& otherFlight) const {
+    return destination == otherFlight.destination && airline == otherFlight.airline;
+}
+
+bool Flight::operator<(const Flight &otherFlight) {
+    return false;
+}
+
+void Flight::setDestination(NetworkAirport *airport) {
+    destination = airport;
+}
+
+void Flight::setAirline(Airline airline) {
+    this->airline = airline;
 }
 
 

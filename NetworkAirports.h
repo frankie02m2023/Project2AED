@@ -22,18 +22,20 @@ class NetworkAirport{
     int low;
 public:
     NetworkAirport(Airport airport);
-    unordered_set<Flight> &getFlightsFromAirport() const;
+    const unordered_set<Flight> &getFlightsFromAirport() const;
+    Airport getAirport() const;
     int getNumberOfFlightsToAirport() const;
     int getNumberOfFlightsFromAirport() const;
+    int setNumberOfFlightsToAirport();
     bool isVisited() const;
     bool setVisited(bool b);
     bool isProcessing() const;
     void setProcessing(bool b);
-    void addFlight(Flight* flight);
+    void addFlight(NetworkAirport* airport,Airline airline);
     void removeFlight(Flight* flight);
     int getNum() const;
     void setNum(int num);
     int getLow() const;
-    void setLow(int num);
+    void setLow(int low);
 };
 #endif //TRABALHOAED2_NETWORKAIRPORTS_H
