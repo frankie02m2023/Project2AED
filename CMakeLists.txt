@@ -16,4 +16,6 @@ add_executable(TrabalhoAED2 main.cpp
         Flight.cpp
         Flight.cpp
         NetworkAirports.cpp
+        FlightNetwork.h
+        FlightNetwork.cpp
 )

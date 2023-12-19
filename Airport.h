@@ -30,6 +30,7 @@ public:
     void setCountry(string country);
     void setCity(string city);
     void setLocation(Location location);
+    bool operator==(const Airport& otherAirport) const;
 };
 
 namespace std
