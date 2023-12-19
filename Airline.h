@@ -19,7 +19,23 @@ class Airline{
     string getName() const;
     string getCallSign() const;
     string getCountry() const;
+    bool operator==(const Airline& otherAirline) const;
 };
+
+namespace std
+{
+    template <>
+    struct hash<Airline>
+    {
+        size_t operator()(const Airline& airline) const
+        {
+            size_t codeHash = hash<string>()(airline.getCode());
+            size_t nameHash = hash<string>()(airline.getName());
+            size_t countryHash = hash<string>()(airline.getCountry());
+            return (codeHash ^ nameHash ^ countryHash) >> 1;
+        }
+    };
+}
 
 
 

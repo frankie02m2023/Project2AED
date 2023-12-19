@@ -5,6 +5,16 @@
 
 #include "Location.h"
 
+Location::Location() {
+    latitude = 0;
+    longitude = 0;
+}
+
+Location::Location(double x, double y) {
+    this->latitude = x;
+    this->longitude = y;
+}
+
 double Location::getLatitude() const {
     return latitude;
 }

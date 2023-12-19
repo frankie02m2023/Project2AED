@@ -32,4 +32,21 @@ public:
     void setLocation(Location location);
 };
 
+namespace std
+{
+    template <>
+    struct hash<Airport>
+    {
+        size_t operator()(const Airport& airport) const
+        {
+            size_t codeHash = hash<string>()(airport.getCode());
+            size_t nameHash = hash<string>()(airport.getName());
+            size_t countryHash = hash<string>()(airport.getCountry());
+            size_t cityHash = hash<string>()(airport.getCity());
+            size_t locationHash = hash<Location>()(airport.getLocation());
+            return (codeHash ^ nameHash ^ countryHash ^ cityHash ^ locationHash) >> 1;
+        }
+    };
+}
+
 #endif //TRABALHOAED2_AIRPORT_H
