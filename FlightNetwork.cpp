@@ -7,11 +7,13 @@ NetworkAirport* FlightNetwork::findAirport(Airport airport) const {
     NetworkAirport networkAirport(airport);
     NetworkAirport* pNetworkAirport = &networkAirport;
     auto it = flightNetwork.find(pNetworkAirport);
+    if(it == nullptr)
+        return nullptr;
     return *it;
 }
 
 bool FlightNetwork::addNetworkAirport(Airport airport) {
-    if(findAirport(airport) == NULL){
+    if(findAirport(airport) != nullptr){
         return false;
     }
     flightNetwork.insert(new NetworkAirport(airport));
@@ -19,11 +21,12 @@ bool FlightNetwork::addNetworkAirport(Airport airport) {
 }
 
 bool FlightNetwork::removeNetworkAirport(Airport airport) {
-   if(findAirport(airport) == NULL){
+   if(findAirport(airport) == nullptr){
        return false;
    }
    NetworkAirport *networkAirport = findAirport(airport);
    flightNetwork.erase(networkAirport);
+   return true;
 }
 
 unordered_set<NetworkAirport *> FlightNetwork::getFlightNetwork() const {
@@ -37,6 +40,7 @@ bool FlightNetwork::addFlight(Airport departureAirport, Airport destinationAirpo
         return false;
     }
     departureNetworkAirport->addFlight(destinationNetworkAirport,airline);
+    return true;
 }
 
 bool FlightNetwork::removeFlight(Airport departureAirport,Airport destinationAirport,Airline airline) {

@@ -71,18 +71,6 @@ void AirTravelManSys::addInfoCountryToAirport(const string& country, const Airpo
     }
 }
 
-/** Adds info to the name hash table
- * Complexity: O(1) in average
- * @param name name that is going to be inserted
- * @param airport airport that is going to be inserted
- */
-void AirTravelManSys::addInfoNameToAirport(const std::string &name, const Airport &airport) {
-    auto canInsert = nameToAirport.insert({name, airport});
-
-    if(! canInsert.second){
-        cout << "Name and airport already inserted" << '\n';
-    }
-}
 
 //------------------------------------------------------------------------------------------------------------------------
 //Data Readers
@@ -194,8 +182,6 @@ void AirTravelManSys::readAirportsDataFile() {
         //adds info to the code hash table
         addInfoCodeToAirport(code,airport);
 
-        //adds info to the name hash table
-        addInfoNameToAirport(name,airport);
     }
 }
 
@@ -241,4 +227,25 @@ void AirTravelManSys::readFlightsDataFile() {
         networkAirportSource->addFlight(networkAirportTarget,airline);
     }
 }
+
+const unordered_map<std::string, Airline> &AirTravelManSys::getCodeToAirlines() const {
+    return codeToAirlines;
+}
+
+const FlightNetwork &AirTravelManSys::getFlightNetwork() const {
+    return flightNetwork;
+}
+
+const unordered_map<std::string, vector<Airport>> &AirTravelManSys::getCityToAirport() const {
+    return cityToAirport;
+}
+
+const unordered_map<std::string, vector<Airport>> &AirTravelManSys::getCountryToAirport() const {
+    return countryToAirport;
+}
+
+const unordered_map<std::string, Airport> &AirTravelManSys::getCodeToAirport() const {
+    return codeToAirport;
+}
+
 

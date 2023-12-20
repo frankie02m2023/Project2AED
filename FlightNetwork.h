@@ -12,8 +12,8 @@
 
 using namespace std;
 
-class NetworkAirport;
 class Flight;
+class NetworkAirport;
 class FlightNetwork;
 
 
@@ -54,7 +54,7 @@ public:
     int getNumberOfFlightsFromAirport() const;
     int setNumberOfFlightsToAirport();
     bool isVisited() const;
-    bool setVisited(bool b);
+    void setVisited(bool b);
     bool isProcessing() const;
     void setProcessing(bool b);
     void addFlight(NetworkAirport* airport,Airline airline);
@@ -82,6 +82,7 @@ namespace std
     };
 }
 
+
 class FlightNetwork{
  private:
     unordered_set<NetworkAirport*> flightNetwork;
@@ -92,6 +93,6 @@ class FlightNetwork{
     unordered_set<NetworkAirport*> getFlightNetwork() const;
     bool addFlight(Airport departureAirport, Airport destinationAirport, Airline airline);
     bool removeFlight(Airport departureAirport,Airport destinationAirport, Airline airline);
-    
+
 };
 

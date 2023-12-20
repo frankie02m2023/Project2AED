@@ -29,7 +29,7 @@ bool NetworkAirport::isVisited() const {
     return visited;
 }
 
-bool NetworkAirport::setVisited(bool b) {
+void NetworkAirport::setVisited(bool b) {
     visited = b;
 }
 
