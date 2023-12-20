@@ -1,7 +1,9 @@
 //
 // Created by franc on 18/12/2023.
 //
-#include "Flight.h"
+#include "FlightNetwork.h"
+
+
 
 Flight::Flight(NetworkAirport *airport, Airline airline) {
     this->destination = airport;

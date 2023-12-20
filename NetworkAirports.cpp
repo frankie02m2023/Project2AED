@@ -1,7 +1,7 @@
 //
 // Created by franc on 18/12/2023.
 //
-#include "NetworkAirports.h"
+#include "FlightNetwork.h"
 
 
 NetworkAirport::NetworkAirport(Airport airport) {
@@ -13,7 +13,7 @@ NetworkAirport::NetworkAirport(Airport airport) {
 }
 
 
-const unordered_set<Flight> &NetworkAirport::getFlightsFromAirport() const {
+const vector<Flight> &NetworkAirport::getFlightsFromAirport() const {
     return flightsFromAirport;
 }
 
@@ -45,14 +45,15 @@ void NetworkAirport::addFlight(NetworkAirport* networkAirport, Airline airline) 
     Flight flight;
     flight.setDestination(networkAirport);
     flight.setAirline(airline);
-    flightsFromAirport.insert(flight);
+    flightsFromAirport.push_back(flight);
 }
 
 void NetworkAirport::removeFlightTo(NetworkAirport* destinationAirport, Airline airline) {
     Flight flight;
     flight.setDestination(destinationAirport);
     flight.setAirline(airline);
-    flightsFromAirport.erase(flight);
+    auto it = std::find(flightsFromAirport.begin(), flightsFromAirport.end(),flight);
+    flightsFromAirport.erase(it);
 }
 
 int NetworkAirport::getNum() const {
@@ -73,6 +74,10 @@ void NetworkAirport::setLow(int low) {
 
 bool NetworkAirport::operator==(const NetworkAirport &networkAirport) const {
     return airport == networkAirport.airport;
+}
+
+Airport NetworkAirport::getAirport() const {
+    return airport;
 }
 
 

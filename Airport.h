@@ -6,7 +6,6 @@
 #define TRABALHOAED2_AIRPORT_H
 #include <string>
 #include "Location.h"
-#include "Flight.h"
 
 using namespace std;
 
