@@ -222,9 +222,7 @@ void AirTravelManSys::readFlightsDataFile() {
         Airline airline = codeToAirlines.at(airlineCode);
 
         //add flight to the source airport
-        NetworkAirport *networkAirportTarget = flightNetwork.findAirport(airportTarget);
-        NetworkAirport *networkAirportSource = flightNetwork.findAirport(airportSource);
-        networkAirportSource->addFlight(networkAirportTarget,airline);
+        flightNetwork.addFlight(airportSource,airportTarget,airline);
     }
 }
 
