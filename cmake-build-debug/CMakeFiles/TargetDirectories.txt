@@ -1,3 +1,0 @@
-D:/FEUP/2_ano/Algoritmos e Estruturas de Dados/projeto2/Project2AED/cmake-build-debug/CMakeFiles/TrabalhoAED2.dir
-D:/FEUP/2_ano/Algoritmos e Estruturas de Dados/projeto2/Project2AED/cmake-build-debug/CMakeFiles/edit_cache.dir
-D:/FEUP/2_ano/Algoritmos e Estruturas de Dados/projeto2/Project2AED/cmake-build-debug/CMakeFiles/rebuild_cache.dir

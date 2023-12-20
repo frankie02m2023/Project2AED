@@ -52,3 +52,7 @@ void Airport::setCity(const string city) {
 void Airport::setLocation(const Location location) {
     this->location = location;
 }
+
+bool Airport::operator==(const Airport &otherAirport) const {
+    return code == otherAirport.code && name == otherAirport.name && country == otherAirport.country && city == otherAirport.city;
+}

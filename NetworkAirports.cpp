@@ -48,8 +48,11 @@ void NetworkAirport::addFlight(NetworkAirport* networkAirport, Airline airline) 
     flightsFromAirport.insert(flight);
 }
 
-void NetworkAirport::removeFlight(Flight *flight) {
-    flightsFromAirport.erase(*flight);
+void NetworkAirport::removeFlightTo(NetworkAirport* destinationAirport, Airline airline) {
+    Flight flight;
+    flight.setDestination(destinationAirport);
+    flight.setAirline(airline);
+    flightsFromAirport.erase(flight);
 }
 
 int NetworkAirport::getNum() const {
@@ -66,6 +69,10 @@ int NetworkAirport::getLow() const {
 
 void NetworkAirport::setLow(int low) {
     this->low = low;
+}
+
+bool NetworkAirport::operator==(const NetworkAirport &networkAirport) const {
+    return airport == networkAirport.airport;
 }
 
 

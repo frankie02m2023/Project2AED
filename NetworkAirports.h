@@ -32,10 +32,27 @@ public:
     bool isProcessing() const;
     void setProcessing(bool b);
     void addFlight(NetworkAirport* airport,Airline airline);
-    void removeFlight(Flight* flight);
+    void removeFlightTo(NetworkAirport* destinationAirport,Airline airline);
     int getNum() const;
     void setNum(int num);
     int getLow() const;
     void setLow(int low);
+    bool operator==(const NetworkAirport& networkAirport) const;
 };
+
+namespace std
+{
+    template <>
+    struct hash<NetworkAirport>
+    {
+        size_t operator()(const NetworkAirport& networkAirport) const
+        {
+            return hash<Airport>()(networkAirport.getAirport()) >> 1;
+        }
+
+        bool operator()(const NetworkAirport& networkAirport1, const NetworkAirport& networkAirport2){
+            return networkAirport1 == networkAirport2;
+        }
+    };
+}
 #endif //TRABALHOAED2_NETWORKAIRPORTS_H
