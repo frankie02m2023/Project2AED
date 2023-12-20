@@ -20,14 +20,14 @@ public:
     void addInfoCountryToAirport(const string& country, const Airport& airport);
     void addInfoCodeToAirport(const string& code, const Airport& airport);
     void addInfoNameToAirport(const string& name,const Airport& airport);
-    void addInfoAvailableAirlines(const Airline& airline);
+    void addInfoCodeToAirlines(const string& code, const Airline& airline);
 
 private:
     std::unordered_map<std::string,vector<Airport>> cityToAirport;
     std::unordered_map<std::string,vector<Airport>> countryToAirport;
     std::unordered_map<std::string,Airport> codeToAirport;
     std::unordered_map<std::string,Airport> nameToAirport;
-    std::unordered_set<Airline> availableAirlines;
+    std::unordered_map<std::string,Airline> codeToAirlines;
     FlightNetwork flightNetwork;
 };
 #endif //TRABALHOAED2_AIRTRAVELMANSYS_H

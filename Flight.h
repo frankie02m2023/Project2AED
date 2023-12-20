@@ -15,7 +15,7 @@ class Flight{
  private:
     NetworkAirport* destination;
     Airline airline;
-    double distance;
+    //double distance;
 public:
     Flight(){};
     Flight(NetworkAirport* airport,Airline airline);
@@ -27,6 +27,7 @@ public:
     void operator=(Flight otherFlight);
     bool operator==(const Flight& otherFlight) const;
     bool operator<(const Flight& otherFlight);
+
 };
 
 namespace std{

@@ -63,7 +63,7 @@ class Edge {
     Vertex<T> * dest;      // destination vertex
     double weight;         // edge weight
 public:
-    Edge(Vertex<T> *d, double w);
+    Edge(Vertex<T> *d,double w);
     Vertex<T> *getDest() const;
     void setDest(Vertex<T> *dest);
     double getWeight() const;

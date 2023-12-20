@@ -14,12 +14,13 @@ using namespace std;
  * Complexity : O(1) in average
  *
  * @param airline airline that is going to be inserted
+ * @param code code that is going to be inserted
  */
-void AirTravelManSys::addInfoAvailableAirlines(const Airline& airline) {
-    auto canInsert = availableAirlines.insert(airline);
+void AirTravelManSys::addInfoCodeToAirlines(const string& code,const Airline& airline) {
+    auto canInsert = codeToAirlines.insert({code,airline});
 
     if(!canInsert.second){
-        cout << "Airline already inserted" << '\n';
+        cout << "Airline and code already inserted" << '\n';
     }
 }
 
@@ -87,7 +88,7 @@ void AirTravelManSys::addInfoNameToAirport(const std::string &name, const Airpor
 //Data Readers
 
 /** Reads data from the airlines file
- *
+ *  Complexity: O(n)
  */
 void AirTravelManSys::readAirlinesDataFile() {
 
@@ -126,12 +127,12 @@ void AirTravelManSys::readAirlinesDataFile() {
 
         //Create airline and puts it in the hash table
         Airline airline {code, name, callSign, country};
-        addInfoAvailableAirlines(airline);
+        addInfoCodeToAirlines(code,airline);
     }
 }
 
 /** Reads data from the airports file
- *
+ * Complexity. O(n)
  */
 void AirTravelManSys::readAirportsDataFile() {
 
@@ -198,7 +199,46 @@ void AirTravelManSys::readAirportsDataFile() {
     }
 }
 
+/** Reads data from the flights file
+ * Complexity: O(n)
+ */
 void AirTravelManSys::readFlightsDataFile() {
+    string line;
+    string fileName = "../dataset/flights.csv";
+    ifstream file(fileName);
 
+    if(!file.is_open()){
+        cerr << "Error: Unable to open the file." << '\n';
+    }
+
+
+    getline(file,line); //header line
+
+    string source, target, airlineCode;
+    while(getline(file,line)){
+
+        //get source
+        size_t it = line.find_first_of(',');
+        source = line.substr(0,it);
+        line = line.substr(it + 1);
+
+        //get target
+        it = line.find_first_of(',');
+        target = line.substr(0,it);
+        line = line.substr(it + 1);
+
+        //get airline
+        airlineCode = line;
+
+        //find the airports and airline
+        Airport airportSource = codeToAirport.at(source);
+        Airport airportTarget = codeToAirport.at(target);
+        Airline airline = codeToAirlines.at(airlineCode);
+
+        //add flight to the source airport
+        NetworkAirport *networkAirportTarget = flightNetwork.findAirport(airportTarget);
+        NetworkAirport *networkAirportSource = flightNetwork.findAirport(airportSource);
+        networkAirportSource->addFlight(networkAirportTarget,airline);
+    }
 }
 

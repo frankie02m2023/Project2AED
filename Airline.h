@@ -22,6 +22,7 @@ class Airline{
         this->callSign = callSign;
         this->country = country;
     }
+    Airline(){}
     string getCode() const;
     string getName() const;
     string getCallSign() const;
