@@ -13,6 +13,7 @@ Airport::Airport(const string code, const string name, const string country, con
     this->location = location;
 }
 
+
 string Airport::getCode() const {
     return code;
 }

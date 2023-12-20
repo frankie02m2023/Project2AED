@@ -33,10 +33,10 @@ unordered_set<NetworkAirport *,HashNetworkAirport,EqualityNetworkAirport> Flight
     return flightNetwork;
 }
 
-bool FlightNetwork::addFlight(Airport departureAirport, Airport destinationAirport, Airline airline) {
+bool FlightNetwork::addFlight(Airport departureAirport, Airport destinationAirport, Airline airline) const {
     NetworkAirport *departureNetworkAirport = findAirport(departureAirport);
     NetworkAirport *destinationNetworkAirport = findAirport(destinationAirport);
-    if(departureNetworkAirport == NULL || destinationNetworkAirport == NULL){
+    if(departureNetworkAirport == nullptr || destinationNetworkAirport == nullptr){
         return false;
     }
     departureNetworkAirport->addFlight(destinationNetworkAirport,airline);

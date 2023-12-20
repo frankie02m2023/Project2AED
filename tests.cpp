@@ -48,6 +48,27 @@ TEST(Data_Readers, readFlightDataFile){
     }
 
     EXPECT_EQ(i,63832);
+
+    Airport airport = system.getCodeToAirport().at("LAE");
+    NetworkAirport *networkAirport = system.getFlightNetwork().findAirport(airport);
+
+    EXPECT_NE(networkAirport, nullptr);
+    EXPECT_EQ(networkAirport->getFlightsFromAirport().size(),11);
+
+
+    Airport airportDest;
+    Airline airline;
+    for(const Flight& flight: networkAirport->getFlightsFromAirport()){
+        if(flight.getDestination()->getAirport().getCode() == "POM"){
+            if(flight.getAirLine().getCode() == "TOK"){
+                airportDest = flight.getDestination()->getAirport();
+                airline = flight.getAirLine();
+            }
+        }
+    }
+
+    EXPECT_EQ(airportDest.getCode(), "POM");
+    EXPECT_EQ(airline.getCode(), "TOK");
 }
 
 
