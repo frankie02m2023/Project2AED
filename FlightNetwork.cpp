@@ -29,7 +29,7 @@ bool FlightNetwork::removeNetworkAirport(Airport airport) {
    return true;
 }
 
-unordered_set<NetworkAirport *> FlightNetwork::getFlightNetwork() const {
+unordered_set<NetworkAirport *,HashNetworkAirport,EqualityNetworkAirport> FlightNetwork::getFlightNetwork() const {
     return flightNetwork;
 }
 

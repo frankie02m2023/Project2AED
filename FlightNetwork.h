@@ -64,33 +64,35 @@ public:
     int getLow() const;
     void setLow(int low);
     bool operator==(const NetworkAirport& networkAirport) const;
+
+    size_t hash() const
+    {
+            return std::hash<Airport>()(airport) >> 1;
+    }
 };
 
-namespace std
-{
-    template <>
-    struct hash<NetworkAirport>
-    {
-        size_t operator()(const NetworkAirport& networkAirport) const
-        {
-            return hash<Airport>()(networkAirport.getAirport()) >> 1;
-        }
+struct HashNetworkAirport {
+    size_t operator()(const NetworkAirport *networkAirport) const {
+        return networkAirport->hash();
+    }
+};
 
-        bool operator()(const NetworkAirport& networkAirport1, const NetworkAirport& networkAirport2){
-            return networkAirport1 == networkAirport2;
-        }
-    };
-}
+struct EqualityNetworkAirport{
+    bool operator()(const NetworkAirport* n1, NetworkAirport* n2) const{
+        return *n1 == *n2;
+    }
+};
+
 
 
 class FlightNetwork{
  private:
-    unordered_set<NetworkAirport*> flightNetwork;
+    unordered_set<NetworkAirport*,HashNetworkAirport,EqualityNetworkAirport> flightNetwork;
  public:
     NetworkAirport* findAirport(Airport airport) const;
     bool addNetworkAirport(Airport airport);
     bool removeNetworkAirport(Airport airport);
-    unordered_set<NetworkAirport*> getFlightNetwork() const;
+    unordered_set<NetworkAirport *, HashNetworkAirport, EqualityNetworkAirport> getFlightNetwork() const;
     bool addFlight(Airport departureAirport, Airport destinationAirport, Airline airline);
     bool removeFlight(Airport departureAirport,Airport destinationAirport, Airline airline);
 
