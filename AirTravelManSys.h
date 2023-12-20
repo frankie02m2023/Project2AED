@@ -16,12 +16,17 @@ public:
     void readFlightsDataFile();
     void readAirportsDataFile();
     void readAirlinesDataFile();
+    void addInfoCityToAirport(const string& city, const Airport& airport);
+    void addInfoCountryToAirport(const string& country, const Airport& airport);
+    void addInfoCodeToAirport(const string& code, const Airport& airport);
+    void addInfoNameToAirport(const string& name,const Airport& airport);
+    void addInfoAvailableAirlines(const Airline& airline);
 
 private:
-    std::unordered_map<std::string,vector<NetworkAirport>> cityToNetworkAirport;
-    std::unordered_map<std::string,vector<NetworkAirport>> countryToNetworkAirport;
-    std::unordered_map<std::string,NetworkAirport> codeToNetworkAirport;
-    std::unordered_map<std::string,NetworkAirport> nameToNetworkAirport;
+    std::unordered_map<std::string,vector<Airport>> cityToAirport;
+    std::unordered_map<std::string,vector<Airport>> countryToAirport;
+    std::unordered_map<std::string,Airport> codeToAirport;
+    std::unordered_map<std::string,Airport> nameToAirport;
     std::unordered_set<Airline> availableAirlines;
     FlightNetwork flightNetwork;
 };
