@@ -5,6 +5,7 @@
 #ifndef TRABALHOAED2_AIRLINE_H
 #define TRABALHOAED2_AIRLINE_H
 #include<string>
+#include <utility>
 
 using namespace std;
 
@@ -15,6 +16,12 @@ class Airline{
     string callSign;
     string country;
  public:
+    Airline(string code, string name, string callSign, string country){
+        this->code = code;
+        this->name = name;
+        this->callSign = callSign;
+        this->country = country;
+    }
     string getCode() const;
     string getName() const;
     string getCallSign() const;
