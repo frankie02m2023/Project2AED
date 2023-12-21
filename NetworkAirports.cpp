@@ -10,6 +10,8 @@ NetworkAirport::NetworkAirport(Airport airport) {
     processed = false;
     num = 0;
     low = 0;
+    numberOfFlightsFromAirport = 0;
+    numberOfFlightsToAirport = 0;
 }
 
 

@@ -77,7 +77,15 @@ TEST(Network_Statistics, numberFlightsFromAirport){
     system.readAirportsDataFile();
     system.readFlightsDataFile();
 
+    Airport airport1 = system.getCodeToAirport().at("LAE");
+    int numberOfFlights = system.numberFlightsFromAirport(airport1);
 
+    EXPECT_EQ(11,numberOfFlights);
+
+    Airport airport2 = system.getCodeToAirport().at("GKA");
+    numberOfFlights = system.numberFlightsFromAirport(airport2);
+
+    EXPECT_EQ(5, numberOfFlights);
 }
 
 
