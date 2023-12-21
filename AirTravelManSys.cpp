@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <set>
+#include <queue>
 
 using namespace std;
 
@@ -29,6 +30,18 @@ const unordered_map<std::string, vector<Airport>> &AirTravelManSys::getCountryTo
 
 const unordered_map<std::string, Airport> &AirTravelManSys::getCodeToAirport() const {
     return codeToAirport;
+}
+
+void AirTravelManSys::cleanProcessState() {
+    for(NetworkAirport* networkAirport: flightNetwork.getFlightNetwork()){
+        networkAirport->setProcessing(false);
+    }
+}
+
+void AirTravelManSys::cleanVisitedState() {
+    for(NetworkAirport* networkAirport: flightNetwork.getFlightNetwork()){
+        networkAirport->setVisited(false);
+    }
 }
 
 //--------------------------------------------------------------------------------------------------------
@@ -278,8 +291,10 @@ int AirTravelManSys::numberOfAirlinesInAirport(const Airport &airport) const {
 
     for(const Flight &flight: networkAirport->getFlightsFromAirport()){
         auto it = std::find(airlines.begin(), airlines.end(),flight.getAirLine());
-        if(it == airlines.end())
+        if(it == airlines.end()) {
             counter++;
+            airlines.push_back(flight.getAirLine());
+        }
     }
 
     return counter;
@@ -299,8 +314,10 @@ int AirTravelManSys::numberOfCountriesFromAirport(const Airport &airport) const 
     for(const Flight &flight: networkAirport->getFlightsFromAirport()){
         string country = flight.getDestination()->getAirport().getCountry();
         auto it = std::find(countries.begin(), countries.end(),country);
-        if(it == countries.end())
+        if(it == countries.end()) {
             counter++;
+            countries.push_back(country);
+        }
     }
 
     return counter;
@@ -324,11 +341,43 @@ int AirTravelManSys::numberOfCountriesFromCity(const string &city) const {
         for(const Flight &flight: networkAirport->getFlightsFromAirport()){
             string country = flight.getDestination()->getAirport().getCountry();
             auto it = std::find(countries.begin(), countries.end(),country);
-            if(it == countries.end())
+            if(it == countries.end()) {
                 counter++;
+                countries.push_back(country);
+            }
         }
     }
 
+    return counter;
+}
+
+int AirTravelManSys::numberOfReachableAirports(const Airport &airport, int stops) {
+    this->cleanProcessState();
+    this->cleanVisitedState();
+    NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+
+    queue<NetworkAirport*> q;
+    q.push(networkAirport);
+
+    networkAirport->setVisited(true);
+    int counter = 0;
+
+    while(!q.empty() && stops != 0){
+        stops--;
+        NetworkAirport* na = q.front();
+        q.pop();
+
+        for(auto it = na->getFlightsFromAirport().begin(); it!= na->getFlightsFromAirport().end(); it++){
+
+            NetworkAirport* nb = it->getDestination();
+            if(!nb->isVisited()){
+                q.push(nb);
+                nb->setVisited(true);
+                counter++;
+            }
+        }
+
+    }
     return counter;
 }
 
