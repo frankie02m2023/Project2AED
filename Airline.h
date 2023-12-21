@@ -42,6 +42,11 @@ namespace std
             size_t countryHash = hash<string>()(airline.getCountry());
             return (codeHash ^ nameHash ^ countryHash) >> 1;
         }
+
+        bool operator()(const Airline& airline1, const Airline& airline2){
+            return airline1.getCode() == airline1.getCode() && airline1.getCountry() == airline2.getCountry()
+                && airline1.getCallSign() == airline2.getCallSign()  && airline1.getName() == airline2.getName();
+        }
     };
 }
 

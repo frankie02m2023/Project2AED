@@ -71,4 +71,13 @@ TEST(Data_Readers, readFlightDataFile){
     EXPECT_EQ(airline.getCode(), "TOK");
 }
 
+TEST(Network_Statistics, numberFlightsFromAirport){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    
+}
+
 

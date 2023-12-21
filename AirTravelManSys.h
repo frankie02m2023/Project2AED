@@ -19,8 +19,10 @@ public:
     void addInfoCityToAirport(const string& city, const Airport& airport);
     void addInfoCountryToAirport(const string& country, const Airport& airport);
     void addInfoCodeToAirport(const string& code, const Airport& airport);
-    void addInfoNameToAirport(const string& name,const Airport& airport);
     void addInfoCodeToAirlines(const string& code, const Airline& airline);
+
+    int numberFlightsFromAirport(const Airport& airport) const;
+    int numberOfAirlinesInAirport(const Airport& airport) const;
 
     const unordered_map<std::string, Airline> &getCodeToAirlines() const;
     const FlightNetwork &getFlightNetwork() const;

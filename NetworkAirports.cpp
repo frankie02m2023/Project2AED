@@ -46,6 +46,8 @@ void NetworkAirport::addFlight(NetworkAirport* networkAirport, Airline airline) 
     flight.setDestination(networkAirport);
     flight.setAirline(airline);
     flightsFromAirport.push_back(flight);
+    networkAirport->numberOfFlightsToAirport++;
+    this->numberOfFlightsFromAirport++;
 }
 
 void NetworkAirport::removeFlightTo(NetworkAirport* destinationAirport, Airline airline) {
@@ -54,6 +56,8 @@ void NetworkAirport::removeFlightTo(NetworkAirport* destinationAirport, Airline 
     flight.setAirline(airline);
     auto it = std::find(flightsFromAirport.begin(), flightsFromAirport.end(),flight);
     flightsFromAirport.erase(it);
+    destinationAirport->numberOfFlightsToAirport--;
+    this->numberOfFlightsFromAirport--;
 }
 
 int NetworkAirport::getNum() const {

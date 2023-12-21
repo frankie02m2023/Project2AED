@@ -5,9 +5,33 @@
 #include "AirTravelManSys.h"
 #include <fstream>
 #include <iostream>
+#include <set>
 
 using namespace std;
 
+
+//Basic getters
+const unordered_map<std::string, Airline> &AirTravelManSys::getCodeToAirlines() const {
+    return codeToAirlines;
+}
+
+const FlightNetwork &AirTravelManSys::getFlightNetwork() const {
+    return flightNetwork;
+}
+
+const unordered_map<std::string, vector<Airport>> &AirTravelManSys::getCityToAirport() const {
+    return cityToAirport;
+}
+
+const unordered_map<std::string, vector<Airport>> &AirTravelManSys::getCountryToAirport() const {
+    return countryToAirport;
+}
+
+const unordered_map<std::string, Airport> &AirTravelManSys::getCodeToAirport() const {
+    return codeToAirport;
+}
+
+//--------------------------------------------------------------------------------------------------------
 //Hash table manipulators
 
 /** Adds info to the airlines hash table .
@@ -226,24 +250,39 @@ void AirTravelManSys::readFlightsDataFile() {
     }
 }
 
-const unordered_map<std::string, Airline> &AirTravelManSys::getCodeToAirlines() const {
-    return codeToAirlines;
+
+
+/** Gets the number of flights from an Airport.
+ *  Complexity: O(1)
+ * @param airport airport we want to know the number of flights
+ * @return number of flights
+ */
+int AirTravelManSys::numberFlightsFromAirport(const Airport &airport) const {
+
+    NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+
+    return networkAirport->getNumberOfFlightsFromAirport();
 }
 
-const FlightNetwork &AirTravelManSys::getFlightNetwork() const {
-    return flightNetwork;
-}
 
-const unordered_map<std::string, vector<Airport>> &AirTravelManSys::getCityToAirport() const {
-    return cityToAirport;
-}
+/** Gets the number of airlines that operate in an airport
+ *  Complexity: O(n^2)
+ * @param airport airport we want to know the number of airlines
+ * @return number of airlines
+ */
+int AirTravelManSys::numberOfAirlinesInAirport(const Airport &airport) const {
 
-const unordered_map<std::string, vector<Airport>> &AirTravelManSys::getCountryToAirport() const {
-    return countryToAirport;
-}
+    NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+    vector<Airline> airlines;
+    int counter = 0;
 
-const unordered_map<std::string, Airport> &AirTravelManSys::getCodeToAirport() const {
-    return codeToAirport;
+    for(const Flight &flight: networkAirport->getFlightsFromAirport()){
+        auto it = std::find(airlines.begin(), airlines.end(),flight.getAirLine());
+        if(it == airlines.end())
+            counter++;
+    }
+
+    return counter;
 }
 
 

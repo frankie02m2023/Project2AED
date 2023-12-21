@@ -5,7 +5,7 @@
 #ifndef TRABALHOAED2_FLIGHTNETWORK_H
 #define TRABALHOAED2_FLIGHTNETWORK_H
 
-#endif //TRABALHOAED2_FLIGHTNETWORK_H
+
 #include "unordered_set"
 #include "Airport.h"
 #include "Airline.h"
@@ -69,6 +69,7 @@ public:
     {
             return std::hash<Airport>()(airport) >> 1;
     }
+
 };
 
 struct HashNetworkAirport {
@@ -98,3 +99,4 @@ class FlightNetwork{
 
 };
 
+#endif
