@@ -77,7 +77,7 @@ TEST(Network_Statistics, numberFlightsFromAirport){
     system.readAirportsDataFile();
     system.readFlightsDataFile();
 
-    
+
 }
 
 

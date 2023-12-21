@@ -23,6 +23,8 @@ public:
 
     int numberFlightsFromAirport(const Airport& airport) const;
     int numberOfAirlinesInAirport(const Airport& airport) const;
+    int numberOfCountriesFromAirport(const Airport& airport) const;
+    int numberOfCountriesFromCity(const string& city) const;
 
     const unordered_map<std::string, Airline> &getCodeToAirlines() const;
     const FlightNetwork &getFlightNetwork() const;

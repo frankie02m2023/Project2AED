@@ -285,4 +285,51 @@ int AirTravelManSys::numberOfAirlinesInAirport(const Airport &airport) const {
     return counter;
 }
 
+/** Gets the number of Countries an airport flights to
+ *  Complexity: O(n^2)
+ * @param airport airport we want to know the number of countries
+ * @return number of countries
+ */
+int AirTravelManSys::numberOfCountriesFromAirport(const Airport &airport) const {
+
+    NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+    vector<string> countries;
+    int counter = 0;
+
+    for(const Flight &flight: networkAirport->getFlightsFromAirport()){
+        string country = flight.getDestination()->getAirport().getCountry();
+        auto it = std::find(countries.begin(), countries.end(),country);
+        if(it == countries.end())
+            counter++;
+    }
+
+    return counter;
+
+}
+
+/** Gets the number of Countries a city flights to
+ * Complexity: O(n^3)
+ * @param city city we want to know the number of countries
+ * @return number of countries
+ */
+int AirTravelManSys::numberOfCountriesFromCity(const string &city) const {
+
+    vector<Airport> airports = cityToAirport.at(city);
+    int counter = 0;
+    vector<string> countries;
+
+    for(const Airport& airport: airports){
+        NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+
+        for(const Flight &flight: networkAirport->getFlightsFromAirport()){
+            string country = flight.getDestination()->getAirport().getCountry();
+            auto it = std::find(countries.begin(), countries.end(),country);
+            if(it == countries.end())
+                counter++;
+        }
+    }
+
+    return counter;
+}
+
 
