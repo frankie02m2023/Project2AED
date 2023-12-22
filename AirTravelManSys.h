@@ -26,9 +26,10 @@ public:
     int numberOfCountriesFromAirport(const Airport& airport) const;
     int numberOfCountriesFromCity(const string& city) const;
     int numberOfReachableAirports(const Airport& airport, int stops);
-    int dfsReachableAirports(NetworkAirport* networkAirport,int stops);
     int numberOfReachableCities(const Airport& airport, int stops);
     int numberOfReachableCountries(const Airport& airport, int stops);
+
+    void topKAirportCapacity(int k);
 
     const unordered_map<std::string, Airline> &getCodeToAirlines() const;
     const FlightNetwork &getFlightNetwork() const;

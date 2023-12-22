@@ -18,13 +18,13 @@ void setup1() {
     Airport airportTest1{"t1", "test1", "co1", "ci2", Location{1.0, 2.0}};
     Airport airportTest2{"t2", "test2", "co1", "ci2", Location{2.0, 3.0}};
     Airport airportTest3{"t3", "test3", "co2", "ci3", Location{20.0, 30.0}};
-    Airport airportTest4{"t1", "test1", "co3", "ci8", Location{10.0, 11.0}};
-    Airport airportTest5{"t1", "test1", "co2", "ci1", Location{50.0, 9.0}};
-    Airport airportTest6{"t1", "test1", "co2", "ci1", Location{51.0, 52.0}};
-    Airport airportTest7{"t1", "test1", "co4", "ci6", Location{30.0, 70.0}};
-    Airport airportTest8{"t1", "test1", "co1", "ci7", Location{100.0, 8.0}};
-    Airport airportTest9{"t1", "test1", "co1", "ci7", Location{22.0, 9.0}};
-    Airport airportTest10{"t1", "test1", "co1", "ci7", Location{13.0, 79.0}};
+    Airport airportTest4{"t1", "test4", "co3", "ci8", Location{10.0, 11.0}};
+    Airport airportTest5{"t1", "test5", "co2", "ci1", Location{50.0, 9.0}};
+    Airport airportTest6{"t1", "test6", "co2", "ci1", Location{51.0, 52.0}};
+    Airport airportTest7{"t1", "test7", "co4", "ci6", Location{30.0, 70.0}};
+    Airport airportTest8{"t1", "test8", "co1", "ci7", Location{100.0, 8.0}};
+    Airport airportTest9{"t1", "test9", "co1", "ci7", Location{22.0, 9.0}};
+    Airport airportTest10{"t1", "test10", "co1", "ci7", Location{13.0, 79.0}};
 
     cityToAirportTest.insert({"ci2",{airportTest1,airportTest2}});
     cityToAirportTest.insert({"ci3",{airportTest3}});
@@ -245,7 +245,7 @@ TEST(Network_Statistics, numberOfCountriesFromAirport){
 
     EXPECT_EQ(3,numberOfCountries);
 
-    Airport airport3 {"t1", "test1", "co3", "ci8", Location{10.0, 11.0}};  //AirportTest4
+    Airport airport3 {"t1", "test4", "co3", "ci8", Location{10.0, 11.0}};  //AirportTest4
     numberOfCountries = system.numberOfCountriesFromAirport(airport3);
 
     EXPECT_EQ(2,numberOfCountries);
@@ -299,8 +299,8 @@ TEST(Network_Statistics, numberOfReachableAirports){
     EXPECT_EQ(9,numberOfReachableAirports);
 
     Airport airport3 {"t2", "test2", "co1", "ci2", Location{2.0, 3.0}}; //airportTest2
-    Airport airport4 {"t1", "test1", "co2", "ci1", Location{51.0, 52.0}};//airportTest6
-    Airport airport5 {"t1", "test1", "co4", "ci6", Location{30.0, 70.0}};//airportTest7
+    Airport airport4 {"t1", "test6", "co2", "ci1", Location{51.0, 52.0}};//airportTest6
+    Airport airport5 {"t1", "test7", "co4", "ci6", Location{30.0, 70.0}};//airportTest7
     Airline airline1{"at3", "airline3", "ca3", "co3"}; //airlineTest3
 
     system.getFlightNetwork().removeFlight(airport3,airport5,airline1);
@@ -340,8 +340,8 @@ TEST(Network_Statistics, numberOfReachableCities){
     EXPECT_EQ(6, numberOfReachableCities);
 
     Airport airport3 {"t2", "test2", "co1", "ci2", Location{2.0, 3.0}}; //airportTest2
-    Airport airport4 {"t1", "test1", "co2", "ci1", Location{51.0, 52.0}};//airportTest6
-    Airport airport5 {"t1", "test1", "co4", "ci6", Location{30.0, 70.0}};//airportTest7
+    Airport airport4 {"t1", "test6", "co2", "ci1", Location{51.0, 52.0}};//airportTest6
+    Airport airport5 {"t1", "test7", "co4", "ci6", Location{30.0, 70.0}};//airportTest7
     Airline airline1{"at3", "airline3", "ca3", "co3"}; //airlineTest3
 
     system.getFlightNetwork().removeFlight(airport3,airport5,airline1);
@@ -383,8 +383,8 @@ TEST(Network_Statistics, numberOfReachableCountries){
     EXPECT_EQ(4, numberOfReachableCountries);
 
     Airport airport3 {"t2", "test2", "co1", "ci2", Location{2.0, 3.0}}; //airportTest2
-    Airport airport4 {"t1", "test1", "co2", "ci1", Location{51.0, 52.0}};//airportTest6
-    Airport airport5 {"t1", "test1", "co4", "ci6", Location{30.0, 70.0}};//airportTest7
+    Airport airport4 {"t1", "test6", "co2", "ci1", Location{51.0, 52.0}};//airportTest6
+    Airport airport5 {"t1", "test7", "co4", "ci6", Location{30.0, 70.0}};//airportTest7
     Airline airline1{"at3", "airline3", "ca3", "co3"}; //airlineTest3
 
     system.getFlightNetwork().removeFlight(airport3,airport5,airline1);
@@ -402,6 +402,20 @@ TEST(Network_Statistics, numberOfReachableCountries){
 
     cleanSetup();
 
+}
+
+TEST(Network_Statistics, topKAirportCapacity){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+
+    setup1();
+    system.setFlightNetwork(flightNetworkTest);
+
+    system.topKAirportCapacity(100);
+    cleanSetup();
 }
 
 

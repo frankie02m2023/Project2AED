@@ -282,6 +282,11 @@ int AirTravelManSys::numberFlightsFromAirport(const Airport &airport) const {
 
     NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
 
+    if(networkAirport == nullptr){
+        cout << "Airport not found" << endl;
+        return 0;
+    }
+
     return networkAirport->getNumberOfFlightsFromAirport();
 }
 
@@ -294,6 +299,12 @@ int AirTravelManSys::numberFlightsFromAirport(const Airport &airport) const {
 int AirTravelManSys::numberOfAirlinesInAirport(const Airport &airport) const {
 
     NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+
+    if(networkAirport == nullptr){
+        cout << "Airport not found" << endl;
+        return 0;
+    }
+
     vector<Airline> airlines;
     int counter = 0;
 
@@ -316,6 +327,12 @@ int AirTravelManSys::numberOfAirlinesInAirport(const Airport &airport) const {
 int AirTravelManSys::numberOfCountriesFromAirport(const Airport &airport) const {
 
     NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+
+    if(networkAirport == nullptr){
+        cout << "Airport not found" << endl;
+        return 0;
+    }
+
     set<string> countries;
     int counter = 0;
 
@@ -346,6 +363,11 @@ int AirTravelManSys::numberOfCountriesFromCity(const string &city) const {
     for(const Airport& airport: airports){
         NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
 
+        if(networkAirport == nullptr){
+            cout << "Airport not found" << endl;
+            return 0;
+        }
+
         for(const Flight &flight: networkAirport->getFlightsFromAirport()){
             string country = flight.getDestination()->getAirport().getCountry();
             auto it = countries.find(country);
@@ -371,7 +393,7 @@ int AirTravelManSys::numberOfReachableAirports(const Airport &airport, int stops
     NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
 
     if(networkAirport == nullptr){
-        cout << "Airport not found";
+        cout << "Airport not found" << endl;
         return 0;
     }
 
@@ -421,7 +443,7 @@ int AirTravelManSys::numberOfReachableCities(const Airport &airport, int stops) 
     NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
 
     if(networkAirport == nullptr){
-        cout << "Airport not found";
+        cout << "Airport not found" << endl;
         return 0;
     }
 
@@ -478,7 +500,7 @@ int AirTravelManSys::numberOfReachableCountries(const Airport &airport, int stop
     NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
 
     if(networkAirport == nullptr){
-        cout << "Airport not found";
+        cout << "Airport not found" << endl;
         return 0;
     }
 
@@ -520,6 +542,37 @@ int AirTravelManSys::numberOfReachableCountries(const Airport &airport, int stop
 
     }
     return counter;
+}
+
+/** Auxiliary function to compare to airports by their number of flights
+ *  Complexity: O(1)
+ * @param networkAirport1 airport to compare
+ * @param networkAirport2 airport to compare
+ * @return comparison between the number of flights
+ */
+bool compAirportByFlights(NetworkAirport* networkAirport1, NetworkAirport* networkAirport2){
+    return (networkAirport1->getNumberOfFlightsFromAirport()+networkAirport1->getNumberOfFlightsToAirport()) >
+            (networkAirport2->getNumberOfFlightsFromAirport()+networkAirport2->getNumberOfFlightsToAirport());
+}
+
+/** Gets the top k airport with most air traffic(flights)
+ *  Complexity: O(nlog(n))
+ * @param k  number of top airports
+ */
+void AirTravelManSys::topKAirportCapacity(int k) {
+    vector<NetworkAirport*> networkAirports {flightNetwork.getFlightNetwork().begin(), flightNetwork.getFlightNetwork().end()};
+    sort(networkAirports.begin(), networkAirports.end(), compAirportByFlights);
+
+    if(k > networkAirports.size())
+        k = networkAirports.size();
+    for(size_t i = 0; i < k; i++){
+        NetworkAirport* networkAirport = networkAirports.at(i);
+
+        cout << i + 1 << ". Airport name: " << networkAirport->getAirport().getName()
+            <<"; code: " << networkAirport->getAirport().getCode()
+            <<"; Capacity: " << networkAirport->getNumberOfFlightsFromAirport() + networkAirport->getNumberOfFlightsToAirport()
+            << endl;
+    }
 }
 
 

@@ -1,6 +1,11 @@
 #include <iostream>
+#include "AirTravelManSys.h"
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    AirTravelManSys travelsys;
+    travelsys.readAirlinesDataFile();
+    travelsys.readAirportsDataFile();
+    travelsys.readFlightsDataFile();
+    travelsys.topKAirportCapacity(10);
     return 0;
 }
