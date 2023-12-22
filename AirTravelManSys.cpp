@@ -11,47 +11,87 @@
 
 using namespace std;
 
+/** @file AirTravelManSys.cpp
+ *  @brief Implementation of AirTravelManSys class
+ */
 
 //Basic getters
+
+/** Gets the airline code map.
+ * Complexity: O(1)
+ * @return airline code map
+ */
 const unordered_map<std::string, Airline> &AirTravelManSys::getCodeToAirlines() const {
     return codeToAirlines;
 }
 
+/** Gets the flightNetwork (Graph)
+ *  Complexity: O(1)
+ * @return flightNetwork (Graph)
+ */
 const FlightNetwork &AirTravelManSys::getFlightNetwork() const {
     return flightNetwork;
 }
 
+/** Gets the cityToAirport map
+ *  Complexity: O(1)
+ * @return cityToAirport map
+ */
 const unordered_map<std::string, vector<Airport>> &AirTravelManSys::getCityToAirport() const {
     return cityToAirport;
 }
 
+/** Gets the countryToAirport map
+ *  Complexity: O(1)
+ * @return countryToAirport map
+ */
 const unordered_map<std::string, vector<Airport>> &AirTravelManSys::getCountryToAirport() const {
     return countryToAirport;
 }
 
+/** Gets the codeToAirport map
+ *  Complexity: O(1)
+ * @return codeToAirport map
+ */
 const unordered_map<std::string, Airport> &AirTravelManSys::getCodeToAirport() const {
     return codeToAirport;
 }
 
+/** cleans the process state (set to false) of the networkAirport vertexes
+ *  Complexity: O(n)
+ */
 void AirTravelManSys::cleanProcessState() {
     for(NetworkAirport* networkAirport: flightNetwork.getFlightNetwork()){
         networkAirport->setProcessing(false);
     }
 }
 
+/** cleans the visited state (set to false) of the networkAirport vertexes
+ *  Complexity: O(n)
+ */
 void AirTravelManSys::cleanVisitedState() {
     for(NetworkAirport* networkAirport: flightNetwork.getFlightNetwork()){
         networkAirport->setVisited(false);
     }
 }
 
+/** Sets the flightNetwork to a given value
+ *  Complexity: O(1)
+ * @param NewFlightNetwork new value to the flightNetwork
+ */
 void AirTravelManSys::setFlightNetwork(FlightNetwork NewFlightNetwork) {
     this->flightNetwork = std::move(NewFlightNetwork);
 }
 
+/** Sets the cityToAirport map to a given value
+ *  Complexity: O(1)
+ * @param newCityToAirport new value of the flightNetwork
+ */
 void AirTravelManSys::setCityToAirport(unordered_map<std::string, vector<Airport>> newCityToAirport) {
     this->cityToAirport = std::move(newCityToAirport);
 }
+
+
 //--------------------------------------------------------------------------------------------------------
 //Hash table manipulators
 

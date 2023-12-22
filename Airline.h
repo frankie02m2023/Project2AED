@@ -9,6 +9,16 @@
 
 using namespace std;
 
+
+/**
+ * @file AirLine.h
+ * @brief Definition of class Airline.
+ *
+ * \class Airline
+ * Where are preformed functions related to the airlines.
+ * Stores the code, name, call sign and country of the airline.
+ */
+
 class Airline{
  private:
     string code;

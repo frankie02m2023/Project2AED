@@ -12,11 +12,22 @@
 
 using namespace std;
 
+/**
+ * @file FlightNetwork.h
+ * @brief Definition of class Flight (Edge), NetworkAirport (Vertex) and FlightNetwork (Graph).
+ *
+ */
+
 class Flight;
 class NetworkAirport;
 class FlightNetwork;
 
 
+/**
+ *\class Flight
+ * Where are preformed functions related to the Flights/edges.
+ * Stores the destination NetworkAirport, airline and distance.
+ */
 class Flight{
 private:
     NetworkAirport* destination;
@@ -32,10 +43,15 @@ public:
     void setAirline(Airline airline);
     void operator=(Flight otherFlight);
     bool operator==(const Flight& otherFlight) const;
-    bool operator<(const Flight& otherFlight);
 
 };
 
+/**
+ *\class NetworkAirport
+ * Where are preformed functions related to the NetworkAirports/vertexes.
+ * Stores the airport (info), vector with the flights, number of flights from the airport, number of flights to the airport,
+ * visited state, precessed state and auxiliary values num and low.
+ */
 class NetworkAirport{
 private:
     Airport airport;
@@ -85,7 +101,11 @@ struct EqualityNetworkAirport{
 };
 
 
-
+/**
+ *\class FlightNetwork
+ * Where are preformed functions related to the FlightsNetwork/graph.
+ * Stores the flightNetwork (all the NetworkAirports/vertexes).
+ */
 class FlightNetwork{
  private:
     unordered_set<NetworkAirport*,HashNetworkAirport,EqualityNetworkAirport> flightNetwork;

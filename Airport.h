@@ -9,6 +9,15 @@
 
 using namespace std;
 
+/**
+ * @file Airport.h
+ * @brief Definition of class Airport.
+ *
+ * \class Airport
+ * Where are preformed functions related to the airports.
+ * Stores the code, name, country, and location of the airport
+ */
+
 class Airport{
 private:
     string code;

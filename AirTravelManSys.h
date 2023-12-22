@@ -9,6 +9,14 @@
 #include <string>
 #include "FlightNetwork.h"
 
+/**
+ * @file AirTravelManSys.h
+ * @brief Definition of class AirTravelManSys.
+ *
+ * \class AirTravelManSys
+ * Where are preformed the most important functions in our system.
+ * Stores some hash tables (unordered_maps) and a FlightNetwork (Graph)
+ */
 class AirTravelManSys{
 public:
 

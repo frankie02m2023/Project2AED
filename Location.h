@@ -7,6 +7,15 @@
 #include<functional>
 using namespace std;
 
+/**
+ * @file Location.h
+ * @brief Definition of class Location.
+ *
+ * \class Location
+ * Where are preformed functions related location.
+ * Stores the latitude and the longitude.
+ */
+
 class Location{
  private:
     double latitude;
