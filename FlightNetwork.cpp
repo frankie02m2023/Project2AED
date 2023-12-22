@@ -43,7 +43,7 @@ bool FlightNetwork::addFlight(Airport departureAirport, Airport destinationAirpo
     return true;
 }
 
-bool FlightNetwork::removeFlight(Airport departureAirport,Airport destinationAirport,Airline airline) {
+bool FlightNetwork::removeFlight(Airport departureAirport,Airport destinationAirport,Airline airline) const {
     NetworkAirport *departureNetworkAirport = findAirport(departureAirport);
     NetworkAirport *destinationNetworkAirport = findAirport(destinationAirport);
     if(departureNetworkAirport == NULL || destinationNetworkAirport == NULL){

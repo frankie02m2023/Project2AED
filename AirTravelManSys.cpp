@@ -309,22 +309,22 @@ int AirTravelManSys::numberOfAirlinesInAirport(const Airport &airport) const {
 }
 
 /** Gets the number of Countries an airport flights to
- *  Complexity: O(n^2)
+ *  Complexity: O(nlog(n))
  * @param airport airport we want to know the number of countries
  * @return number of countries
  */
 int AirTravelManSys::numberOfCountriesFromAirport(const Airport &airport) const {
 
     NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
-    vector<string> countries;
+    set<string> countries;
     int counter = 0;
 
     for(const Flight &flight: networkAirport->getFlightsFromAirport()){
         string country = flight.getDestination()->getAirport().getCountry();
-        auto it = std::find(countries.begin(), countries.end(),country);
+        auto it = countries.find(country);
         if(it == countries.end()) {
             counter++;
-            countries.push_back(country);
+            countries.insert(country);
         }
     }
 
@@ -333,7 +333,7 @@ int AirTravelManSys::numberOfCountriesFromAirport(const Airport &airport) const 
 }
 
 /** Gets the number of Countries a city flights to
- * Complexity: O(n^3) in the worst case
+ * Complexity: O(n^2log(n)) in the worst case
  * @param city city we want to know the number of countries
  * @return number of countries
  */
@@ -341,17 +341,17 @@ int AirTravelManSys::numberOfCountriesFromCity(const string &city) const {
 
     vector<Airport> airports = cityToAirport.at(city);
     int counter = 0;
-    vector<string> countries;
+    set<string> countries;
 
     for(const Airport& airport: airports){
         NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
 
         for(const Flight &flight: networkAirport->getFlightsFromAirport()){
             string country = flight.getDestination()->getAirport().getCountry();
-            auto it = std::find(countries.begin(), countries.end(),country);
+            auto it = countries.find(country);
             if(it == countries.end()) {
                 counter++;
-                countries.push_back(country);
+                countries.insert(country);
             }
         }
     }
@@ -370,27 +370,40 @@ int AirTravelManSys::numberOfReachableAirports(const Airport &airport, int stops
     this->cleanVisitedState();
     NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
 
-    queue<NetworkAirport*> q;
-    q.push(networkAirport);
+    if(networkAirport == nullptr){
+        cout << "Airport not found";
+        return 0;
+    }
+
+    queue<pair<NetworkAirport*,int>> q;
+    q.emplace(networkAirport,0);
 
     networkAirport->setVisited(true);
     int counter = 0;
 
-    while(!q.empty() && stops != 0){
-        stops--;
-        NetworkAirport* na = q.front();
+    while(!q.empty()) {
+        pair<NetworkAirport *, int> na = q.front();
         q.pop();
 
-        for(auto it = na->getFlightsFromAirport().begin(); it!= na->getFlightsFromAirport().end(); it++){
-
-            NetworkAirport* nb = it->getDestination();
-            if(!nb->isVisited()){
-                q.push(nb);
-                nb->setVisited(true);
-                counter++;
-            }
+        if(na.second > stops){
+            break;
         }
 
+        for (auto it = na.first->getFlightsFromAirport().begin(); it != na.first->getFlightsFromAirport().end(); it++) {
+
+            NetworkAirport *nb = it->getDestination();
+            if (!nb->isVisited()) {
+
+                int distance = na.second + 1;
+                q.emplace(nb, distance);
+                nb->setVisited(true);
+
+                if (distance - 1 <= stops) {
+                    counter++;
+                }
+            }
+
+        }
     }
     return counter;
 }
@@ -401,35 +414,49 @@ int AirTravelManSys::numberOfReachableAirports(const Airport &airport, int stops
  * @param stops maximum number of stops
  * @return number of reachable cities
  */
+
 int AirTravelManSys::numberOfReachableCities(const Airport &airport, int stops) {
     this->cleanProcessState();
     this->cleanVisitedState();
     NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+
+    if(networkAirport == nullptr){
+        cout << "Airport not found";
+        return 0;
+    }
+
     set<string> citiesVisited;
-    queue<NetworkAirport*> q;
-    q.push(networkAirport);
+
+    queue<pair<NetworkAirport*,int>> q;
+    q.emplace(networkAirport,0);
 
     networkAirport->setVisited(true);
-    citiesVisited.insert(networkAirport->getAirport().getCity());
+    //citiesVisited.insert(networkAirport->getAirport().getCity());
     int counter = 0;
 
-    while(!q.empty() && stops != 0){
-        stops--;
-        NetworkAirport* na = q.front();
+    while(!q.empty()){
+        pair<NetworkAirport*,int> na = q.front();
         q.pop();
 
-        for(auto it = na->getFlightsFromAirport().begin(); it!= na->getFlightsFromAirport().end(); it++){
+        if(na.second > stops){
+            break;
+        }
+
+        for(auto it = na.first->getFlightsFromAirport().begin(); it!= na.first->getFlightsFromAirport().end(); it++){
 
             NetworkAirport* nb = it->getDestination();
             if(!nb->isVisited()){
-                q.push(nb);
+
+                int distance = na.second + 1;
+                q.emplace(nb,distance);
                 nb->setVisited(true);
 
                 string city = nb->getAirport().getCity();
                 auto iter = citiesVisited.find(city);
 
                 if(iter == citiesVisited.end()){
-                    counter++;
+                    if(distance - 1 <= stops )
+                        counter++;
                     citiesVisited.insert(city);
                 }
             }
@@ -449,31 +476,43 @@ int AirTravelManSys::numberOfReachableCountries(const Airport &airport, int stop
     this->cleanProcessState();
     this->cleanVisitedState();
     NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+
+    if(networkAirport == nullptr){
+        cout << "Airport not found";
+        return 0;
+    }
+
     set<string> countriesVisited;
-    queue<NetworkAirport*> q;
-    q.push(networkAirport);
+    queue<pair<NetworkAirport*,int>> q;
+    q.emplace(networkAirport,0);
 
     networkAirport->setVisited(true);
-    countriesVisited.insert(networkAirport->getAirport().getCountry());
+    //countriesVisited.insert(networkAirport->getAirport().getCountry());
     int counter = 0;
 
-    while(!q.empty() && stops != 0){
-        stops--;
-        NetworkAirport* na = q.front();
+    while(!q.empty()){
+        pair<NetworkAirport*,int> na = q.front();
         q.pop();
 
-        for(auto it = na->getFlightsFromAirport().begin(); it!= na->getFlightsFromAirport().end(); it++){
+        if(na.second > stops){
+            break;
+        }
+
+        for(auto it = na.first->getFlightsFromAirport().begin(); it!= na.first->getFlightsFromAirport().end(); it++){
 
             NetworkAirport* nb = it->getDestination();
             if(!nb->isVisited()){
-                q.push(nb);
+
+                int distance = na.second + 1;
+                q.emplace(nb, distance);
                 nb->setVisited(true);
 
                 string country = nb->getAirport().getCountry();
                 auto iter = countriesVisited.find(country);
 
                 if(iter == countriesVisited.end()){
-                    counter++;
+                    if(distance - 1 <= stops)
+                        counter++;
                     countriesVisited.insert(country);
                 }
             }

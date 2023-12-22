@@ -239,17 +239,18 @@ TEST(Network_Statistics, numberOfCountriesFromAirport){
 
     EXPECT_EQ(numberOfCountries,1);
 
-    Airport airport2 {"t1", "test1", "co1", "ci2", Location{1.0, 2.0}};
+    Airport airport2 {"t1", "test1", "co1", "ci2", Location{1.0, 2.0}}; //AirportTest1
     system.setFlightNetwork(flightNetworkTest);
     numberOfCountries = system.numberOfCountriesFromAirport(airport2);
 
     EXPECT_EQ(3,numberOfCountries);
 
-    Airport airport3 {"t1", "test1", "co3", "ci8", Location{10.0, 11.0}};
+    Airport airport3 {"t1", "test1", "co3", "ci8", Location{10.0, 11.0}};  //AirportTest4
     numberOfCountries = system.numberOfCountriesFromAirport(airport3);
 
     EXPECT_EQ(2,numberOfCountries);
 
+    cleanSetup();
 }
 
 TEST(Network_Statistics, numberOfCountriesFromCity){
@@ -270,7 +271,139 @@ TEST(Network_Statistics, numberOfCountriesFromCity){
     numberOfCountries = system.numberOfCountriesFromCity(city2);
 
     EXPECT_EQ(3,numberOfCountries);
+    cleanSetup();
 }
+
+TEST(Network_Statistics, numberOfReachableAirports){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    Airport airport1 = system.getCodeToAirport().at("LAE");
+    int numberOfReachableAirports = system.numberOfReachableAirports(airport1,0);
+
+    EXPECT_EQ(9,numberOfReachableAirports);
+
+    setup1();
+    system.setFlightNetwork(flightNetworkTest);
+    Airport airport2 {"t1", "test1", "co1", "ci2", Location{1.0, 2.0}}; //airportTest1
+
+    numberOfReachableAirports = system.numberOfReachableAirports(airport2,0);
+    EXPECT_EQ(4,numberOfReachableAirports);
+
+    numberOfReachableAirports = system.numberOfReachableAirports(airport2,1);
+    EXPECT_EQ(9,numberOfReachableAirports);
+
+    numberOfReachableAirports = system.numberOfReachableAirports(airport2,2);
+    EXPECT_EQ(9,numberOfReachableAirports);
+
+    Airport airport3 {"t2", "test2", "co1", "ci2", Location{2.0, 3.0}}; //airportTest2
+    Airport airport4 {"t1", "test1", "co2", "ci1", Location{51.0, 52.0}};//airportTest6
+    Airport airport5 {"t1", "test1", "co4", "ci6", Location{30.0, 70.0}};//airportTest7
+    Airline airline1{"at3", "airline3", "ca3", "co3"}; //airlineTest3
+
+    system.getFlightNetwork().removeFlight(airport3,airport5,airline1);
+
+    numberOfReachableAirports = system.numberOfReachableAirports(airport2, 1);
+    EXPECT_EQ(8,numberOfReachableAirports);
+
+    system.getFlightNetwork().addFlight(airport4, airport5,airline1);
+
+    numberOfReachableAirports = system.numberOfReachableAirports(airport2, 1);
+    EXPECT_EQ(8,numberOfReachableAirports);
+
+    numberOfReachableAirports = system.numberOfReachableAirports(airport2, 2);
+    EXPECT_EQ(9,numberOfReachableAirports);
+
+    cleanSetup();
+}
+
+TEST(Network_Statistics, numberOfReachableCities){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+
+    setup1();
+    system.setFlightNetwork(flightNetworkTest);
+    Airport airport2 {"t1", "test1", "co1", "ci2", Location{1.0, 2.0}}; //airportTest1
+
+    int numberOfReachableCities = system.numberOfReachableCities(airport2, 0);
+    EXPECT_EQ(4, numberOfReachableCities);
+
+    numberOfReachableCities = system.numberOfReachableCities(airport2, 1);
+    EXPECT_EQ(6, numberOfReachableCities);
+
+    numberOfReachableCities = system.numberOfReachableCities(airport2, 2);
+    EXPECT_EQ(6, numberOfReachableCities);
+
+    Airport airport3 {"t2", "test2", "co1", "ci2", Location{2.0, 3.0}}; //airportTest2
+    Airport airport4 {"t1", "test1", "co2", "ci1", Location{51.0, 52.0}};//airportTest6
+    Airport airport5 {"t1", "test1", "co4", "ci6", Location{30.0, 70.0}};//airportTest7
+    Airline airline1{"at3", "airline3", "ca3", "co3"}; //airlineTest3
+
+    system.getFlightNetwork().removeFlight(airport3,airport5,airline1);
+
+    numberOfReachableCities = system.numberOfReachableCities(airport2, 1);
+    EXPECT_EQ(5, numberOfReachableCities);
+
+    system.getFlightNetwork().addFlight(airport4, airport5,airline1);
+
+    numberOfReachableCities = system.numberOfReachableCities(airport2, 1);
+    EXPECT_EQ(5, numberOfReachableCities);
+
+    numberOfReachableCities = system.numberOfReachableCities(airport2, 2);
+    EXPECT_EQ(6, numberOfReachableCities);
+
+    cleanSetup();
+
+
+}
+
+TEST(Network_Statistics, numberOfReachableCountries){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+
+    setup1();
+    system.setFlightNetwork(flightNetworkTest);
+    Airport airport2 {"t1", "test1", "co1", "ci2", Location{1.0, 2.0}}; //airportTest1
+
+    int numberOfReachableCountries = system.numberOfReachableCountries(airport2, 0);
+    EXPECT_EQ(3, numberOfReachableCountries);
+
+    numberOfReachableCountries = system.numberOfReachableCountries(airport2, 1);
+    EXPECT_EQ(4, numberOfReachableCountries);
+
+    numberOfReachableCountries = system.numberOfReachableCountries(airport2, 2);
+    EXPECT_EQ(4, numberOfReachableCountries);
+
+    Airport airport3 {"t2", "test2", "co1", "ci2", Location{2.0, 3.0}}; //airportTest2
+    Airport airport4 {"t1", "test1", "co2", "ci1", Location{51.0, 52.0}};//airportTest6
+    Airport airport5 {"t1", "test1", "co4", "ci6", Location{30.0, 70.0}};//airportTest7
+    Airline airline1{"at3", "airline3", "ca3", "co3"}; //airlineTest3
+
+    system.getFlightNetwork().removeFlight(airport3,airport5,airline1);
+
+    numberOfReachableCountries = system.numberOfReachableCountries(airport2, 1);
+    EXPECT_EQ(3, numberOfReachableCountries);
+
+    system.getFlightNetwork().addFlight(airport4, airport5,airline1);
+
+    numberOfReachableCountries = system.numberOfReachableCountries(airport2, 1);
+    EXPECT_EQ(3, numberOfReachableCountries);
+
+    numberOfReachableCountries = system.numberOfReachableCountries(airport2, 2);
+    EXPECT_EQ(4, numberOfReachableCountries);
+
+    cleanSetup();
+
+}
+
 
 
 
