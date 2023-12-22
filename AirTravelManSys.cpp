@@ -7,6 +7,7 @@
 #include <iostream>
 #include <set>
 #include <queue>
+#include <utility>
 
 using namespace std;
 
@@ -44,6 +45,13 @@ void AirTravelManSys::cleanVisitedState() {
     }
 }
 
+void AirTravelManSys::setFlightNetwork(FlightNetwork NewFlightNetwork) {
+    this->flightNetwork = std::move(NewFlightNetwork);
+}
+
+void AirTravelManSys::setCityToAirport(unordered_map<std::string, vector<Airport>> newCityToAirport) {
+    this->cityToAirport = std::move(newCityToAirport);
+}
 //--------------------------------------------------------------------------------------------------------
 //Hash table manipulators
 
@@ -325,7 +333,7 @@ int AirTravelManSys::numberOfCountriesFromAirport(const Airport &airport) const 
 }
 
 /** Gets the number of Countries a city flights to
- * Complexity: O(n^3)
+ * Complexity: O(n^3) in the worst case
  * @param city city we want to know the number of countries
  * @return number of countries
  */
@@ -351,6 +359,12 @@ int AirTravelManSys::numberOfCountriesFromCity(const string &city) const {
     return counter;
 }
 
+/** Gets the number of reachable airports from a given airport in a maximum k number of stops
+ *  Complexity: O(n^2)
+ * @param airport airport we want to know the reachable airports
+ * @param stops maximum number of stops
+ * @return number of reachable airport
+ */
 int AirTravelManSys::numberOfReachableAirports(const Airport &airport, int stops) {
     this->cleanProcessState();
     this->cleanVisitedState();
@@ -374,6 +388,94 @@ int AirTravelManSys::numberOfReachableAirports(const Airport &airport, int stops
                 q.push(nb);
                 nb->setVisited(true);
                 counter++;
+            }
+        }
+
+    }
+    return counter;
+}
+
+/** Gets the number of reachable cities from a given airport in a maximum k number of stops
+ *  Complexity: O(n^2log(n))
+ * @param airport airport we want to know the reachable airports
+ * @param stops maximum number of stops
+ * @return number of reachable cities
+ */
+int AirTravelManSys::numberOfReachableCities(const Airport &airport, int stops) {
+    this->cleanProcessState();
+    this->cleanVisitedState();
+    NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+    set<string> citiesVisited;
+    queue<NetworkAirport*> q;
+    q.push(networkAirport);
+
+    networkAirport->setVisited(true);
+    citiesVisited.insert(networkAirport->getAirport().getCity());
+    int counter = 0;
+
+    while(!q.empty() && stops != 0){
+        stops--;
+        NetworkAirport* na = q.front();
+        q.pop();
+
+        for(auto it = na->getFlightsFromAirport().begin(); it!= na->getFlightsFromAirport().end(); it++){
+
+            NetworkAirport* nb = it->getDestination();
+            if(!nb->isVisited()){
+                q.push(nb);
+                nb->setVisited(true);
+
+                string city = nb->getAirport().getCity();
+                auto iter = citiesVisited.find(city);
+
+                if(iter == citiesVisited.end()){
+                    counter++;
+                    citiesVisited.insert(city);
+                }
+            }
+        }
+
+    }
+    return counter;
+}
+
+/** Gets the number of reachable countries from a given airport in a maximum k number of stops
+ *  Complexity: O(n^2log(n))
+ * @param airport airport we want to know the reachable airports
+ * @param stops maximum number of stops
+ * @return number of reachable countries
+ */
+int AirTravelManSys::numberOfReachableCountries(const Airport &airport, int stops) {
+    this->cleanProcessState();
+    this->cleanVisitedState();
+    NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+    set<string> countriesVisited;
+    queue<NetworkAirport*> q;
+    q.push(networkAirport);
+
+    networkAirport->setVisited(true);
+    countriesVisited.insert(networkAirport->getAirport().getCountry());
+    int counter = 0;
+
+    while(!q.empty() && stops != 0){
+        stops--;
+        NetworkAirport* na = q.front();
+        q.pop();
+
+        for(auto it = na->getFlightsFromAirport().begin(); it!= na->getFlightsFromAirport().end(); it++){
+
+            NetworkAirport* nb = it->getDestination();
+            if(!nb->isVisited()){
+                q.push(nb);
+                nb->setVisited(true);
+
+                string country = nb->getAirport().getCountry();
+                auto iter = countriesVisited.find(country);
+
+                if(iter == countriesVisited.end()){
+                    counter++;
+                    countriesVisited.insert(country);
+                }
             }
         }
 

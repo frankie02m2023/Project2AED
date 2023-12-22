@@ -26,12 +26,17 @@ public:
     int numberOfCountriesFromAirport(const Airport& airport) const;
     int numberOfCountriesFromCity(const string& city) const;
     int numberOfReachableAirports(const Airport& airport, int stops);
+    int numberOfReachableCities(const Airport& airport, int stops);
+    int numberOfReachableCountries(const Airport& airport, int stops);
 
     const unordered_map<std::string, Airline> &getCodeToAirlines() const;
     const FlightNetwork &getFlightNetwork() const;
     const unordered_map<std::string, vector<Airport>> &getCityToAirport() const;
     const unordered_map<std::string, vector<Airport>> &getCountryToAirport() const;
     const unordered_map<std::string, Airport> &getCodeToAirport() const;
+    void setCityToAirport(unordered_map<std::string, vector<Airport>> newCityToAirport);
+    void setFlightNetwork(FlightNetwork NewFlightNetwork);
+
 
     void cleanProcessState();
     void cleanVisitedState();
