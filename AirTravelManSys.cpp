@@ -311,6 +311,26 @@ void AirTravelManSys::readFlightsDataFile() {
     }
 }
 
+/** Gets the total number of airports in the flight Network.
+ *  Complexity: O(1)
+ * @return number of airports
+ */
+int AirTravelManSys::totalNumberOfAirports() const {
+    return flightNetwork.getFlightNetwork().size();
+}
+
+
+/** Gets the total number of flights in the flight Network.
+ *  Complexity: O(n)
+ * @return number of flights
+ */
+int AirTravelManSys::totalNumberOfFlights() const {
+    int numberOfFlights = 0;
+    for(auto networkAirport : flightNetwork.getFlightNetwork()){
+        numberOfFlights+= networkAirport->getNumberOfFlightsFromAirport();
+    }
+    return numberOfFlights;
+}
 
 
 /** Gets the number of flights from an Airport.
@@ -357,6 +377,57 @@ int AirTravelManSys::numberOfAirlinesInAirport(const Airport &airport) const {
     }
 
     return counter;
+}
+
+/** Gets the number of flights that travel to a certain city
+ * Complexity: O(n)
+ * @param city the name of the target city
+ * @return number of flights that travel to the city
+ */
+
+int AirTravelManSys::numberOfFlightsToCity(const std::string &city) const {
+    auto it  = cityToAirport.find(city);
+    int numberOfFlightsToCity = 0;
+    vector<Airport> targetAirports = it->second;
+    for(const Airport& airport: targetAirports){
+       NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+       numberOfFlightsToCity+=networkAirport->getNumberOfFlightsToAirport();
+    }
+    return numberOfFlightsToCity;
+}
+
+/** Gets the number of flights that depart from a certain city
+ * Complexity: O(n)
+ * @param city the name of the target city
+ * @return number of flights that travel from the city
+ */
+
+int AirTravelManSys::numberOfFlightsFromCity(const std::string &city) const {
+    auto it  = cityToAirport.find(city);
+    int numberOfFlightsFromCity = 0;
+    vector<Airport> targetAirports = it->second;
+    for(const Airport& airport: targetAirports){
+        NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+        numberOfFlightsFromCity+=networkAirport->getNumberOfFlightsFromAirport();
+    }
+    return numberOfFlightsFromCity;
+}
+
+/** Gets the number of flights associated with a certain airline
+ * Complexity: O(n^2)
+ * @param city the name of the target airline
+ * @return number of flights associated to the target airline
+ */
+int AirTravelManSys::numberOfFlightsPerAirline(const Airline &airline) const {
+    int numberOfFlightsPerAirline = 0;
+    for(auto airport : flightNetwork.getFlightNetwork()){
+        for(const auto& flight : airport->getFlightsFromAirport()){
+            if(flight.getAirLine() == airline){
+                numberOfFlightsPerAirline++;
+            }
+        }
+    }
+    return numberOfFlightsPerAirline;
 }
 
 /** Gets the number of Countries an airport flights to

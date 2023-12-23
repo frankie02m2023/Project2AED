@@ -191,6 +191,28 @@ TEST(Data_Readers, readFlightDataFile){
     EXPECT_EQ(airline.getCode(), "TOK");
 }
 
+TEST(Network_Statistics,numberOfTotalAirports){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    int numberOfTotalAirports = system.totalNumberOfAirports();
+
+    EXPECT_EQ(numberOfTotalAirports,3019);
+}
+
+TEST(Network_Statistics,numberOfTotalFlights){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    int numberOfTotalAirports = system.totalNumberOfFlights();
+
+    EXPECT_EQ(numberOfTotalAirports,63832);
+}
+
 TEST(Network_Statistics, numberFlightsFromAirport){
     AirTravelManSys system;
     system.readAirlinesDataFile();
@@ -224,6 +246,74 @@ TEST(Network_Statistics, numberOfAirlinesInAirport){
     numberOfAirlines = system.numberOfAirlinesInAirport(airport2);
 
     EXPECT_EQ(numberOfAirlines,8);
+
+}
+
+TEST(Network_Statistics, numberOfFlightsToCity){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    string city1 = "Paris";
+    int numberOfFlightsToCity = system.numberOfFlightsToCity(city1);
+
+    EXPECT_EQ(714,numberOfFlightsToCity);
+
+    string city2 = "Porto";
+    numberOfFlightsToCity = system.numberOfFlightsToCity(city2);
+
+    EXPECT_EQ(numberOfFlightsToCity,102);
+
+    string city3 = "Los Angeles";
+    numberOfFlightsToCity = system.numberOfFlightsToCity(city3);
+
+    EXPECT_EQ(numberOfFlightsToCity,497);
+}
+
+TEST(Network_Statistics, numberOfFlightsFromCity){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    string city1 = "Paris";
+    int numberOfFlightsFromCity = system.numberOfFlightsFromCity(city1);
+
+    EXPECT_EQ(719,numberOfFlightsFromCity);
+
+    string city2 = "Porto";
+    numberOfFlightsFromCity = system.numberOfFlightsFromCity(city2);
+
+    EXPECT_EQ(numberOfFlightsFromCity,100);
+
+    string city3 = "Los Angeles";
+    numberOfFlightsFromCity = system.numberOfFlightsFromCity(city3);
+
+    EXPECT_EQ(numberOfFlightsFromCity,491);
+}
+
+
+TEST(Network_Statistics, numberOfFlightsPerAirline){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    Airline airline1("RYR","Ryanair","RYANAIR","Ireland");
+    int numberOfFlightsPerAirline1 = system.numberOfFlightsPerAirline(airline1);
+
+    EXPECT_EQ(numberOfFlightsPerAirline1,2484);
+
+    Airline airline2("ETD","Etihad Airways","ETIHAD","United Arab Emirates");
+    int numberOfFlightsPerAirline2 = system.numberOfFlightsPerAirline(airline2);
+
+    EXPECT_EQ(numberOfFlightsPerAirline2,228);
+
+    Airline airline3("QTR","Qatar Airways","QATARI","Qatar");
+    int numberOfFlightsPerAirline3 = system.numberOfFlightsPerAirline(airline3);
+
+    EXPECT_EQ(numberOfFlightsPerAirline3,278);
 
 }
 
