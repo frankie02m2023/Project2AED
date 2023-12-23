@@ -28,7 +28,6 @@ public:
     void addInfoCountryToAirport(const string& country, const Airport& airport);
     void addInfoCodeToAirport(const string& code, const Airport& airport);
     void addInfoCodeToAirlines(const string& code, const Airline& airline);
-    void addInfoAirlineToFlights(const Airline& airline, const Airport& airport);
 
     int totalNumberOfAirports() const;
     int totalNumberOfFlights() const;
@@ -50,7 +49,6 @@ public:
     const unordered_map<std::string, vector<Airport>> &getCityToAirport() const;
     const unordered_map<std::string, vector<Airport>> &getCountryToAirport() const;
     const unordered_map<std::string, Airport> &getCodeToAirport() const;
-    const unordered_map<Airline,vector<Flight>> &getAirlineToFlights() const;
     void setCityToAirport(unordered_map<std::string, vector<Airport>> newCityToAirport);
     void setFlightNetwork(FlightNetwork NewFlightNetwork);
 
@@ -63,7 +61,6 @@ private:
     std::unordered_map<std::string,vector<Airport>> countryToAirport;
     std::unordered_map<std::string,Airport> codeToAirport;
     std::unordered_map<std::string,Airline> codeToAirlines;
-    std::unordered_map<Airline,vector<Flight>> airlineToFlights;
     FlightNetwork flightNetwork;
 };
 #endif //TRABALHOAED2_AIRTRAVELMANSYS_H
