@@ -123,6 +123,120 @@ void setup1() {
 
 }
 
+void setup2(){
+    Airport airportTest1("A","A","co1","ci1",Location{0.0,0.0});
+    Airport airportTest2("B","B","co1","ci2",Location{1.0,1.0});
+    Airport airportTest3("C","C","co2","ci3",Location{11.0,16.0});
+    Airport airportTest4("D","D","co2","ci4",Location{11.0,18.0});
+
+    flightNetworkTest.addNetworkAirport(airportTest1);
+    flightNetworkTest.addNetworkAirport(airportTest2);
+    flightNetworkTest.addNetworkAirport(airportTest3);
+    flightNetworkTest.addNetworkAirport(airportTest4);
+
+    Airline airlineTest1{"a1", "airline1", "ca1", "co2"};
+    Airline airlineTest2{"a2", "airline2", "ca2", "co1"};
+    Airline airlineTest3{"a3", "airline3", "ca3", "co3"};
+    Airline airlineTest4{"a4", "airline4", "ca4", "co6"};
+    Airline airlineTest5{"a5", "airline5", "ca5", "co3"};
+
+    flightNetworkTest.addFlight(airportTest1,airportTest2,airlineTest1);
+    flightNetworkTest.addFlight(airportTest2,airportTest3,airlineTest3);
+    flightNetworkTest.addFlight(airportTest3,airportTest4,airlineTest4);
+    flightNetworkTest.addFlight(airportTest4,airportTest1,airlineTest1);
+}
+
+void setup3(){
+    Airport airportTest1("A","A","co1","ci1",Location{0.0,0.0});
+    Airport airportTest2("B","B","co1","ci2",Location{1.0,1.0});
+    Airport airportTest3("C","C","co2","ci3",Location{11.0,16.0});
+    Airport airportTest4("D","D","co2","ci4",Location{11.0,18.0});
+    Airport airportTest5("E","E","co2","ci3",Location{11.0,17.0});
+    Airport airportTest6("F","F","co3","ci6",Location{5.0,24.0});
+
+    flightNetworkTest.addNetworkAirport(airportTest1);
+    flightNetworkTest.addNetworkAirport(airportTest2);
+    flightNetworkTest.addNetworkAirport(airportTest3);
+    flightNetworkTest.addNetworkAirport(airportTest4);
+    flightNetworkTest.addNetworkAirport(airportTest5);
+    flightNetworkTest.addNetworkAirport(airportTest6);
+
+    Airline airlineTest1{"a1", "airline1", "ca1", "co2"};
+    Airline airlineTest2{"a2", "airline2", "ca2", "co1"};
+    Airline airlineTest3{"a3", "airline3", "ca3", "co3"};
+    Airline airlineTest4{"a4", "airline4", "ca4", "co6"};
+    Airline airlineTest5{"a5", "airline5", "ca5", "co3"};
+
+
+    flightNetworkTest.addFlight(airportTest1,airportTest2,airlineTest1);
+    flightNetworkTest.addFlight(airportTest1,airportTest2,airlineTest2);
+    flightNetworkTest.addFlight(airportTest1,airportTest3,airlineTest2);
+    flightNetworkTest.addFlight(airportTest1,airportTest6,airlineTest5);
+
+    flightNetworkTest.addFlight(airportTest2,airportTest1,airlineTest1);
+    flightNetworkTest.addFlight(airportTest2,airportTest3,airlineTest1);
+    flightNetworkTest.addFlight(airportTest2,airportTest5,airlineTest1);
+    flightNetworkTest.addFlight(airportTest2,airportTest6,airlineTest1);
+
+    flightNetworkTest.addFlight(airportTest3,airportTest2,airlineTest1);
+    flightNetworkTest.addFlight(airportTest3,airportTest4,airlineTest1);
+    flightNetworkTest.addFlight(airportTest3,airportTest4,airlineTest5);
+
+    flightNetworkTest.addFlight(airportTest4,airportTest2,airlineTest2);
+    flightNetworkTest.addFlight(airportTest4,airportTest5,airlineTest5);
+
+    flightNetworkTest.addFlight(airportTest5,airportTest2,airlineTest1);
+    flightNetworkTest.addFlight(airportTest5,airportTest2,airlineTest1);
+
+    flightNetworkTest.addFlight(airportTest6,airportTest1,airlineTest2);
+    flightNetworkTest.addFlight(airportTest6,airportTest1,airlineTest3);
+    flightNetworkTest.addFlight(airportTest6,airportTest4,airlineTest4);
+}
+
+void setup4(){
+    Airport airportTest1("A","A","co1","ci1",Location{0.0,0.0});
+    Airport airportTest2("B","B","co1","ci2",Location{1.0,1.0});
+    Airport airportTest3("C","C","co2","ci3",Location{11.0,16.0});
+    Airport airportTest4("D","D","co2","ci4",Location{11.0,18.0});
+    Airport airportTest5("E","E","co2","ci3",Location{11.0,17.0});
+    Airport airportTest6("F","F","co3","ci6",Location{5.0,24.0});
+
+    flightNetworkTest.addNetworkAirport(airportTest1);
+    flightNetworkTest.addNetworkAirport(airportTest2);
+    flightNetworkTest.addNetworkAirport(airportTest3);
+    flightNetworkTest.addNetworkAirport(airportTest4);
+    flightNetworkTest.addNetworkAirport(airportTest5);
+    flightNetworkTest.addNetworkAirport(airportTest6);
+
+    Airline airlineTest1{"a1", "airline1", "ca1", "co2"};
+    Airline airlineTest2{"a2", "airline2", "ca2", "co1"};
+    Airline airlineTest3{"a3", "airline3", "ca3", "co3"};
+    Airline airlineTest4{"a4", "airline4", "ca4", "co6"};
+    Airline airlineTest5{"a5", "airline5", "ca5", "co3"};
+
+
+    flightNetworkTest.addFlight(airportTest1,airportTest2,airlineTest3);
+    flightNetworkTest.addFlight(airportTest1,airportTest4,airlineTest3);
+
+    flightNetworkTest.addFlight(airportTest2,airportTest3,airlineTest3);
+    flightNetworkTest.addFlight(airportTest2,airportTest4,airlineTest3);
+    flightNetworkTest.addFlight(airportTest2,airportTest5,airlineTest1);
+    flightNetworkTest.addFlight(airportTest2,airportTest5,airlineTest4);
+
+    flightNetworkTest.addFlight(airportTest3,airportTest5,airlineTest4);
+
+    flightNetworkTest.addFlight(airportTest4,airportTest1,airlineTest1);
+    flightNetworkTest.addFlight(airportTest4,airportTest1,airlineTest2);
+    flightNetworkTest.addFlight(airportTest4,airportTest1,airlineTest3);
+    flightNetworkTest.addFlight(airportTest4,airportTest2,airlineTest1);
+    flightNetworkTest.addFlight(airportTest4,airportTest6,airlineTest1);
+
+    flightNetworkTest.addFlight(airportTest5,airportTest2,airlineTest1);
+    flightNetworkTest.addFlight(airportTest5,airportTest2,airlineTest4);
+}
+
+
+
 void cleanSetup(){
     FlightNetwork cleanFlightNetwork;
     flightNetworkTest = cleanFlightNetwork;
@@ -364,6 +478,48 @@ TEST(Network_Statistics, numberOfCountriesFromCity){
     cleanSetup();
 }
 
+TEST(Network_Statistics, numberOfCitiesFromAirport){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+    setup1();
+
+    system.setFlightNetwork(flightNetworkTest);
+    Airport airport1 {"t1", "test1", "co1", "ci2", Location{1.0, 2.0}}; //AirportTest1
+    int numberOfCities = system.numberOfCitiesFromAirport(airport1);
+
+    EXPECT_EQ(4,numberOfCities);
+
+    Airport airport2 {"t1", "test5", "co2", "ci1", Location{50.0, 9.0}};  //AirportTest5
+    numberOfCities = system.numberOfCitiesFromAirport(airport2);
+
+    EXPECT_EQ(2,numberOfCities);
+
+    cleanSetup();
+}
+
+TEST(Network_Statistics, numberOfAirportsFromAirport){
+AirTravelManSys system;
+system.readAirlinesDataFile();
+system.readAirportsDataFile();
+system.readFlightsDataFile();
+setup1();
+
+system.setFlightNetwork(flightNetworkTest);
+Airport airport1 {"t2", "test2", "co1", "ci2", Location{2.0, 3.0}}; //AirportTest1
+int numberOfAirports = system.numberOfAirportsFromAirport(airport1);
+
+EXPECT_EQ(4,numberOfAirports);
+
+Airport airport2 {"t1", "test10", "co1", "ci7", Location{13.0, 79.0}};  //AirportTest5
+numberOfAirports = system.numberOfAirportsFromAirport(airport2);
+
+EXPECT_EQ(3,numberOfAirports);
+
+cleanSetup();
+}
+
 TEST(Network_Statistics, numberOfReachableAirports){
     AirTravelManSys system;
     system.readAirlinesDataFile();
@@ -492,6 +648,60 @@ TEST(Network_Statistics, numberOfReachableCountries){
 
     cleanSetup();
 
+}
+
+TEST(Network_Statistics, maxTrip){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    setup2();
+    system.setFlightNetwork(flightNetworkTest);
+
+    int maxTrip = 3;
+    vector<pair<Airport,Airport>> maxTripAirportPairs;
+    Airport a1_1("A","A","co1","ci1",Location{0.0,0.0});
+    Airport a2_1("B","B","co1","ci2",Location{1.0,1.0});
+    Airport a3_1("C","C","co2","ci3",Location{11.0,16.0});
+    Airport a4_1("D","D","co2","ci4",Location{11.0,18.0});
+
+    EXPECT_EQ(maxTrip,system.maxTrip(maxTripAirportPairs));
+    EXPECT_EQ(maxTripAirportPairs.size(),4);
+    EXPECT_TRUE(std::find(maxTripAirportPairs.begin(), maxTripAirportPairs.end(), make_pair(a1_1,a4_1)) != maxTripAirportPairs.end());
+    EXPECT_TRUE(std::find(maxTripAirportPairs.begin(), maxTripAirportPairs.end(), make_pair(a2_1,a1_1)) != maxTripAirportPairs.end());
+    EXPECT_TRUE(std::find(maxTripAirportPairs.begin(), maxTripAirportPairs.end(), make_pair(a3_1,a2_1)) != maxTripAirportPairs.end());
+    EXPECT_TRUE(std::find(maxTripAirportPairs.begin(), maxTripAirportPairs.end(), make_pair(a4_1,a3_1)) != maxTripAirportPairs.end());
+
+    maxTripAirportPairs.clear();
+    cleanSetup();
+
+    setup3();
+    system.setFlightNetwork(flightNetworkTest);
+
+    maxTrip = 3;
+    Airport a1_2("E","E","co2","ci3",Location{11.0,17.0});
+    Airport a2_2("D","D","co2","ci4",Location{11.0,18.0});
+
+    EXPECT_EQ(maxTrip,system.maxTrip(maxTripAirportPairs));
+    EXPECT_EQ(maxTripAirportPairs.size(),1);
+    EXPECT_EQ(maxTripAirportPairs.at(0), make_pair(a1_2,a2_2));
+
+    cleanSetup();
+
+    setup4();
+    system.setFlightNetwork(flightNetworkTest);
+
+    maxTrip = 4;
+
+    Airport a1("A","A","co1","ci1",Location{0.0,0.0});
+    Airport a3("C","C","co2","ci3",Location{11.0,16.0});
+    Airport a6("F","F","co3","ci6",Location{5.0,24.0});
+
+    EXPECT_EQ(maxTrip,system.maxTrip(maxTripAirportPairs));
+    EXPECT_EQ(2,maxTripAirportPairs.size());
+    EXPECT_TRUE(find(maxTripAirportPairs.begin(),maxTripAirportPairs.end(), make_pair(a3,a1)) != maxTripAirportPairs.end());
+    EXPECT_TRUE(find(maxTripAirportPairs.begin(),maxTripAirportPairs.end(), make_pair(a3,a6)) != maxTripAirportPairs.end());
 }
 
 TEST(Network_Statistics, topKAirportCapacity){

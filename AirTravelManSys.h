@@ -38,9 +38,13 @@ public:
     int numberOfFlightsPerAirline(const Airline& airline) const;
     int numberOfCountriesFromAirport(const Airport& airport) const;
     int numberOfCountriesFromCity(const string& city) const;
+    int numberOfCitiesFromAirport(const Airport& airport) const;
+    int numberOfAirportsFromAirport(const Airport& airport) const;
     int numberOfReachableAirports(const Airport& airport, int stops);
     int numberOfReachableCities(const Airport& airport, int stops);
     int numberOfReachableCountries(const Airport& airport, int stops);
+
+    int maxTrip(vector<pair<Airport,Airport>>& maxTripAirportPairs);
 
     void topKAirportCapacity(int k);
 

@@ -6,6 +6,9 @@ int main() {
     travelsys.readAirlinesDataFile();
     travelsys.readAirportsDataFile();
     travelsys.readFlightsDataFile();
-    travelsys.topKAirportCapacity(10);
+    vector<pair<Airport,Airport>> v;
+    int maxTrip = travelsys.maxTrip(v);
+    cout << maxTrip << endl;
+    cout << v.size();
     return 0;
 }

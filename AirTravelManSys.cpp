@@ -430,7 +430,7 @@ int AirTravelManSys::numberOfFlightsPerAirline(const Airline &airline) const {
     return numberOfFlightsPerAirline;
 }
 
-/** Gets the number of Countries an airport flights to
+/** Gets the number of different countries an airport flies to
  *  Complexity: O(nlog(n))
  * @param airport airport we want to know the number of countries
  * @return number of countries
@@ -460,7 +460,7 @@ int AirTravelManSys::numberOfCountriesFromAirport(const Airport &airport) const 
 
 }
 
-/** Gets the number of Countries a city flights to
+/** Gets the number of Countries a city flies to
  * Complexity: O(n^2log(n)) in the worst case
  * @param city city we want to know the number of countries
  * @return number of countries
@@ -491,6 +491,46 @@ int AirTravelManSys::numberOfCountriesFromCity(const string &city) const {
 
     return counter;
 }
+
+/** Gets the number of different cities an airport flies to
+ *  Complexity: O(nlog(n))
+ * @param airport airport we want to know the number of cities
+ * @return number of cities
+ */
+int AirTravelManSys::numberOfCitiesFromAirport(const Airport &airport) const {
+    NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+    vector<string> cities;
+    int numberOfCitiesFromAirport = 0;
+    for(const auto& flight: networkAirport->getFlightsFromAirport()){
+        string city = flight.getDestination()->getAirport().getCity();
+        auto it = find(cities.begin(),cities.end(),city);
+        if(it == cities.end()){
+            cities.push_back(city);
+            numberOfCitiesFromAirport++;
+        }
+    }
+    return numberOfCitiesFromAirport;
+}
+
+/** Gets the number of different airports an airport flights to
+ *  Complexity: O(nlog(n))
+ * @param airport airport we want to know the number of airports
+ * @return number of airports
+ */
+ int AirTravelManSys::numberOfAirportsFromAirport(const Airport &airport) const {
+     NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+     vector<Airport> airports;
+     int numberOfAirportsFromAirport = 0;
+     for(const auto& flight : networkAirport->getFlightsFromAirport()){
+         Airport destAirport = flight.getDestination()->getAirport();
+         auto it = find(airports.begin(),airports.end(),destAirport);
+         if(it == airports.end()){
+             airports.push_back(destAirport);
+             numberOfAirportsFromAirport++;
+         }
+     }
+    return numberOfAirportsFromAirport;
+ }
 
 /** Gets the number of reachable airports from a given airport in a maximum k number of stops
  *  Complexity: O(n^2)
@@ -653,6 +693,44 @@ int AirTravelManSys::numberOfReachableCountries(const Airport &airport, int stop
 
     }
     return counter;
+}
+
+pair<NetworkAirport*,int> bfsAirportVisit(NetworkAirport *networkAirport){
+    networkAirport->setVisited(true);
+    queue<pair<NetworkAirport*,int>> q;
+    q.emplace(networkAirport,0);
+    NetworkAirport* targetAirport;
+    int distance;
+    while(!q.empty()){
+        targetAirport = q.front().first;
+        distance = q.front().second;
+        q.pop();
+        for(const auto& flight : targetAirport->getFlightsFromAirport()){
+            if(!flight.getDestination()->isVisited()){
+                flight.getDestination()->setVisited(true);
+                q.emplace(flight.getDestination(),distance + 1);
+            }
+        }
+    }
+    return make_pair(targetAirport,distance);
+}
+
+int AirTravelManSys::maxTrip(vector<pair<Airport, Airport>>& maxTripAirportPairs) {
+  int maxTrip = 0;
+  pair<NetworkAirport*,int> distanceToDestination;
+  for(auto networkAirport : flightNetwork.getFlightNetwork()){
+      cleanVisitedState();
+      cleanProcessState();
+      distanceToDestination = bfsAirportVisit(networkAirport);
+      if(distanceToDestination.second >= maxTrip){
+          if(distanceToDestination.second > maxTrip){
+              maxTripAirportPairs.clear();
+          }
+          maxTrip = distanceToDestination.second;
+          maxTripAirportPairs.emplace_back(networkAirport->getAirport(),distanceToDestination.first->getAirport());
+      }
+  }
+  return maxTrip;
 }
 
 /** Auxiliary function to compare to airports by their number of flights
