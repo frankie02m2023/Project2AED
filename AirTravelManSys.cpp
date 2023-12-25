@@ -695,7 +695,9 @@ int AirTravelManSys::numberOfReachableCountries(const Airport &airport, int stop
     return counter;
 }
 
-pair<NetworkAirport*,int> bfsAirportVisit(NetworkAirport *networkAirport){
+vector<pair<NetworkAirport*,int>> bfsAirportVisit(NetworkAirport *networkAirport){
+    vector<pair<NetworkAirport*,int>> v;
+    vector<pair<NetworkAirport*,int>> distanceToDestination;
     networkAirport->setVisited(true);
     queue<pair<NetworkAirport*,int>> q;
     q.emplace(networkAirport,0);
@@ -705,6 +707,7 @@ pair<NetworkAirport*,int> bfsAirportVisit(NetworkAirport *networkAirport){
         targetAirport = q.front().first;
         distance = q.front().second;
         q.pop();
+        v.emplace_back(targetAirport,distance);
         for(const auto& flight : targetAirport->getFlightsFromAirport()){
             if(!flight.getDestination()->isVisited()){
                 flight.getDestination()->setVisited(true);
@@ -712,22 +715,31 @@ pair<NetworkAirport*,int> bfsAirportVisit(NetworkAirport *networkAirport){
             }
         }
     }
-    return make_pair(targetAirport,distance);
+    for(auto pair : v){
+        if(pair.second == distance){
+            distanceToDestination.emplace_back(pair.first,pair.second);
+        }
+    }
+    return distanceToDestination;
 }
 
 int AirTravelManSys::maxTrip(vector<pair<Airport, Airport>>& maxTripAirportPairs) {
   int maxTrip = 0;
-  pair<NetworkAirport*,int> distanceToDestination;
+  vector<pair<NetworkAirport*,int>> distanceToDestination;
   for(auto networkAirport : flightNetwork.getFlightNetwork()){
       cleanVisitedState();
       cleanProcessState();
       distanceToDestination = bfsAirportVisit(networkAirport);
-      if(distanceToDestination.second >= maxTrip){
-          if(distanceToDestination.second > maxTrip){
-              maxTripAirportPairs.clear();
+      if(!distanceToDestination.empty()){
+          if(distanceToDestination.at(0).second >= maxTrip){
+              if(distanceToDestination.at(0).second > maxTrip){
+                  maxTripAirportPairs.clear();
+              }
+              maxTrip = distanceToDestination.at(0).second;
+              for(auto pair : distanceToDestination){
+                  maxTripAirportPairs.emplace_back(networkAirport->getAirport(),pair.first->getAirport());
+              }
           }
-          maxTrip = distanceToDestination.second;
-          maxTripAirportPairs.emplace_back(networkAirport->getAirport(),distanceToDestination.first->getAirport());
       }
   }
   return maxTrip;

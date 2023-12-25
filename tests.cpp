@@ -687,6 +687,7 @@ TEST(Network_Statistics, maxTrip){
     EXPECT_EQ(maxTripAirportPairs.size(),1);
     EXPECT_EQ(maxTripAirportPairs.at(0), make_pair(a1_2,a2_2));
 
+    maxTripAirportPairs.clear();
     cleanSetup();
 
     setup4();
