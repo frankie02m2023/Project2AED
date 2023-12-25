@@ -820,7 +820,6 @@ vector<NetworkAirport*> AirTravelManSys::convertLocationToAirports(const std::st
             networkAirports.push_back(networkAirport);
         }
     }
-
         return networkAirports;
 }
 
@@ -846,7 +845,86 @@ NetworkAirport* AirTravelManSys::convertNameToAirport(const std::string& name) {
             return networkAirport;
         }
     }
+    cout << "Airport not found" << endl;
     return nullptr;
+}
+
+void findMinDistDFS(NetworkAirport* source, NetworkAirport* destination, NetworkAirport* bestSource, NetworkAirport* bestDestination, int& minDist, int& countDist){
+    source->setVisited(true);
+
+    if(source->getAirport() == destination->getAirport()){
+        if(minDist > countDist){
+            minDist = countDist;
+            bestSource = source;
+            bestDestination = destination;
+        }
+    }
+    else{
+
+        for(auto it = source->getFlightsFromAirport().begin(); it != source->getFlightsFromAirport().end(); it++){
+            NetworkAirport* networkAirport = it->getDestination();
+
+            if(!networkAirport->isVisited()){
+                countDist++;
+                findMinDistDFS(networkAirport,destination, bestSource, bestDestination, minDist,countDist);
+            }
+        }
+
+    }
+
+    source->setVisited(false);
+    countDist--;
+}
+
+void findFlightOptionsDFS(NetworkAirport* source, NetworkAirport* destination, vector<NetworkAirport*> flightOption, vector<vector<NetworkAirport*>> &flightOptions, int dist){
+    source->setVisited(true);
+    flightOption.push_back(source);
+
+    if(dist == 0){
+        if(destination->getAirport() == source->getAirport()){
+            flightOptions.push_back(flightOption);
+        }
+    }
+
+    else{
+
+        for(auto it = source->getFlightsFromAirport().begin(); it != source->getFlightsFromAirport().end(); it++ ){
+            NetworkAirport* networkAirport = it->getDestination();
+
+            if(!networkAirport->isVisited()){
+                findFlightOptionsDFS(networkAirport, destination,flightOption,flightOptions, dist--);
+            }
+        }
+    }
+
+    source->setVisited(false);
+}
+
+void AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, const vector<NetworkAirport *>& destinations) {
+    cleanVisitedState();
+    cleanProcessState();
+
+    int minDist = INT_MAX;
+    int countDist = 0;
+    NetworkAirport* bestSource = sources.at(0);
+    NetworkAirport* bestDestination = destinations.at(0);
+
+    for(NetworkAirport* source: sources){
+        for(NetworkAirport* destination: destinations){
+            findMinDistDFS(source, destination, bestSource, bestDestination, minDist, countDist);
+        }
+    }
+
+    vector<vector<NetworkAirport*>> flightOptions;
+    vector<NetworkAirport*> flightOption;
+
+    findFlightOptionsDFS(bestSource, bestDestination, flightOption, flightOptions, minDist);
+
+    for(const vector<NetworkAirport*>& option: flightOptions){
+        for(NetworkAirport* networkAirport: option){
+            cout << "Airport code: " << networkAirport->getAirport().getCode() << "Airport name: " << networkAirport->getAirport().getName() << endl;
+        }
+    }
 }
 
 

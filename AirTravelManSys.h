@@ -53,6 +53,8 @@ public:
 
     void topKAirportCapacity(int k);
 
+    void bestFlightOption(const vector<NetworkAirport*>& sources,const vector<NetworkAirport*>& destinations);
+
     const unordered_map<std::string, Airline> &getCodeToAirlines() const;
     const FlightNetwork &getFlightNetwork() const;
     const unordered_map<std::string, vector<Airport>> &getCityToAirport() const;
