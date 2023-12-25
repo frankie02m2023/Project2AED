@@ -849,7 +849,7 @@ NetworkAirport* AirTravelManSys::convertNameToAirport(const std::string& name) {
     return nullptr;
 }
 
-void findMinDistDFS(NetworkAirport* source, NetworkAirport* destination, NetworkAirport* bestSource, NetworkAirport* bestDestination, int& minDist, int& countDist){
+void AirTravelManSys::findMinDistDFS(NetworkAirport* source, NetworkAirport* destination, NetworkAirport* bestSource, NetworkAirport* bestDestination, int& minDist, int& countDist){
     source->setVisited(true);
 
     if(source->getAirport() == destination->getAirport()){
@@ -876,7 +876,7 @@ void findMinDistDFS(NetworkAirport* source, NetworkAirport* destination, Network
     countDist--;
 }
 
-void findFlightOptionsDFS(NetworkAirport* source, NetworkAirport* destination, vector<NetworkAirport*> flightOption, vector<vector<NetworkAirport*>> &flightOptions, int dist){
+void AirTravelManSys::findFlightOptionsDFS(NetworkAirport* source, NetworkAirport* destination, vector<NetworkAirport*> flightOption, vector<vector<NetworkAirport*>> &flightOptions, int dist){
     source->setVisited(true);
     flightOption.push_back(source);
 

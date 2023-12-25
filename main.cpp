@@ -2,6 +2,7 @@
 #include "AirTravelManSys.h"
 
 int main() {
+    /*
     AirTravelManSys travelsys;
     travelsys.readAirlinesDataFile();
     travelsys.readAirportsDataFile();
@@ -11,4 +12,5 @@ int main() {
     cout << maxTrip << endl;
     cout << v.size();
     return 0;
+     */
 }

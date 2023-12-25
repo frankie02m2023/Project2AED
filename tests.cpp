@@ -703,6 +703,7 @@ TEST(Network_Statistics, maxTrip){
     EXPECT_EQ(2,maxTripAirportPairs.size());
     EXPECT_TRUE(find(maxTripAirportPairs.begin(),maxTripAirportPairs.end(), make_pair(a3,a1)) != maxTripAirportPairs.end());
     EXPECT_TRUE(find(maxTripAirportPairs.begin(),maxTripAirportPairs.end(), make_pair(a3,a6)) != maxTripAirportPairs.end());
+    cleanSetup();
 }
 
 TEST(Network_Statistics, topKAirportCapacity){
@@ -717,6 +718,29 @@ TEST(Network_Statistics, topKAirportCapacity){
 
     system.topKAirportCapacity(100);
     cleanSetup();
+}
+
+TEST(Best_Flight_Option, findMinDistDFS){
+
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    setup1();
+    system.setFlightNetwork(flightNetworkTest);
+
+    Airport airport1 {"t1", "test1", "co1", "ci2", Location{1.0, 2.0}}; //test airport 1
+    Airport airport2  {"t1", "test6", "co2", "ci1", Location{51.0, 52.0}};//test airport 6
+    NetworkAirport* source = system.getFlightNetwork().findAirport(airport1);
+    NetworkAirport* destination = system.getFlightNetwork().findAirport(airport2);
+    NetworkAirport* bestSource = source;
+    NetworkAirport* bestDestination = destination;
+    int minDist = INT_MAX;
+    int countDist = 0;
+    system.findMinDistDFS(source, destination, bestSource, bestDestination, minDist, countDist);
+
+    EXPECT_EQ(minDist,3);
 }
 
 
