@@ -849,14 +849,12 @@ NetworkAirport* AirTravelManSys::convertNameToAirport(const std::string& name) {
     return nullptr;
 }
 
-void AirTravelManSys::findMinDistDFS(NetworkAirport* source, NetworkAirport* destination, NetworkAirport* bestSource, NetworkAirport* bestDestination, int& minDist, int& countDist){
+void AirTravelManSys::findMinDistDFS(NetworkAirport* source, NetworkAirport* destination,int& minDist, int& countDist){
     source->setVisited(true);
 
     if(source->getAirport() == destination->getAirport()){
         if(minDist > countDist){
             minDist = countDist;
-            bestSource = source;
-            bestDestination = destination;
         }
     }
     else{
@@ -866,7 +864,7 @@ void AirTravelManSys::findMinDistDFS(NetworkAirport* source, NetworkAirport* des
 
             if(!networkAirport->isVisited()){
                 countDist++;
-                findMinDistDFS(networkAirport,destination, bestSource, bestDestination, minDist,countDist);
+                findMinDistDFS(networkAirport,destination,minDist,countDist);
             }
         }
 
@@ -876,23 +874,25 @@ void AirTravelManSys::findMinDistDFS(NetworkAirport* source, NetworkAirport* des
     countDist--;
 }
 
-void AirTravelManSys::findFlightOptionsDFS(NetworkAirport* source, NetworkAirport* destination, vector<NetworkAirport*> flightOption, vector<vector<NetworkAirport*>> &flightOptions, int dist){
+void AirTravelManSys::findFlightOptionsDFS(NetworkAirport* source, NetworkAirport* destination, vector<NetworkAirport*> flightOption, set<vector<NetworkAirport*>> &flightOptions, int dist){
     source->setVisited(true);
     flightOption.push_back(source);
 
     if(dist == 0){
         if(destination->getAirport() == source->getAirport()){
-            flightOptions.push_back(flightOption);
+            flightOptions.insert(flightOption);
         }
     }
-
+    else if(dist < 0){
+        //stops the search
+    }
     else{
 
         for(auto it = source->getFlightsFromAirport().begin(); it != source->getFlightsFromAirport().end(); it++ ){
             NetworkAirport* networkAirport = it->getDestination();
 
             if(!networkAirport->isVisited()){
-                findFlightOptionsDFS(networkAirport, destination,flightOption,flightOptions, dist--);
+                findFlightOptionsDFS(networkAirport, destination,flightOption,flightOptions, dist - 1);
             }
         }
     }
@@ -906,23 +906,30 @@ void AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, 
 
     int minDist = INT_MAX;
     int countDist = 0;
-    NetworkAirport* bestSource = sources.at(0);
-    NetworkAirport* bestDestination = destinations.at(0);
 
     for(NetworkAirport* source: sources){
         for(NetworkAirport* destination: destinations){
-            findMinDistDFS(source, destination, bestSource, bestDestination, minDist, countDist);
+            findMinDistDFS(source, destination,minDist, countDist);
         }
     }
 
-    vector<vector<NetworkAirport*>> flightOptions;
+    set<vector<NetworkAirport*>> flightOptions;
     vector<NetworkAirport*> flightOption;
 
-    findFlightOptionsDFS(bestSource, bestDestination, flightOption, flightOptions, minDist);
+    cleanVisitedState();
+    for(NetworkAirport* source: sources){
+        for(NetworkAirport* destination: destinations){
+            findFlightOptionsDFS(source, destination, flightOption, flightOptions, minDist);
+        }
+    }
 
+    int i = 1;
     for(const vector<NetworkAirport*>& option: flightOptions){
+        cout << '\n';
+        cout << "Option" << i <<" : -------------" << endl;
+        i++;
         for(NetworkAirport* networkAirport: option){
-            cout << "Airport code: " << networkAirport->getAirport().getCode() << "Airport name: " << networkAirport->getAirport().getName() << endl;
+            cout << "Airport code: " << networkAirport->getAirport().getCode() << "  Airport name: " << networkAirport->getAirport().getName() << endl;
         }
     }
 }

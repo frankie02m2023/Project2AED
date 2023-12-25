@@ -734,13 +734,78 @@ TEST(Best_Flight_Option, findMinDistDFS){
     Airport airport2  {"t1", "test6", "co2", "ci1", Location{51.0, 52.0}};//test airport 6
     NetworkAirport* source = system.getFlightNetwork().findAirport(airport1);
     NetworkAirport* destination = system.getFlightNetwork().findAirport(airport2);
-    NetworkAirport* bestSource = source;
-    NetworkAirport* bestDestination = destination;
     int minDist = INT_MAX;
     int countDist = 0;
-    system.findMinDistDFS(source, destination, bestSource, bestDestination, minDist, countDist);
+    system.findMinDistDFS(source, destination,minDist, countDist);
 
-    EXPECT_EQ(minDist,3);
+    EXPECT_EQ(minDist,2);
+
+    system.cleanVisitedState();
+    Airport airport3 {"t1", "test9", "co1", "ci7", Location{22.0, 9.0}};//test airport 9
+    destination = system.getFlightNetwork().findAirport(airport3);
+    minDist = INT_MAX;
+    countDist = 0;
+    system.findMinDistDFS(source, destination, minDist, countDist);
+
+    EXPECT_EQ(1,minDist);
+
+    system.cleanVisitedState();
+    Airport airport4 {"t1", "test7", "co4", "ci6", Location{30.0, 70.0}};
+    destination = system.getFlightNetwork().findAirport(airport4);
+    minDist = INT_MAX;
+    countDist = 0;
+    system.findMinDistDFS(source,destination,minDist,countDist);
+
+    EXPECT_EQ(2,minDist);
+    cleanSetup();
+}
+
+TEST(Best_Flight_Option, findFlightOption){
+    cout << '\n';
+    cout << "Running findFlightOption Test" << endl;
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    setup1();
+    system.setFlightNetwork(flightNetworkTest);
+
+    Airport airport1 {"t1", "test1", "co1", "ci2", Location{1.0, 2.0}}; //test airport 1
+    Airport airport2  {"t1", "test6", "co2", "ci1", Location{51.0, 52.0}};//test airport 6
+    NetworkAirport* source = system.getFlightNetwork().findAirport(airport1);
+    NetworkAirport* destination = system.getFlightNetwork().findAirport(airport2);
+    set<vector<NetworkAirport*>> options;
+    vector<NetworkAirport*> opt;
+
+    int i = 1;
+    system.findFlightOptionsDFS(source, destination, opt, options, 2);
+    for(const vector<NetworkAirport*>& option: options){
+        cout << '\n';
+        cout << "Option " << i <<" : -------------" << endl;
+        i++;
+        for(NetworkAirport* networkAirport: option){
+            cout << "Airport code: " << networkAirport->getAirport().getCode() << "Airport name: " << networkAirport->getAirport().getName() << endl;
+        }
+    }
+    cleanSetup();
+
+    Airport airport3 {"t1", "test7", "co4", "ci6", Location{30.0, 70.0}};
+    destination = system.getFlightNetwork().findAirport(airport3);
+    set<vector<NetworkAirport*>> options2;
+    vector<NetworkAirport*> opt2;
+
+    i = 1;
+    system.findFlightOptionsDFS(source, destination, opt2, options2,2);
+    for(const vector<NetworkAirport*>& option: options2){
+        cout << '\n';
+        cout << "Option " << i <<" : -------------" << endl;
+        i++;
+        for(NetworkAirport* networkAirport: option){
+            cout << "Airport code: " << networkAirport->getAirport().getCode() << "Airport name: " << networkAirport->getAirport().getName() << endl;
+        }
+    }
+    cleanSetup();
 }
 
 

@@ -7,6 +7,7 @@
 
 #include <unordered_map>
 #include <string>
+#include <set>
 #include "FlightNetwork.h"
 
 /**
@@ -54,8 +55,8 @@ public:
     void topKAirportCapacity(int k);
 
     void bestFlightOption(const vector<NetworkAirport*>& sources,const vector<NetworkAirport*>& destinations);
-    void findMinDistDFS(NetworkAirport* source, NetworkAirport* destination, NetworkAirport* bestSource, NetworkAirport* bestDestination, int& minDist, int& countDist);
-    void findFlightOptionsDFS(NetworkAirport* source, NetworkAirport* destination, vector<NetworkAirport*> flightOption, vector<vector<NetworkAirport*>> &flightOptions, int dist);
+    void findMinDistDFS(NetworkAirport* source, NetworkAirport* destination, int& minDist, int& countDist);
+    void findFlightOptionsDFS(NetworkAirport* source, NetworkAirport* destination, vector<NetworkAirport*> flightOption, set<vector<NetworkAirport*>> &flightOptions, int dist);
 
     const unordered_map<std::string, Airline> &getCodeToAirlines() const;
     const FlightNetwork &getFlightNetwork() const;
