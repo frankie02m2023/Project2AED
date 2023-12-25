@@ -44,6 +44,11 @@ public:
     int numberOfReachableCities(const Airport& airport, int stops);
     int numberOfReachableCountries(const Airport& airport, int stops);
 
+    NetworkAirport* convertNameToAirport(const string& name);
+    NetworkAirport* convertCodeToAirport(const string& code);
+    vector<NetworkAirport*> convertCityToAirports(const string& city);
+    vector<NetworkAirport*> convertLocationToAirports(const string& latitude, const string& longitude);
+
     int maxTrip(vector<pair<Airport,Airport>>& maxTripAirportPairs);
 
     void topKAirportCapacity(int k);

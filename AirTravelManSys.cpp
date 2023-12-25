@@ -8,6 +8,7 @@
 #include <set>
 #include <queue>
 #include <utility>
+#include <cmath>
 
 using namespace std;
 
@@ -774,6 +775,78 @@ void AirTravelManSys::topKAirportCapacity(int k) {
             <<"; Capacity: " << networkAirport->getNumberOfFlightsFromAirport() + networkAirport->getNumberOfFlightsToAirport()
             << endl;
     }
+}
+
+vector<NetworkAirport*> AirTravelManSys::convertCityToAirports(const std::string& city) {
+    auto it = cityToAirport.find(city);
+    vector<Airport> airports;
+    vector<NetworkAirport*> networkAirports;
+    if(it == cityToAirport.end()){
+        cout << "City not found" << endl;
+        return networkAirports;
+    }
+    else{
+        airports = it->second;
+        for(const Airport& airport: airports){
+            NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+            networkAirports.push_back(networkAirport);
+        }
+        return networkAirports;
+    }
+}
+
+
+double distanceCoordinates(double latitude, double longitude, Location airportLocation){
+    return sqrt(pow(airportLocation.getLatitude()-latitude,2) + pow(airportLocation.getLongitude()-longitude,2));
+
+}
+
+vector<NetworkAirport*> AirTravelManSys::convertLocationToAirports(const std::string& latitude, const std::string& longitude) {
+    double DLatitude = stod(latitude);
+    double DLongitude = stod(longitude);
+    double distance = 0;
+    vector<NetworkAirport*> networkAirports;
+
+    for(NetworkAirport* networkAirport: flightNetwork.getFlightNetwork()){
+        double airportDistance = distanceCoordinates(DLatitude, DLongitude, networkAirport->getAirport().getLocation());
+        if(airportDistance < distance){
+            distance = airportDistance;
+        }
+    }
+
+    for(NetworkAirport* networkAirport: flightNetwork.getFlightNetwork()) {
+        double airportDistance = distanceCoordinates(DLatitude, DLongitude, networkAirport->getAirport().getLocation());
+        if (airportDistance == distance) {
+            networkAirports.push_back(networkAirport);
+        }
+    }
+
+        return networkAirports;
+}
+
+NetworkAirport* AirTravelManSys::convertCodeToAirport(const std::string& code) {
+    auto it = codeToAirport.find(code);
+
+    if(it == codeToAirport.end()){
+        cout << "Airport not found" << endl;
+        return nullptr;
+    }
+
+    else{
+        Airport airport = codeToAirport.at(code);
+        NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+        return networkAirport;
+    }
+}
+
+
+NetworkAirport* AirTravelManSys::convertNameToAirport(const std::string& name) {
+    for(NetworkAirport* networkAirport : flightNetwork.getFlightNetwork()){
+        if(networkAirport->getAirport().getName() == name){
+            return networkAirport;
+        }
+    }
+    return nullptr;
 }
 
 
