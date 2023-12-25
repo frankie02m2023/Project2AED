@@ -808,6 +808,52 @@ TEST(Best_Flight_Option, findFlightOption){
     cleanSetup();
 }
 
+TEST(Best_Flight_Option, bestFlightOption){
+    cout << '\n';
+    cout << "Running BestFlightOption Test" << endl;
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    setup1();
+    system.setFlightNetwork(flightNetworkTest);
+
+    Airport airport1 {"t1", "test1", "co1", "ci2", Location{1.0, 2.0}}; //test airport 1
+    Airport airport2  {"t1", "test6", "co2", "ci1", Location{51.0, 52.0}};//test airport 6
+    Airport airport3 {"t3", "test3", "co2", "ci3", Location{20.0, 30.0}};;
+    Airport airport4 {"t1", "test7", "co4", "ci6", Location{30.0, 70.0}};
+    NetworkAirport* source = system.getFlightNetwork().findAirport(airport1);
+    NetworkAirport* source2 = system.getFlightNetwork().findAirport(airport3);
+    NetworkAirport* destination = system.getFlightNetwork().findAirport(airport2);
+    NetworkAirport* destination2 = system.getFlightNetwork().findAirport(airport4);
+    vector<NetworkAirport*> sources {source,source2};
+    vector<NetworkAirport*> destinations{destination,destination2};
+
+    system.bestFlightOption(sources, destinations);
+    cleanSetup();
+/*
+    Airport airport3 {"t1", "test7", "co4", "ci6", Location{30.0, 70.0}};
+    destination = system.getFlightNetwork().findAirport(airport3);
+    set<vector<NetworkAirport*>> options2;
+    vector<NetworkAirport*> opt2;
+
+    i = 1;
+    system.findFlightOptionsDFS(source, destination, opt2, options2,2);
+    for(const vector<NetworkAirport*>& option: options2){
+        cout << '\n';
+        cout << "Option " << i <<" : -------------" << endl;
+        i++;
+        for(NetworkAirport* networkAirport: option){
+            cout << "Airport code: " << networkAirport->getAirport().getCode() << "Airport name: " << networkAirport->getAirport().getName() << endl;
+        }
+    }
+    cleanSetup();
+    */
+}
+
+
+
 
 
 

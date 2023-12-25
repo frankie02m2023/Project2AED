@@ -910,6 +910,7 @@ void AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, 
     for(NetworkAirport* source: sources){
         for(NetworkAirport* destination: destinations){
             findMinDistDFS(source, destination,minDist, countDist);
+            countDist = 0;
         }
     }
 
