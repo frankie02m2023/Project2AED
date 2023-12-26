@@ -9,6 +9,7 @@
 #include <queue>
 #include <utility>
 #include <cmath>
+#include <cfloat>
 
 using namespace std;
 
@@ -90,6 +91,10 @@ void AirTravelManSys::setFlightNetwork(FlightNetwork NewFlightNetwork) {
  */
 void AirTravelManSys::setCityToAirport(unordered_map<std::string, vector<Airport>> newCityToAirport) {
     this->cityToAirport = std::move(newCityToAirport);
+}
+
+void AirTravelManSys::setCodeToAirport(const unordered_map<std::string, Airport> &codeToAirport) {
+    AirTravelManSys::codeToAirport = codeToAirport;
 }
 
 
@@ -804,7 +809,7 @@ double distanceCoordinates(double latitude, double longitude, Location airportLo
 vector<NetworkAirport*> AirTravelManSys::convertLocationToAirports(const std::string& latitude, const std::string& longitude) {
     double DLatitude = stod(latitude);
     double DLongitude = stod(longitude);
-    double distance = 0;
+    auto distance = DBL_MAX;
     vector<NetworkAirport*> networkAirports;
 
     for(NetworkAirport* networkAirport: flightNetwork.getFlightNetwork()){
@@ -850,6 +855,8 @@ NetworkAirport* AirTravelManSys::convertNameToAirport(const std::string& name) {
 }
 
 void AirTravelManSys::findMinDistDFS(NetworkAirport* source, NetworkAirport* destination,int& minDist, int& countDist){
+    cout << "Running Find Min Dist" << endl;
+    cout << '\n';
     source->setVisited(true);
 
     if(source->getAirport() == destination->getAirport()){
@@ -874,7 +881,41 @@ void AirTravelManSys::findMinDistDFS(NetworkAirport* source, NetworkAirport* des
     countDist--;
 }
 
+void AirTravelManSys::findMinDistBFS(NetworkAirport *source, NetworkAirport *destination, int &minDist,int &countDist) {
+
+    queue<pair<NetworkAirport*,int>> q;
+    q.emplace(source,0);
+
+    source->setVisited(true);
+
+    while(!q.empty()){
+        pair<NetworkAirport*,int> na = q.front();
+        q.pop();
+
+
+        for(auto it = na.first->getFlightsFromAirport().begin(); it!= na.first->getFlightsFromAirport().end(); it++){
+
+            NetworkAirport* nb = it->getDestination();
+            if(!nb->isVisited()){
+
+                int distance = na.second + 1;
+                q.emplace(nb,distance);
+                nb->setVisited(true);
+                if(nb->getAirport() == destination->getAirport()){
+                    minDist = distance;
+                }
+            }
+        }
+
+        if(minDist == na.second + 1){
+            break;
+        }
+    }
+}
+
 void AirTravelManSys::findFlightOptionsDFS(NetworkAirport* source, NetworkAirport* destination, vector<NetworkAirport*> flightOption, set<vector<NetworkAirport*>> &flightOptions, int dist){
+    cout << "Running Find Flight Option" << endl;
+    cout << '\n';
     source->setVisited(true);
     flightOption.push_back(source);
 
@@ -900,6 +941,57 @@ void AirTravelManSys::findFlightOptionsDFS(NetworkAirport* source, NetworkAirpor
     source->setVisited(false);
 }
 
+void AirTravelManSys::findFlightOptionsBFS(NetworkAirport *source, NetworkAirport *destination,vector<NetworkAirport *> flightOption, set<vector<NetworkAirport *>> &flightOptions, int dist){
+    vector<ParentChild> parents;
+    queue<ParentChild> q; //pair parent and child (with distance to root)
+    ParentChild node = make_pair(make_pair(-1,0), make_pair(source,0));
+    parents.push_back(node);
+    q.push(node);
+    int i = 0;
+    source->setVisited(true);
+
+    while(!q.empty()){
+        ParentChild na = q.front();
+        q.pop();
+
+
+        for(auto it = na.second.first->getFlightsFromAirport().begin(); it!= na.second.first->getFlightsFromAirport().end(); it++){
+            NetworkAirport* nb = it->getDestination();
+            if(!nb->isVisited()){
+                i++;
+                int distance = na.second.second + 1;
+                node = make_pair((make_pair(na.first.second,i)), make_pair(nb, distance));
+                q.emplace(node);
+                nb->setVisited(true);
+                if(nb->getAirport() == destination->getAirport() && distance == dist){
+                    buildFlightOption(node,parents,flightOptions);
+                }
+                parents.push_back(node);
+            }
+        }
+
+        if(dist < na.second.second){
+            break;
+        }
+    }
+
+}
+
+void AirTravelManSys::buildFlightOption(ParentChild root, vector<ParentChild> parents, set<vector<NetworkAirport *>> &flightOptions) {
+    vector<NetworkAirport*> flightOption;
+    while(true){
+        auto it = flightOption.begin();
+        flightOption.insert(it,root.second.first);
+        int pos = root.first.first;
+        if(pos == -1){
+            break;
+        }
+        root = parents.at(pos);
+
+    }
+    flightOptions.insert(flightOption);
+}
+
 void AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, const vector<NetworkAirport *>& destinations) {
     cleanVisitedState();
     cleanProcessState();
@@ -909,7 +1001,7 @@ void AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, 
 
     for(NetworkAirport* source: sources){
         for(NetworkAirport* destination: destinations){
-            findMinDistDFS(source, destination,minDist, countDist);
+            findMinDistBFS(source, destination,minDist, countDist);
             countDist = 0;
         }
     }
@@ -917,10 +1009,10 @@ void AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, 
     set<vector<NetworkAirport*>> flightOptions;
     vector<NetworkAirport*> flightOption;
 
-    cleanVisitedState();
     for(NetworkAirport* source: sources){
         for(NetworkAirport* destination: destinations){
-            findFlightOptionsDFS(source, destination, flightOption, flightOptions, minDist);
+            cleanVisitedState();
+            findFlightOptionsBFS(source, destination, flightOption, flightOptions, minDist);
         }
     }
 
@@ -934,5 +1026,7 @@ void AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, 
         }
     }
 }
+
+
 
 

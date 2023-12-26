@@ -18,6 +18,7 @@
  * Where are preformed the most important functions in our system.
  * Stores some hash tables (unordered_maps) and a FlightNetwork (Graph)
  */
+typedef  pair<pair<int,int>,pair<NetworkAirport*,int>> ParentChild;
 class AirTravelManSys{
 public:
 
@@ -56,7 +57,10 @@ public:
 
     void bestFlightOption(const vector<NetworkAirport*>& sources,const vector<NetworkAirport*>& destinations);
     void findMinDistDFS(NetworkAirport* source, NetworkAirport* destination, int& minDist, int& countDist);
+    void findMinDistBFS(NetworkAirport* source, NetworkAirport* destination, int& minDist, int& countDist);
     void findFlightOptionsDFS(NetworkAirport* source, NetworkAirport* destination, vector<NetworkAirport*> flightOption, set<vector<NetworkAirport*>> &flightOptions, int dist);
+    void findFlightOptionsBFS(NetworkAirport* source, NetworkAirport* destination, vector<NetworkAirport*> flightOption, set<vector<NetworkAirport*>> &flightOptions, int dist);
+    void buildFlightOption(ParentChild root, vector<ParentChild> parents, set<vector<NetworkAirport*>> &flightOptions);
 
     const unordered_map<std::string, Airline> &getCodeToAirlines() const;
     const FlightNetwork &getFlightNetwork() const;
@@ -65,6 +69,7 @@ public:
     const unordered_map<std::string, Airport> &getCodeToAirport() const;
     void setCityToAirport(unordered_map<std::string, vector<Airport>> newCityToAirport);
     void setFlightNetwork(FlightNetwork NewFlightNetwork);
+    void setCodeToAirport(const unordered_map<std::string, Airport> &codeToAirport);
 
 
     void cleanProcessState();

@@ -12,19 +12,20 @@
 
 FlightNetwork flightNetworkTest;
 unordered_map<std::string, std::vector<Airport>> cityToAirportTest;
+unordered_map<std::string, Airport> codeToAirportTest;
 
 void setup1() {
 
     Airport airportTest1{"t1", "test1", "co1", "ci2", Location{1.0, 2.0}};
     Airport airportTest2{"t2", "test2", "co1", "ci2", Location{2.0, 3.0}};
     Airport airportTest3{"t3", "test3", "co2", "ci3", Location{20.0, 30.0}};
-    Airport airportTest4{"t1", "test4", "co3", "ci8", Location{10.0, 11.0}};
-    Airport airportTest5{"t1", "test5", "co2", "ci1", Location{50.0, 9.0}};
-    Airport airportTest6{"t1", "test6", "co2", "ci1", Location{51.0, 52.0}};
-    Airport airportTest7{"t1", "test7", "co4", "ci6", Location{30.0, 70.0}};
-    Airport airportTest8{"t1", "test8", "co1", "ci7", Location{100.0, 8.0}};
-    Airport airportTest9{"t1", "test9", "co1", "ci7", Location{22.0, 9.0}};
-    Airport airportTest10{"t1", "test10", "co1", "ci7", Location{13.0, 79.0}};
+    Airport airportTest4{"t4", "test4", "co3", "ci8", Location{10.0, 11.0}};
+    Airport airportTest5{"t5", "test5", "co2", "ci1", Location{50.0, 9.0}};
+    Airport airportTest6{"t6", "test6", "co2", "ci1", Location{51.0, 52.0}};
+    Airport airportTest7{"t7", "test7", "co4", "ci6", Location{30.0, 70.0}};
+    Airport airportTest8{"t8", "test8", "co1", "ci7", Location{100.0, 8.0}};
+    Airport airportTest9{"t9", "test9", "co1", "ci7", Location{22.0, 9.0}};
+    Airport airportTest10{"t10", "test10", "co1", "ci7", Location{13.0, 79.0}};
 
     cityToAirportTest.insert({"ci2",{airportTest1,airportTest2}});
     cityToAirportTest.insert({"ci3",{airportTest3}});
@@ -32,6 +33,18 @@ void setup1() {
     cityToAirportTest.insert({"ci1",{airportTest5,airportTest6}});
     cityToAirportTest.insert({"ci6",{airportTest7}});
     cityToAirportTest.insert({"ci7",{airportTest8,airportTest9, airportTest10}});
+
+    codeToAirportTest.insert({"t1",airportTest1});
+    codeToAirportTest.insert({"t2",airportTest2});
+    codeToAirportTest.insert({"t3",airportTest3});
+    codeToAirportTest.insert({"t4",airportTest4});
+    codeToAirportTest.insert({"t5",airportTest5});
+    codeToAirportTest.insert({"t6",airportTest6});
+    codeToAirportTest.insert({"t7",airportTest7});
+    codeToAirportTest.insert({"t8",airportTest8});
+    codeToAirportTest.insert({"t9",airportTest9});
+    codeToAirportTest.insert({"t10",airportTest10});
+
 
     Airline airlineTest1{"at1", "airline1", "ca1", "co1"};
     Airline airlineTest2{"at2", "airline2", "ca2", "co1"};
@@ -449,7 +462,7 @@ TEST(Network_Statistics, numberOfCountriesFromAirport){
 
     EXPECT_EQ(3,numberOfCountries);
 
-    Airport airport3 {"t1", "test4", "co3", "ci8", Location{10.0, 11.0}};  //AirportTest4
+    Airport airport3 {"t4", "test4", "co3", "ci8", Location{10.0, 11.0}};  //AirportTest4
     numberOfCountries = system.numberOfCountriesFromAirport(airport3);
 
     EXPECT_EQ(2,numberOfCountries);
@@ -491,7 +504,7 @@ TEST(Network_Statistics, numberOfCitiesFromAirport){
 
     EXPECT_EQ(4,numberOfCities);
 
-    Airport airport2 {"t1", "test5", "co2", "ci1", Location{50.0, 9.0}};  //AirportTest5
+    Airport airport2 {"t5", "test5", "co2", "ci1", Location{50.0, 9.0}};  //AirportTest5
     numberOfCities = system.numberOfCitiesFromAirport(airport2);
 
     EXPECT_EQ(2,numberOfCities);
@@ -507,12 +520,12 @@ system.readFlightsDataFile();
 setup1();
 
 system.setFlightNetwork(flightNetworkTest);
-Airport airport1 {"t2", "test2", "co1", "ci2", Location{2.0, 3.0}}; //AirportTest1
+Airport airport1 {"t2", "test2", "co1", "ci2", Location{2.0, 3.0}}; //AirportTest2
 int numberOfAirports = system.numberOfAirportsFromAirport(airport1);
 
 EXPECT_EQ(4,numberOfAirports);
 
-Airport airport2 {"t1", "test10", "co1", "ci7", Location{13.0, 79.0}};  //AirportTest5
+Airport airport2 {"t10", "test10", "co1", "ci7", Location{13.0, 79.0}};  //AirportTest10
 numberOfAirports = system.numberOfAirportsFromAirport(airport2);
 
 EXPECT_EQ(3,numberOfAirports);
@@ -545,8 +558,8 @@ TEST(Network_Statistics, numberOfReachableAirports){
     EXPECT_EQ(9,numberOfReachableAirports);
 
     Airport airport3 {"t2", "test2", "co1", "ci2", Location{2.0, 3.0}}; //airportTest2
-    Airport airport4 {"t1", "test6", "co2", "ci1", Location{51.0, 52.0}};//airportTest6
-    Airport airport5 {"t1", "test7", "co4", "ci6", Location{30.0, 70.0}};//airportTest7
+    Airport airport4 {"t6", "test6", "co2", "ci1", Location{51.0, 52.0}};//airportTest6
+    Airport airport5 {"t7", "test7", "co4", "ci6", Location{30.0, 70.0}};//airportTest7
     Airline airline1{"at3", "airline3", "ca3", "co3"}; //airlineTest3
 
     system.getFlightNetwork().removeFlight(airport3,airport5,airline1);
@@ -586,8 +599,8 @@ TEST(Network_Statistics, numberOfReachableCities){
     EXPECT_EQ(6, numberOfReachableCities);
 
     Airport airport3 {"t2", "test2", "co1", "ci2", Location{2.0, 3.0}}; //airportTest2
-    Airport airport4 {"t1", "test6", "co2", "ci1", Location{51.0, 52.0}};//airportTest6
-    Airport airport5 {"t1", "test7", "co4", "ci6", Location{30.0, 70.0}};//airportTest7
+    Airport airport4 {"t6", "test6", "co2", "ci1", Location{51.0, 52.0}};//airportTest6
+    Airport airport5 {"t7", "test7", "co4", "ci6", Location{30.0, 70.0}};//airportTest7
     Airline airline1{"at3", "airline3", "ca3", "co3"}; //airlineTest3
 
     system.getFlightNetwork().removeFlight(airport3,airport5,airline1);
@@ -629,8 +642,8 @@ TEST(Network_Statistics, numberOfReachableCountries){
     EXPECT_EQ(4, numberOfReachableCountries);
 
     Airport airport3 {"t2", "test2", "co1", "ci2", Location{2.0, 3.0}}; //airportTest2
-    Airport airport4 {"t1", "test6", "co2", "ci1", Location{51.0, 52.0}};//airportTest6
-    Airport airport5 {"t1", "test7", "co4", "ci6", Location{30.0, 70.0}};//airportTest7
+    Airport airport4 {"t6", "test6", "co2", "ci1", Location{51.0, 52.0}};//airportTest6
+    Airport airport5 {"t7", "test7", "co4", "ci6", Location{30.0, 70.0}};//airportTest7
     Airline airline1{"at3", "airline3", "ca3", "co3"}; //airlineTest3
 
     system.getFlightNetwork().removeFlight(airport3,airport5,airline1);
@@ -731,7 +744,7 @@ TEST(Best_Flight_Option, findMinDistDFS){
     system.setFlightNetwork(flightNetworkTest);
 
     Airport airport1 {"t1", "test1", "co1", "ci2", Location{1.0, 2.0}}; //test airport 1
-    Airport airport2  {"t1", "test6", "co2", "ci1", Location{51.0, 52.0}};//test airport 6
+    Airport airport2  {"t6", "test6", "co2", "ci1", Location{51.0, 52.0}};//test airport 6
     NetworkAirport* source = system.getFlightNetwork().findAirport(airport1);
     NetworkAirport* destination = system.getFlightNetwork().findAirport(airport2);
     int minDist = INT_MAX;
@@ -741,7 +754,7 @@ TEST(Best_Flight_Option, findMinDistDFS){
     EXPECT_EQ(minDist,2);
 
     system.cleanVisitedState();
-    Airport airport3 {"t1", "test9", "co1", "ci7", Location{22.0, 9.0}};//test airport 9
+    Airport airport3 {"t9", "test9", "co1", "ci7", Location{22.0, 9.0}};//test airport 9
     destination = system.getFlightNetwork().findAirport(airport3);
     minDist = INT_MAX;
     countDist = 0;
@@ -750,7 +763,7 @@ TEST(Best_Flight_Option, findMinDistDFS){
     EXPECT_EQ(1,minDist);
 
     system.cleanVisitedState();
-    Airport airport4 {"t1", "test7", "co4", "ci6", Location{30.0, 70.0}};
+    Airport airport4 {"t7", "test7", "co4", "ci6", Location{30.0, 70.0}};//test airport7
     destination = system.getFlightNetwork().findAirport(airport4);
     minDist = INT_MAX;
     countDist = 0;
@@ -772,7 +785,7 @@ TEST(Best_Flight_Option, findFlightOption){
     system.setFlightNetwork(flightNetworkTest);
 
     Airport airport1 {"t1", "test1", "co1", "ci2", Location{1.0, 2.0}}; //test airport 1
-    Airport airport2  {"t1", "test6", "co2", "ci1", Location{51.0, 52.0}};//test airport 6
+    Airport airport2  {"t6", "test6", "co2", "ci1", Location{51.0, 52.0}};//test airport 6
     NetworkAirport* source = system.getFlightNetwork().findAirport(airport1);
     NetworkAirport* destination = system.getFlightNetwork().findAirport(airport2);
     set<vector<NetworkAirport*>> options;
@@ -790,7 +803,7 @@ TEST(Best_Flight_Option, findFlightOption){
     }
     cleanSetup();
 
-    Airport airport3 {"t1", "test7", "co4", "ci6", Location{30.0, 70.0}};
+    Airport airport3 {"t7", "test7", "co4", "ci6", Location{30.0, 70.0}};
     destination = system.getFlightNetwork().findAirport(airport3);
     set<vector<NetworkAirport*>> options2;
     vector<NetworkAirport*> opt2;
@@ -820,9 +833,9 @@ TEST(Best_Flight_Option, bestFlightOption){
     system.setFlightNetwork(flightNetworkTest);
 
     Airport airport1 {"t1", "test1", "co1", "ci2", Location{1.0, 2.0}}; //test airport 1
-    Airport airport2  {"t1", "test6", "co2", "ci1", Location{51.0, 52.0}};//test airport 6
+    Airport airport2  {"t6", "test6", "co2", "ci1", Location{51.0, 52.0}};//test airport 6
     Airport airport3 {"t3", "test3", "co2", "ci3", Location{20.0, 30.0}};;
-    Airport airport4 {"t1", "test7", "co4", "ci6", Location{30.0, 70.0}};
+    Airport airport4 {"t7", "test7", "co4", "ci6", Location{30.0, 70.0}};
     NetworkAirport* source = system.getFlightNetwork().findAirport(airport1);
     NetworkAirport* source2 = system.getFlightNetwork().findAirport(airport3);
     NetworkAirport* destination = system.getFlightNetwork().findAirport(airport2);
@@ -832,26 +845,94 @@ TEST(Best_Flight_Option, bestFlightOption){
 
     system.bestFlightOption(sources, destinations);
     cleanSetup();
-/*
-    Airport airport3 {"t1", "test7", "co4", "ci6", Location{30.0, 70.0}};
-    destination = system.getFlightNetwork().findAirport(airport3);
-    set<vector<NetworkAirport*>> options2;
-    vector<NetworkAirport*> opt2;
-
-    i = 1;
-    system.findFlightOptionsDFS(source, destination, opt2, options2,2);
-    for(const vector<NetworkAirport*>& option: options2){
-        cout << '\n';
-        cout << "Option " << i <<" : -------------" << endl;
-        i++;
-        for(NetworkAirport* networkAirport: option){
-            cout << "Airport code: " << networkAirport->getAirport().getCode() << "Airport name: " << networkAirport->getAirport().getName() << endl;
-        }
-    }
-    cleanSetup();
-    */
 }
 
+TEST(Best_Flight_Option, convertCityToAirports){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    setup1();
+    system.setFlightNetwork(flightNetworkTest);
+    system.setCityToAirport(cityToAirportTest);
+
+    vector<NetworkAirport*> networkAirports;
+    Airport airportTest1{"t1", "test1", "co1", "ci2", Location{1.0, 2.0}};
+    Airport airportTest2{"t2", "test2", "co1", "ci2", Location{2.0, 3.0}};
+    NetworkAirport* networkAirport1 = system.getFlightNetwork().findAirport(airportTest1);
+    NetworkAirport* networkAirport2 = system.getFlightNetwork().findAirport(airportTest2);
+    networkAirports.push_back(networkAirport1);
+    networkAirports.push_back(networkAirport2);
+
+    EXPECT_EQ(networkAirports, system.convertCityToAirports("ci2"));
+
+}
+
+TEST(Best_Flight_Option, convertLocationToAirport){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    setup1();
+    system.setFlightNetwork(flightNetworkTest);
+
+    vector<NetworkAirport*> networkAirports;
+    Airport airportTest1{"t1", "test1", "co1", "ci2", Location{1.0, 2.0}};
+    Airport airportTest2{"t2", "test2", "co1", "ci2", Location{2.0, 3.0}};
+    NetworkAirport* networkAirport1 = system.getFlightNetwork().findAirport(airportTest1);
+    NetworkAirport* networkAirport2 = system.getFlightNetwork().findAirport(airportTest2);
+    networkAirports.push_back(networkAirport2);
+    networkAirports.push_back(networkAirport1);
+
+    EXPECT_EQ(networkAirports, system.convertLocationToAirports("1.5","2.5"));
+}
+
+TEST(Best_Flight_Option, convertCodeToAirport){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    setup1();
+    system.setFlightNetwork(flightNetworkTest);
+    system.setCodeToAirport(codeToAirportTest);
+
+    vector<NetworkAirport*> networkAirports;
+    Airport airportTest1{"t1", "test1", "co1", "ci2", Location{1.0, 2.0}};
+    NetworkAirport* networkAirport1 = system.getFlightNetwork().findAirport(airportTest1);
+
+    EXPECT_EQ(networkAirport1, system.convertCodeToAirport("t1"));
+
+    Airport airportTest2{"t2", "test2", "co1", "ci2", Location{2.0, 3.0}};
+    NetworkAirport* networkAirport2 = system.getFlightNetwork().findAirport(airportTest2);
+
+    EXPECT_EQ(networkAirport2, system.convertCodeToAirport("t2"));
+}
+
+TEST(Best_Flight_Option, convertNameToAirport){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    setup1();
+    system.setFlightNetwork(flightNetworkTest);
+    system.setCodeToAirport(codeToAirportTest);
+
+    vector<NetworkAirport*> networkAirports;
+    Airport airportTest1{"t1", "test1", "co1", "ci2", Location{1.0, 2.0}};
+    NetworkAirport* networkAirport1 = system.getFlightNetwork().findAirport(airportTest1);
+
+    EXPECT_EQ(networkAirport1, system.convertNameToAirport("test1"));
+
+
+    Airport airportTest2{"t2", "test2", "co1", "ci2", Location{2.0, 3.0}};
+    NetworkAirport* networkAirport2 = system.getFlightNetwork().findAirport(airportTest2);
+
+    EXPECT_EQ(networkAirport2, system.convertNameToAirport("test2"));
+}
 
 
 
