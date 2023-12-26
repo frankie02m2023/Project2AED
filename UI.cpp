@@ -293,11 +293,80 @@ int UI::numberOfFlights() {
 }
 
 int UI::numberOfCountriesFromCity() {
-    return 0;
+    while(true){
+        cout << "1.Number of countries from City\n";
+        cout << "2.Return to the Network Statistics Menu\n\n";
+
+        int option;
+
+        int s = optionSelection(option, 1, 2); cout << '\n';
+
+        if (s != 0) {
+            cout << "Error found\n";
+            return s;
+        }
+
+        string cityName;
+        switch (option) {
+            case 1:
+                s = cityFinder(cityName);
+                if(s == 1) break; //city not found
+                cout << "Total Number of Countries from" << cityName << ": " <<  airTravelSys.numberOfCountriesFromCity(cityName) << "\n\n";
+                break;
+
+            case 2:
+                return 0;
+
+            default:
+                cout << "Error found\n";
+                return 1;
+        }
+
+    }
 }
 
 int UI::numberOfDestinations() {
-    return 0;
+    while(true) {
+        cout << "1.Countries\n";
+        cout << "2.Cities\n";
+        cout << "3.Airports\n";
+        cout << "4.Return to the Network Statistics Menu\n\n";
+
+        int option;
+
+        int s = optionSelection(option, 1, 4); cout << '\n';
+
+        if (s != 0) {
+            cout << "Error found\n";
+            return s;
+        }
+
+        Airport airport;
+        switch (option) {
+            case 1:
+                s = airportFinder(airport);
+                if(s == 1) break; //airport not found
+                cout << "Total Number of Countries from airport" << airport.getName() << ": " <<  airTravelSys.numberOfCountriesFromAirport(airport) << "\n\n";
+                break;
+
+            case 2:
+                s = airportFinder(airport);
+                if(s == 1) break; //airport not found
+                cout << "Total Number of Cities from airport" << airport.getName() << ": " <<  airTravelSys.numberOfCitiesFromAirport(airport) << "\n\n";
+                break;
+
+            case 3:
+                s = airportFinder(airport);
+                if(s == 1) break; //airport not found
+                cout << "Total Number of Airports from airport" << airport.getName() << ": " <<  airTravelSys.numberOfAirportsFromAirport(airport) << "\n\n";
+                break;
+            case 4:
+                return 0;
+            default:
+                cout << "Error found\n";
+                return 1;
+        }
+    }
 }
 
 int UI::numberOfDestinationsInKStops() {
