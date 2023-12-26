@@ -9,6 +9,16 @@
 
 class UI {
 
+
+/**
+ * @file UI.h
+ * @brief Definition of class UI.
+ *
+ * \class UI
+ * Where are preformed functions related to the user interface(menus).
+ * Stores a AirTravelManSys object.
+ */
+
 public:
     UI();
     int optionSelection(int &option,int min, int max);

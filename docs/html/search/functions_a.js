@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['networkstatisticsmenu_0',['networkStatisticsMenu',['../class_u_i.html#a840f4ed08d05fca36cca941e80f87f98',1,'UI']]],
+  ['numberflightsfromairport_1',['numberFlightsFromAirport',['../class_air_travel_man_sys.html#ad25d9eada52660feb94ba96cf395f644',1,'AirTravelManSys']]],
+  ['numberofairlinesfromairport_2',['numberOfAirlinesFromAirport',['../class_u_i.html#a827a1baf7ab8be0a1ca0727628718e8b',1,'UI']]],
+  ['numberofairlinesinairport_3',['numberOfAirlinesInAirport',['../class_air_travel_man_sys.html#a568611aa083a08cda42eed4be18722ad',1,'AirTravelManSys']]],
+  ['numberofairportsfromairport_4',['numberOfAirportsFromAirport',['../class_air_travel_man_sys.html#a8e74e2f823cf9560f0ec048137307aae',1,'AirTravelManSys']]],
+  ['numberofcitiesfromairport_5',['numberOfCitiesFromAirport',['../class_air_travel_man_sys.html#aa2d1a03c972c8f024051b20088e8a232',1,'AirTravelManSys']]],
+  ['numberofcountriesfromairport_6',['numberOfCountriesFromAirport',['../class_air_travel_man_sys.html#ae2bdfc40444eb109e15b6696b1d4eee8',1,'AirTravelManSys']]],
+  ['numberofcountriesfromcity_7',['numberofcountriesfromcity',['../class_air_travel_man_sys.html#a0055ea274cf284329bdfd379f6389ffc',1,'AirTravelManSys::numberOfCountriesFromCity()'],['../class_u_i.html#a7a1a9ad955fa747524b96699d2b40be2',1,'UI::numberOfCountriesFromCity()']]],
+  ['numberofdestinations_8',['numberOfDestinations',['../class_u_i.html#aa8b1cbf6a5613e491de7f8a15f76ff61',1,'UI']]],
+  ['numberofdestinationsinkstops_9',['numberOfDestinationsInKStops',['../class_u_i.html#a6e3015e2ded6e3a089c803d7421fdff3',1,'UI']]],
+  ['numberofflights_10',['numberOfFlights',['../class_u_i.html#ab8eb6c94c5ca6cc6c3865d821f93c3f0',1,'UI']]],
+  ['numberofflightsfromcity_11',['numberOfFlightsFromCity',['../class_air_travel_man_sys.html#af7363033f46e5886e2a6cf74bf60b95c',1,'AirTravelManSys']]],
+  ['numberofflightsperairline_12',['numberOfFlightsPerAirline',['../class_air_travel_man_sys.html#aafac5528ab281023e999623962c48646',1,'AirTravelManSys']]],
+  ['numberofflightstocity_13',['numberOfFlightsToCity',['../class_air_travel_man_sys.html#abc07079cf34efce47d8b9405fca165f5',1,'AirTravelManSys']]],
+  ['numberofreachableairports_14',['numberOfReachableAirports',['../class_air_travel_man_sys.html#a735c677244efaf97a7625c8f66b11342',1,'AirTravelManSys']]],
+  ['numberofreachablecities_15',['numberOfReachableCities',['../class_air_travel_man_sys.html#a1f171abcf10b52022873c9b3d6b910e3',1,'AirTravelManSys']]],
+  ['numberofreachablecountries_16',['numberOfReachableCountries',['../class_air_travel_man_sys.html#a7327bd3e84f5625f2b6570b10f7b4765',1,'AirTravelManSys']]]
+];

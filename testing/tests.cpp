@@ -3,10 +3,10 @@
 //
 
 #include <gtest/gtest.h>
-#include "Airline.h"
-#include "Airport.h"
-#include "AirTravelManSys.h"
-#include "Location.h"
+#include "../source_code/Airline.h"
+#include "../source_code/Airport.h"
+#include "../source_code/AirTravelManSys.h"
+#include "../source_code/Location.h"
 
 
 

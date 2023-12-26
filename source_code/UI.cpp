@@ -6,6 +6,11 @@
 #include <limits>
 #include "UI.h"
 
+
+/** @file UI.cpp
+ *  @brief Implementation of UI class
+ */
+
 UI::UI() {
     AirTravelManSys airTravelManSys;
     airTravelManSys.readAirlinesDataFile();
@@ -15,6 +20,13 @@ UI::UI() {
     airTravelSys = airTravelManSys;
 }
 
+/** Asks for an option (integer) and the user needs to write the option on the keyboard.
+ * Complexity: O(1) (worst case is O(n) were n is the time the user writes wrong options)
+ * @param option Were the option value is going to be stored
+ * @param min   Minimum value accepted
+ * @param max   Maximum value accepted
+ * @return  If there was not any error 0. Else 1.
+ */
 int UI::optionSelection(int &option, int min, int max){
     while(std::cout << "Enter your Option:" ){
         if(not(std::cin >> option)) {
@@ -43,6 +55,10 @@ int UI::optionSelection(int &option, int min, int max){
 }
 
 //Menus -----------------------------------------------
+/** Main Menu of the system.
+ *  Complexity: Varies on the functions called and how many times some of them are called.
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::mainMenu() {
     cout << "\nWELCOME TO THE AED AIR TRAVEL SYSTEM\n\n";
 
@@ -86,6 +102,11 @@ int UI::mainMenu() {
     return s;
 }
 
+/** Network Menu were the user chooses the options related to the network statistics.
+ *  Complexity: Varies on the functions called and how many times some of them are called.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::networkStatisticsMenu() {
     while(true) {
         cout << "\nFLIGHT NETWORK STATISTICS\n\n";
@@ -165,6 +186,11 @@ int UI::networkStatisticsMenu() {
 
 }
 
+/** Best Flight Option Menu were the options related to the choice of the criteria for calling the bestFlightOption method are chosen.
+*  Complexity: Varies on the functions called and how many times some of them are called.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::bestFlightOptionsMenu() {
     while(true) {
         cout << "\n BEST FLIGHT OPTION\n\n";
@@ -287,6 +313,11 @@ int UI::bestFlightOptionsWithFiltersMenu() {
 //Handlers ------------------------
 //NetworkStatistics handlers-------------------------
 
+/** Shows the global Number of flights or airports.
+ *  Complexity: Varies on the functions called and how many times some of them are called.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::globalNumbers() {
     while(true) {
         cout << "1.Airports\n";
@@ -321,6 +352,11 @@ int UI::globalNumbers() {
     }
 }
 
+/** Shows the Number of airlines in an airport.
+ *  Complexity: Varies on the functions called and how many times some of them are called.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::numberOfAirlinesFromAirport() {
     while(true){
         cout << "1.Number of airlines from airport\n";
@@ -354,6 +390,11 @@ int UI::numberOfAirlinesFromAirport() {
     }
 }
 
+/** Shows the Number of flights per airport , per airline or per city.
+ *  Complexity: Varies on the functions called and how many times some of them are called.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::numberOfFlights() {
     while(true){
         cout << "1.Per airport\n";
@@ -403,6 +444,11 @@ int UI::numberOfFlights() {
     }
 }
 
+/** Shows the Number of countries that can be reached directly from a city.
+ *  Complexity: Varies on the functions called and how many times some of them are called.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::numberOfCountriesFromCity() {
     while(true){
         cout << "1.Number of countries from City\n";
@@ -436,6 +482,11 @@ int UI::numberOfCountriesFromCity() {
     }
 }
 
+/** Shows the Number of destinations (airports, cities or countries) from an airport.
+ *  Complexity: Varies on the functions called and how many times some of them are called.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::numberOfDestinations() {
     while(true) {
         cout << "1.Countries\n";
@@ -480,6 +531,11 @@ int UI::numberOfDestinations() {
     }
 }
 
+/** Shows the Number of destinations (airport, countries or cities) in k stops from an airport.
+ *  Complexity: Varies on the functions called and how many times some of them are called.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::numberOfDestinationsInKStops() {
     while(true) {
         cout << "1.Countries\n";
@@ -533,6 +589,11 @@ int UI::numberOfDestinationsInKStops() {
     }
 }
 
+/** Shows the Maximum trip possible and the source and destination airports.
+ *  Complexity: Varies on the functions called and how many times some of them are called.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::maximumTrip() {
     while(true){
         cout <<"1.Maximum trip\n";
@@ -569,6 +630,11 @@ int UI::maximumTrip() {
     }
 }
 
+/** Shows top k airports in terms of air traffic.
+ *  Complexity: Variess on the functions called and how many times some of them are called.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::topKAirportTraffic() {
     while(true){
         cout <<"1.Top k Airports with the greatest air traffic capacity\n";
@@ -617,11 +683,21 @@ int UI::topKAirportTraffic() {
     }
 }
 
+/** Shows the airports that are essential to the network (articulation points).
+ *  Complexity: Varies between on the functions called and how many times some of them are called.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::essentialAirports() {
     return 0;
 }
 
 // Auxiliary functions ----------------------------
+/** Finds the airport according to user input (name or code).
+ *  Complexity: O(1) or O(N) depending on user input.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::airportFinder(Airport& airport) {
         cout << "Choose one of the options(number) to find the airport:\n\n";
 
@@ -655,6 +731,11 @@ int UI::airportFinder(Airport& airport) {
         return s;
 }
 
+/** Finds the airport according to user input (name).
+ *  Complexity: O(N).
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::airportFinderName(Airport& airport) {
     cout << "Please insert the airport name (be careful, some airports may have the same name):\n";
     string name;
@@ -674,6 +755,11 @@ int UI::airportFinderName(Airport& airport) {
     return 0;
 }
 
+/** Finds the airport according to user input (code).
+ *  Complexity: O(1) or O(N) if the code does not correspond to a airport.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::airportFinderCode(Airport& airport) {
     cout << "Please insert the airport code:\n";
     string code;
@@ -695,6 +781,11 @@ int UI::airportFinderCode(Airport& airport) {
     return 0;
 }
 
+/** Finds a city  according to user input (name).
+ *  Complexity: O(1) or O(N) if the city does not exists.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::cityFinder(string& name){
     cout << "Please insert the name of the city:\n";
     cin >> name;
@@ -712,6 +803,11 @@ int UI::cityFinder(string& name){
     return 0;
 }
 
+/** Finds the airline according to user input (code).
+ *  Complexity: O(1) or O(N) if the code does not correspond to a airline.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::airlineFinderCode(Airline& airline) {
     cout << "Please insert the airline code:\n";
     string code;
@@ -733,6 +829,11 @@ int UI::airlineFinderCode(Airline& airline) {
     return 0;
 }
 
+/** Builds a location object according to the user input.
+ *  Complexity: O(1) (O(N) in the worst scenario when the user inserts wrong values).
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::locationBuilder(Location &location) {
     double latitude, longitude;
 
