@@ -9,7 +9,8 @@ include_directories(googletest/googletest/include)
 include_directories(googletest/googlemock/include)
 set( CMAKE_BUILD_TYPE ${CMAKE_BUILD_TYPE_TMP} )
 
-add_executable(googletest tests.cpp Airline.cpp Airport.cpp AirTravelManSys.cpp Flight.cpp FlightNetwork.cpp Location.cpp NetworkAirports.cpp)
+add_executable(googletest tests.cpp Airline.cpp Airport.cpp AirTravelManSys.cpp Flight.cpp FlightNetwork.cpp Location.cpp NetworkAirports.cpp
+        UI.cpp)
 
 target_link_libraries(googletest gtest gtest_main)
 
@@ -27,6 +28,8 @@ set(SOURCE_FILES main.cpp
         FlightNetwork.cpp
         AirTravelManSys.h
         AirTravelManSys.cpp
+        UI.h
+        UI.cpp
 )
 
 file(COPY dataset/airlines.csv dataset/airports.csv dataset/flights.csv DESTINATION ${CMAKE_BINARY_DIR})

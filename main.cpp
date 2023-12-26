@@ -1,18 +1,20 @@
 #include <iostream>
 #include "AirTravelManSys.h"
+#include "UI.h"
 
 int main() {
 
-    AirTravelManSys travelsys;
-    travelsys.readAirlinesDataFile();
-    travelsys.readAirportsDataFile();
-    travelsys.readFlightsDataFile();
-    Airport source = travelsys.getCodeToAirport().at("JFK");
-    Airport destination = travelsys.getCodeToAirport().at("OPO");
-    NetworkAirport* sourcen = travelsys.getFlightNetwork().findAirport(source);
-    NetworkAirport* destinationn = travelsys.getFlightNetwork().findAirport(destination);
-    vector<NetworkAirport*> sources {sourcen};
-    vector<NetworkAirport*> destinations {destinationn};
-    travelsys.bestFlightOption(sources,destinations);
+    UI userInterface;
+    while(true) {
+        int s = userInterface.mainMenu();
+        if (s == 1) {
+            //error during the execution;
+            return 1;
+        }
+        else if(s == 2){
+            //exit signal
+            break;
+        }
+    }
     return 0;
 }
