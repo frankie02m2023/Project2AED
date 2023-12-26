@@ -969,7 +969,6 @@ TEST(Best_Flight_Option, convertLocationToAirport){
     NetworkAirport* networkAirport1 = system.getFlightNetwork().findAirport(airportTest1);
     NetworkAirport* networkAirport2 = system.getFlightNetwork().findAirport(airportTest2);
     networkAirports.push_back(networkAirport2);
-    networkAirports.push_back(networkAirport1);
 
     EXPECT_EQ(networkAirports, system.convertLocationToAirports("1.5","2.5"));
 }

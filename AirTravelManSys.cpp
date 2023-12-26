@@ -93,6 +93,10 @@ void AirTravelManSys::setCityToAirport(unordered_map<std::string, vector<Airport
     this->cityToAirport = std::move(newCityToAirport);
 }
 
+/** Sets the CodeToAirport map to a given value
+ *  Complexity: O(1)
+ * @param codeToAirport new value of the codeToAirport
+ */
 void AirTravelManSys::setCodeToAirport(const unordered_map<std::string, Airport> &codeToAirport) {
     AirTravelManSys::codeToAirport = codeToAirport;
 }
@@ -782,6 +786,11 @@ void AirTravelManSys::topKAirportCapacity(int k) {
     }
 }
 
+/** Gets all the airport in a city
+ * Complexity: O(1)
+ * @param city Name of the city
+ * @return Vector with all the airport found
+ */
 vector<NetworkAirport*> AirTravelManSys::convertCityToAirports(const std::string& city) {
     auto it = cityToAirport.find(city);
     vector<Airport> airports;
@@ -801,11 +810,40 @@ vector<NetworkAirport*> AirTravelManSys::convertCityToAirports(const std::string
 }
 
 
+/** Auxiliary function to calculate the distance.
+ *  Complexity: O(log(n))
+ * @param latitude Latitude of the location
+ * @param longitude Longitude of the location
+ * @param airportLocation Location of the airport we want to calculate the distance
+ * @return  Distance
+ */
 double distanceCoordinates(double latitude, double longitude, Location airportLocation){
-    return sqrt(pow(airportLocation.getLatitude()-latitude,2) + pow(airportLocation.getLongitude()-longitude,2));
+    // distance between latitudes
+    // and longitudes
+    double dLat = (latitude - airportLocation.getLatitude()) *
+                  M_PI / 180.0;
+    double dLon = (longitude - airportLocation.getLongitude()) *
+                  M_PI / 180.0;
 
+    // convert to radians
+    double lat1 = (latitude) * M_PI / 180.0;
+    double lat2 = (airportLocation.getLatitude()) * M_PI / 180.0;
+
+    // apply formulae
+    double a = pow(sin(dLat / 2), 2) +
+               pow(sin(dLon / 2), 2) *
+               cos(lat1) * cos(lat2);
+    double rad = 6371;
+    double c = 2 * asin(sqrt(a));
+    return rad * c;
 }
 
+/** Gets the nearest airport to a certain location.
+ *  Complexity: O(nlog(n))
+ * @param latitude Latitude of the location
+ * @param longitude Longitude of the location
+ * @return  Vector with the airports found
+ */
 vector<NetworkAirport*> AirTravelManSys::convertLocationToAirports(const std::string& latitude, const std::string& longitude) {
     double DLatitude = stod(latitude);
     double DLongitude = stod(longitude);
@@ -828,6 +866,11 @@ vector<NetworkAirport*> AirTravelManSys::convertLocationToAirports(const std::st
         return networkAirports;
 }
 
+/** Converts code to airport.
+ * Complexity: O(1)
+ * @param code Code of the airport
+ * @return  Airport found
+ */
 NetworkAirport* AirTravelManSys::convertCodeToAirport(const std::string& code) {
     auto it = codeToAirport.find(code);
 
@@ -843,7 +886,11 @@ NetworkAirport* AirTravelManSys::convertCodeToAirport(const std::string& code) {
     }
 }
 
-
+/** Converts a name into an airport.
+ *  Complexity: O(n)
+ * @param name  Name of the airport to convert
+ * @return  Airport found
+ */
 NetworkAirport* AirTravelManSys::convertNameToAirport(const std::string& name) {
     for(NetworkAirport* networkAirport : flightNetwork.getFlightNetwork()){
         if(networkAirport->getAirport().getName() == name){
