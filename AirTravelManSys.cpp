@@ -862,8 +862,6 @@ NetworkAirport* AirTravelManSys::convertNameToAirport(const std::string& name) {
  * @param countDist     Counts the distance from the source to the destination
  */
 void AirTravelManSys::findMinDistDFS(NetworkAirport* source, NetworkAirport* destination,int& minDist, int& countDist){
-    cout << "Running Find Min Dist" << endl;
-    cout << '\n';
     source->setVisited(true);
 
     if(source->getAirport() == destination->getAirport()){
@@ -871,7 +869,7 @@ void AirTravelManSys::findMinDistDFS(NetworkAirport* source, NetworkAirport* des
             minDist = countDist;
         }
     }
-    
+
     else{
 
         for(auto it = source->getFlightsFromAirport().begin(); it != source->getFlightsFromAirport().end(); it++){
@@ -939,8 +937,6 @@ void AirTravelManSys::findMinDistBFS(NetworkAirport *source, NetworkAirport *des
  * @param dist  Maximum number of stops/distance from the source
  */
 void AirTravelManSys::findFlightOptionsDFS(NetworkAirport* source, NetworkAirport* destination, vector<NetworkAirport*> flightOption, set<vector<NetworkAirport*>> &flightOptions, int dist){
-    cout << "Running Find Flight Option" << endl;
-    cout << '\n';
     source->setVisited(true);
     flightOption.push_back(source);
 
@@ -1003,12 +999,14 @@ void AirTravelManSys::findFlightOptionsBFS(NetworkAirport *source, NetworkAirpor
                 if(nb->getAirport() == destination->getAirport() && distance == dist){
                     //found one flight option
                     buildFlightOption(node,parents,flightOptions);
+                    nb->setVisited(false);
                 }
 
                 parents.push_back(node);
             }
         }
 
+        na.second.first->setVisited(false);
         if(dist < na.second.second){
             //every flight option in the minimum distance range was found
             break;
