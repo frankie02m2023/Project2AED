@@ -854,6 +854,13 @@ NetworkAirport* AirTravelManSys::convertNameToAirport(const std::string& name) {
     return nullptr;
 }
 
+/** Gets minimum distance/stops between two airport using a BFS approach.
+ *  Complexity: O(n^2)
+ * @param source  Source of the flight
+ * @param destination   Destination of the flight
+ * @param minDist   Minimum distance/stops found from the source to the destination
+ * @param countDist     Counts the distance from the source to the destination
+ */
 void AirTravelManSys::findMinDistDFS(NetworkAirport* source, NetworkAirport* destination,int& minDist, int& countDist){
     cout << "Running Find Min Dist" << endl;
     cout << '\n';
@@ -864,6 +871,7 @@ void AirTravelManSys::findMinDistDFS(NetworkAirport* source, NetworkAirport* des
             minDist = countDist;
         }
     }
+    
     else{
 
         for(auto it = source->getFlightsFromAirport().begin(); it != source->getFlightsFromAirport().end(); it++){
@@ -881,7 +889,13 @@ void AirTravelManSys::findMinDistDFS(NetworkAirport* source, NetworkAirport* des
     countDist--;
 }
 
-void AirTravelManSys::findMinDistBFS(NetworkAirport *source, NetworkAirport *destination, int &minDist,int &countDist) {
+/** Gets minimum distance/stops between two airport using a BFS approach.
+ *  Complexity: O(n^2)
+ * @param source  Source of the flight
+ * @param destination   Destination of the flight
+ * @param minDist   Minimum distance/stops found from the source to the destination
+ */
+void AirTravelManSys::findMinDistBFS(NetworkAirport *source, NetworkAirport *destination, int &minDist) {
 
     queue<pair<NetworkAirport*,int>> q;
     q.emplace(source,0);
@@ -901,18 +915,29 @@ void AirTravelManSys::findMinDistBFS(NetworkAirport *source, NetworkAirport *des
                 int distance = na.second + 1;
                 q.emplace(nb,distance);
                 nb->setVisited(true);
+
                 if(nb->getAirport() == destination->getAirport()){
+                    //min distance found
                     minDist = distance;
                 }
             }
         }
 
         if(minDist == na.second + 1){
+            //Exist loop when min distance is found
             break;
         }
     }
 }
 
+/** Gets the flight options with a certain number of stops using a DFS approach.
+ *  Complexity: O(n^2)
+ * @param source  Source of the flight
+ * @param destination   Destination of the flight
+ * @param flightOption  One of the possible flight options
+ * @param flightOptions  Set of different flight options
+ * @param dist  Maximum number of stops/distance from the source
+ */
 void AirTravelManSys::findFlightOptionsDFS(NetworkAirport* source, NetworkAirport* destination, vector<NetworkAirport*> flightOption, set<vector<NetworkAirport*>> &flightOptions, int dist){
     cout << "Running Find Flight Option" << endl;
     cout << '\n';
@@ -941,42 +966,63 @@ void AirTravelManSys::findFlightOptionsDFS(NetworkAirport* source, NetworkAirpor
     source->setVisited(false);
 }
 
-void AirTravelManSys::findFlightOptionsBFS(NetworkAirport *source, NetworkAirport *destination,vector<NetworkAirport *> flightOption, set<vector<NetworkAirport *>> &flightOptions, int dist){
+/** Gets the flight options with a certain number of stops using a BFS approach.
+ *  Complexity: O(n^2) (O(n^3) when a flight path is found (worst case))
+ * @param source  Source of the flight
+ * @param destination   Destination of the flight
+ * @param flightOptions  Set of different flight options
+ * @param dist  Maximum number of stops/distance from the source
+ */
+void AirTravelManSys::findFlightOptionsBFS(NetworkAirport *source, NetworkAirport *destination, set<vector<NetworkAirport *>> &flightOptions, int dist){
     vector<ParentChild> parents;
-    queue<ParentChild> q; //pair parent and child (with distance to root)
+    queue<ParentChild> q; //pair parents index and child index and child source and distance
     ParentChild node = make_pair(make_pair(-1,0), make_pair(source,0));
     parents.push_back(node);
     q.push(node);
+
     int i = 0;
     source->setVisited(true);
 
     while(!q.empty()){
+        //BFS loop
+
         ParentChild na = q.front();
         q.pop();
 
 
         for(auto it = na.second.first->getFlightsFromAirport().begin(); it!= na.second.first->getFlightsFromAirport().end(); it++){
             NetworkAirport* nb = it->getDestination();
+
             if(!nb->isVisited()){
-                i++;
-                int distance = na.second.second + 1;
-                node = make_pair((make_pair(na.first.second,i)), make_pair(nb, distance));
+                i++; //index for the parents vector
+                int distance = na.second.second + 1; //distance from the source
+                node = make_pair((make_pair(na.first.second,i)), make_pair(nb, distance)); //node(pair) to insert in the queue and parents vector
                 q.emplace(node);
                 nb->setVisited(true);
+
                 if(nb->getAirport() == destination->getAirport() && distance == dist){
+                    //found one flight option
                     buildFlightOption(node,parents,flightOptions);
                 }
+
                 parents.push_back(node);
             }
         }
 
         if(dist < na.second.second){
+            //every flight option in the minimum distance range was found
             break;
         }
     }
 
 }
 
+/** Builds the flight path and puts it in the set with the other flight paths.
+ *  Complexity: O(n)
+ * @param root Destination of the flight path and source for search the other stops
+ * @param parents Vector with the parent nodes
+ * @param flightOptions Set of different flight options
+ */
 void AirTravelManSys::buildFlightOption(ParentChild root, vector<ParentChild> parents, set<vector<NetworkAirport *>> &flightOptions) {
     vector<NetworkAirport*> flightOption;
     while(true){
@@ -992,34 +1038,39 @@ void AirTravelManSys::buildFlightOption(ParentChild root, vector<ParentChild> pa
     flightOptions.insert(flightOption);
 }
 
+/** Finds the best flight path (minimum stops) with no filters
+ *
+ * @param sources
+ * @param destinations
+ */
 void AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, const vector<NetworkAirport *>& destinations) {
     cleanVisitedState();
     cleanProcessState();
 
     int minDist = INT_MAX;
-    int countDist = 0;
 
+    //find the minimum distance between the airports
     for(NetworkAirport* source: sources){
         for(NetworkAirport* destination: destinations){
-            findMinDistBFS(source, destination,minDist, countDist);
-            countDist = 0;
+            findMinDistBFS(source, destination,minDist);
         }
     }
 
     set<vector<NetworkAirport*>> flightOptions;
-    vector<NetworkAirport*> flightOption;
 
+    //find the different flight options from the possible sources to the destination
     for(NetworkAirport* source: sources){
         for(NetworkAirport* destination: destinations){
             cleanVisitedState();
-            findFlightOptionsBFS(source, destination, flightOption, flightOptions, minDist);
+            findFlightOptionsBFS(source, destination,flightOptions, minDist);
         }
     }
 
+    //prints the results
     int i = 1;
     for(const vector<NetworkAirport*>& option: flightOptions){
         cout << '\n';
-        cout << "Option" << i <<" : -------------" << endl;
+        cout << "Option " << i <<" : -------------" << endl;
         i++;
         for(NetworkAirport* networkAirport: option){
             cout << "Airport code: " << networkAirport->getAirport().getCode() << "  Airport name: " << networkAirport->getAirport().getName() << endl;
