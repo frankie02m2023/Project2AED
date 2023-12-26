@@ -729,7 +729,10 @@ TEST(Network_Statistics, topKAirportCapacity){
     setup1();
     system.setFlightNetwork(flightNetworkTest);
 
-    system.topKAirportCapacity(100);
+    vector<NetworkAirport*> network = system.topKAirportCapacity(100);
+    for(NetworkAirport* nt: network){
+        cout<<nt->getAirport().getName() << ": " << nt->getNumberOfFlightsFromAirport() + nt->getNumberOfFlightsToAirport() << '\n';
+    }
     cleanSetup();
 }
 
@@ -928,7 +931,17 @@ TEST(Best_Flight_Option, bestFlightOption){
     vector<NetworkAirport*> sources {source,source2};
     vector<NetworkAirport*> destinations{destination,destination2};
 
-    system.bestFlightOption(sources, destinations);
+
+    set<vector<NetworkAirport*>> flightOptions = system.bestFlightOption(sources, destinations);
+    int i = 1;
+    for(const vector<NetworkAirport*>& option: flightOptions){
+        cout << '\n';
+        cout << "Option " << i <<" : -------------" << endl;
+        i++;
+        for(NetworkAirport* networkAirport: option){
+            cout << "Airport code: " << networkAirport->getAirport().getCode() << "  Airport name: " << networkAirport->getAirport().getName() << endl;
+        }
+    }
     cleanSetup();
 }
 
@@ -970,7 +983,7 @@ TEST(Best_Flight_Option, convertLocationToAirport){
     NetworkAirport* networkAirport2 = system.getFlightNetwork().findAirport(airportTest2);
     networkAirports.push_back(networkAirport2);
 
-    EXPECT_EQ(networkAirports, system.convertLocationToAirports("1.5","2.5"));
+    EXPECT_EQ(networkAirports, system.convertLocationToAirports(1.5,2.5));
 }
 
 TEST(Best_Flight_Option, convertCodeToAirport){

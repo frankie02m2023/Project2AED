@@ -37,6 +37,7 @@ public:
     int airportFinderCode(Airport& airport);
     int cityFinder(string& name);
     int airlineFinderCode(Airline& airline);
+    int locationBuilder(Location& location);
 private:
     AirTravelManSys airTravelSys;
 };

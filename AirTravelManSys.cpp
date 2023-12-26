@@ -770,20 +770,16 @@ bool compAirportByFlights(NetworkAirport* networkAirport1, NetworkAirport* netwo
  *  Complexity: O(nlog(n))
  * @param k  number of top airports
  */
-void AirTravelManSys::topKAirportCapacity(int k) {
+vector<NetworkAirport*> AirTravelManSys::topKAirportCapacity(int k) {
     vector<NetworkAirport*> networkAirports {flightNetwork.getFlightNetwork().begin(), flightNetwork.getFlightNetwork().end()};
     sort(networkAirports.begin(), networkAirports.end(), compAirportByFlights);
 
     if(k > networkAirports.size())
         k = networkAirports.size();
-    for(size_t i = 0; i < k; i++){
-        NetworkAirport* networkAirport = networkAirports.at(i);
 
-        cout << i + 1 << ". Airport name: " << networkAirport->getAirport().getName()
-            <<"; code: " << networkAirport->getAirport().getCode()
-            <<"; Capacity: " << networkAirport->getNumberOfFlightsFromAirport() + networkAirport->getNumberOfFlightsToAirport()
-            << endl;
-    }
+    vector<NetworkAirport*> subVector {networkAirports.begin(), networkAirports.begin() + k};
+
+    return subVector;
 }
 
 /** Gets all the airport in a city
@@ -844,21 +840,19 @@ double distanceCoordinates(double latitude, double longitude, Location airportLo
  * @param longitude Longitude of the location
  * @return  Vector with the airports found
  */
-vector<NetworkAirport*> AirTravelManSys::convertLocationToAirports(const std::string& latitude, const std::string& longitude) {
-    double DLatitude = stod(latitude);
-    double DLongitude = stod(longitude);
+vector<NetworkAirport*> AirTravelManSys::convertLocationToAirports(const double& latitude, const double& longitude) {
     auto distance = DBL_MAX;
     vector<NetworkAirport*> networkAirports;
 
     for(NetworkAirport* networkAirport: flightNetwork.getFlightNetwork()){
-        double airportDistance = distanceCoordinates(DLatitude, DLongitude, networkAirport->getAirport().getLocation());
+        double airportDistance = distanceCoordinates(latitude, longitude, networkAirport->getAirport().getLocation());
         if(airportDistance < distance){
             distance = airportDistance;
         }
     }
 
     for(NetworkAirport* networkAirport: flightNetwork.getFlightNetwork()) {
-        double airportDistance = distanceCoordinates(DLatitude, DLongitude, networkAirport->getAirport().getLocation());
+        double airportDistance = distanceCoordinates(latitude, longitude, networkAirport->getAirport().getLocation());
         if (airportDistance == distance) {
             networkAirports.push_back(networkAirport);
         }
@@ -1088,7 +1082,7 @@ void AirTravelManSys::buildFlightOption(ParentChild root, vector<ParentChild> pa
  * @param sources
  * @param destinations
  */
-void AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, const vector<NetworkAirport *>& destinations) {
+set<vector<NetworkAirport *>> AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, const vector<NetworkAirport *>& destinations) {
     cleanVisitedState();
     cleanProcessState();
 
@@ -1111,16 +1105,7 @@ void AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, 
         }
     }
 
-    //prints the results
-    int i = 1;
-    for(const vector<NetworkAirport*>& option: flightOptions){
-        cout << '\n';
-        cout << "Option " << i <<" : -------------" << endl;
-        i++;
-        for(NetworkAirport* networkAirport: option){
-            cout << "Airport code: " << networkAirport->getAirport().getCode() << "  Airport name: " << networkAirport->getAirport().getName() << endl;
-        }
-    }
+return flightOptions;
 }
 
 

@@ -44,7 +44,7 @@ int UI::optionSelection(int &option, int min, int max){
 
 //Menus -----------------------------------------------
 int UI::mainMenu() {
-    cout << "WELCOME TO THE AED AIR TRAVEL SYSTEM\n\n";
+    cout << "\nWELCOME TO THE AED AIR TRAVEL SYSTEM\n\n";
 
     cout << "Please insert the number corresponding to the option you want to select\n\n";
 
@@ -88,7 +88,7 @@ int UI::mainMenu() {
 
 int UI::networkStatisticsMenu() {
     while(true) {
-        cout << "FLIGHT NETWORK STATISTICS\n\n";
+        cout << "\nFLIGHT NETWORK STATISTICS\n\n";
 
         cout << "Please insert the number corresponding to the option you want to select\n\n";
 
@@ -166,7 +166,117 @@ int UI::networkStatisticsMenu() {
 }
 
 int UI::bestFlightOptionsMenu() {
-    return 0;
+    while(true) {
+        cout << "\n BEST FLIGHT OPTION\n\n";
+
+        cout << "Please insert the number corresponding to the criteria you want to select to choose your departure location\n\n";
+
+        cout << "1.Airport\n";
+        cout << "2.City\n";
+        cout << "3.Location\n";
+        cout << "4.Return to the Main Menu\n\n";
+
+        int option;
+
+        int s = optionSelection(option, 1, 4);
+        cout << '\n';
+
+        if (s != 0) {
+            cout << "Error found\n";
+            return s;
+        }
+
+        string cityNameD;
+        Airport airportD;
+        Location locationD;
+        vector<NetworkAirport *> networkAirportsD;
+        NetworkAirport *networkAirportD;
+        switch (option) {
+            case 1:
+                s = airportFinder(airportD);
+                networkAirportD = airTravelSys.getFlightNetwork().findAirport(airportD);
+                networkAirportsD.push_back(networkAirportD);
+                break;
+
+            case 2:
+                s = cityFinder(cityNameD);
+                networkAirportsD = airTravelSys.convertCityToAirports(cityNameD);
+                break;
+
+            case 3:
+                s = locationBuilder(locationD);
+                networkAirportsD = airTravelSys.convertLocationToAirports(locationD.getLatitude(),
+                                                                          locationD.getLongitude());
+                break;
+
+            case 4:
+                return 0;
+
+            default:
+                cout << "Error found\n";
+                return 1;
+        }
+
+        cout << "Please insert the number corresponding to the criteria you want to select to choose your arrival location\n\n";
+
+        cout << "1.Airport\n";
+        cout << "2.City\n";
+        cout << "3.Location\n";
+        cout << "4.Return to the Main Menu\n\n";
+
+
+        s = optionSelection(option, 1, 4);
+        cout << '\n';
+
+        if (s != 0) {
+            cout << "Error found\n";
+            return s;
+        }
+
+        string cityNameA;
+        Airport airportA;
+        Location locationA;
+        vector<NetworkAirport *> networkAirportsA;
+        NetworkAirport *networkAirportA;
+        switch (option) {
+            case 1:
+                s = airportFinder(airportA);
+                networkAirportA = airTravelSys.getFlightNetwork().findAirport(airportA);
+                networkAirportsA.push_back(networkAirportA);
+                break;
+
+            case 2:
+                s = cityFinder(cityNameA);
+                networkAirportsA = airTravelSys.convertCityToAirports(cityNameA);
+                break;
+
+            case 3:
+                s = locationBuilder(locationA);
+                networkAirportsA = airTravelSys.convertLocationToAirports(locationA.getLatitude(),
+                                                                          locationA.getLongitude());
+                break;
+
+            case 4:
+                return 0;
+
+            default:
+                cout << "Error found\n";
+                return 1;
+        }
+
+        set<vector<NetworkAirport*>> flightOptions = airTravelSys.bestFlightOption(networkAirportsD, networkAirportsA);
+        int i = 1;
+        for(const vector<NetworkAirport*>& opt: flightOptions){
+            cout << '\n';
+            cout << "Option " << i <<" : -------------" << endl;
+            i++;
+            for(NetworkAirport* networkAirport: opt){
+                cout << "Airport code: " << networkAirport->getAirport().getCode() << "  Airport name: " << networkAirport->getAirport().getName() << endl;
+            }
+        }
+
+
+    }
 }
 
 int UI::bestFlightOptionsWithFiltersMenu() {
@@ -175,6 +285,7 @@ int UI::bestFlightOptionsWithFiltersMenu() {
 
 
 //Handlers ------------------------
+//NetworkStatistics handlers-------------------------
 
 int UI::globalNumbers() {
     while(true) {
@@ -370,15 +481,140 @@ int UI::numberOfDestinations() {
 }
 
 int UI::numberOfDestinationsInKStops() {
-    return 0;
+    while(true) {
+        cout << "1.Countries\n";
+        cout << "2.Cities\n";
+        cout << "3.Airports\n";
+        cout << "4.Return to the Network Statistics Menu\n\n";
+
+        int option;
+
+        int s = optionSelection(option, 1, 4); cout << '\n';
+
+        if (s != 0) {
+            cout << "Error found\n";
+            return s;
+        }
+
+        cout << "Select the number of stops\n\n";
+        int stops;
+        s = optionSelection(stops,0, 3018);
+
+        if (s != 0) {
+            cout << "Error found\n";
+            return s;
+        }
+
+        Airport airport;
+        switch (option) {
+            case 1:
+                s = airportFinder(airport);
+                if(s == 1) break; //airport not found
+                cout << "Total Number of Countries from airport " << airport.getName() << " in " << stops << " stops: " <<  airTravelSys.numberOfReachableCountries(airport,stops) << "\n\n";
+                break;
+
+            case 2:
+                s = airportFinder(airport);
+                if(s == 1) break; //airport not found
+                cout << "Total Number of Cities from airport " << airport.getName() << " in " << stops << " stops: " <<  airTravelSys.numberOfReachableCities(airport,stops) << "\n\n";
+                break;
+
+            case 3:
+                s = airportFinder(airport);
+                if(s == 1) break; //airport not found
+                cout << "Total Number of Airports from airport " << airport.getName() << " in " << stops << " stops: " << airTravelSys.numberOfReachableAirports(airport,stops) << "\n\n";
+                break;
+            case 4:
+                return 0;
+            default:
+                cout << "Error found\n";
+                return 1;
+        }
+    }
 }
 
 int UI::maximumTrip() {
-    return 0;
+    while(true){
+        cout <<"1.Maximum trip\n";
+        cout <<"2.Return to the Network Statistics Menu\n\n";
+
+        int option;
+
+        int s = optionSelection(option, 1, 2); cout << '\n';
+
+        if (s != 0) {
+            cout << "Error found\n";
+            return s;
+        }
+
+        vector<pair<Airport,Airport>> airportsPair;
+        int distance;
+        switch (option) {
+            case 1:
+                distance = airTravelSys.maxTrip(airportsPair);
+                cout << "Distance: " << distance << '\n';
+                for(const auto& pair: airportsPair)
+                    cout << "Airport 1: " << pair.first.getName()  << " <----------> Airport 2: "<< pair.second.getName() << "\n";
+                cout << '\n';
+                break;
+
+            case 2:
+                return 0;
+
+            default:
+                cout << "Error found\n";
+                return 1;
+        }
+
+    }
 }
 
 int UI::topKAirportTraffic() {
-    return 0;
+    while(true){
+        cout <<"1.Top k Airports with the greatest air traffic capacity\n";
+        cout <<"2.Return to the Network Statistics Menu\n\n";
+
+        int option;
+
+        int s = optionSelection(option, 1, 2); cout << '\n';
+
+        if (s != 0) {
+            cout << "Error found\n";
+            return s;
+        }
+
+        cout << "Select the number of top airports you want to see\n\n";
+        int k;
+        s = optionSelection(k,0, 3019);
+
+        if (s != 0) {
+            cout << "Error found\n";
+            return s;
+        }
+
+
+        vector<NetworkAirport*> topK;
+        int i = 1;
+        switch (option) {
+            case 1:
+                topK = airTravelSys.topKAirportCapacity(k);
+                cout << "Top: " << k << '\n';
+                for(const auto& networkAirport: topK) {
+                    cout << i << ". Airport name: " << networkAirport->getAirport().getName() << " Capacity: "<< networkAirport->getNumberOfFlightsToAirport() + networkAirport->getNumberOfFlightsFromAirport() << "\n\n";
+                    i++;
+                }
+                    cout << '\n';
+                break;
+
+            case 2:
+                return 0;
+
+            default:
+                cout << "Error found\n";
+                return 1;
+        }
+
+    }
 }
 
 int UI::essentialAirports() {
@@ -497,4 +733,57 @@ int UI::airlineFinderCode(Airline& airline) {
     return 0;
 }
 
+int UI::locationBuilder(Location &location) {
+    double latitude, longitude;
+
+    while(std::cout << "Enter the latitude:" ){
+        if(not(std::cin >> latitude)) {
+            if (std::cin.rdstate() & (std::ios::badbit | std::ios::eofbit)) {
+                std::cout << "Aborted\n";
+                return 1;
+            }
+            std::cout << "Please enter a valid latitude (not a double)\n";
+            std::cin.clear();                            // clear the fail state
+            // remove any lingering characters in the istream:
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+        else if(latitude > 90 || latitude < -90){
+            std::cout << "Please enter a valid latitude (double out of range)\n";
+            std::cin.clear();                            // clear the fail state
+            // remove any lingering characters in the istream:
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+        else{
+            //valid option inserted
+            break;
+        }
+    }
+
+    while(std::cout << "Enter the longitude:" ){
+        if(not(std::cin >> longitude)) {
+            if (std::cin.rdstate() & (std::ios::badbit | std::ios::eofbit)) {
+                std::cout << "Aborted\n";
+                return 1;
+            }
+            std::cout << "Please enter a valid longitude (not a double)\n";
+            std::cin.clear();                            // clear the fail state
+            // remove any lingering characters in the istream:
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+        else if(longitude > 180 || longitude < -180){
+            std::cout << "Please enter a valid longitude (double out of range)\n";
+            std::cin.clear();                            // clear the fail state
+            // remove any lingering characters in the istream:
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        }
+        else{
+            //valid option inserted
+            break;
+        }
+    }
+
+    location.setLatitude(latitude);
+    location.setLongitude(longitude);
+    return 0;
+}
 

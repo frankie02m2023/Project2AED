@@ -49,13 +49,13 @@ public:
     NetworkAirport* convertNameToAirport(const string& name);
     NetworkAirport* convertCodeToAirport(const string& code);
     vector<NetworkAirport*> convertCityToAirports(const string& city);
-    vector<NetworkAirport*> convertLocationToAirports(const string& latitude, const string& longitude);
+    vector<NetworkAirport*> convertLocationToAirports(const double& latitude, const double& longitude);
 
     int maxTrip(vector<pair<Airport,Airport>>& maxTripAirportPairs);
 
-    void topKAirportCapacity(int k);
+    vector<NetworkAirport*> topKAirportCapacity(int k);
 
-    void bestFlightOption(const vector<NetworkAirport*>& sources,const vector<NetworkAirport*>& destinations);
+    set<vector<NetworkAirport *>> bestFlightOption(const vector<NetworkAirport*>& sources,const vector<NetworkAirport*>& destinations);
     void findMinDistDFS(NetworkAirport* source, NetworkAirport* destination, int& minDist, int& countDist);
     void findMinDistBFS(NetworkAirport* source, NetworkAirport* destination, int& minDist);
     void findFlightOptionsDFS(NetworkAirport* source, NetworkAirport* destination, vector<NetworkAirport*> flightOption, set<vector<NetworkAirport*>> &flightOptions, int dist);
