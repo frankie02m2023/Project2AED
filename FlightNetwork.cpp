@@ -91,3 +91,7 @@ bool FlightNetwork::removeFlight(Airport departureAirport,Airport destinationAir
     return true;
 }
 
+void FlightNetwork::resetFlightNetwork() {
+    flightNetwork.clear();
+}
+

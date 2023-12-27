@@ -733,6 +733,62 @@ TEST(Network_Statistics, topKAirportCapacity){
     cleanSetup();
 }
 
+TEST(Network_Statistics, essentialAirports){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    setup2();
+    system.setFlightNetwork(flightNetworkTest);
+
+    unordered_set<Airport> essentialAirports = system.essentialAirports();
+
+
+    Airport a1_1("A","A","co1","ci1",Location{0.0,0.0});
+    Airport a2_1("B","B","co1","ci2",Location{1.0,1.0});
+    Airport a3_1("C","C","co2","ci3",Location{11.0,16.0});
+    Airport a4_1("D","D","co2","ci4",Location{11.0,18.0});
+    Airline airline1{"a1", "airline1", "ca1", "co2"};
+
+    EXPECT_EQ(essentialAirports.size(),0);
+
+    flightNetworkTest.resetFlightNetwork();
+    setup2();
+    system.setFlightNetwork(flightNetworkTest);
+    flightNetworkTest.removeFlight(a4_1,a1_1,airline1);
+    essentialAirports = system.essentialAirports();
+
+    EXPECT_EQ(essentialAirports.size(),2);
+    EXPECT_TRUE(essentialAirports.find(a2_1) != essentialAirports.end());
+    EXPECT_TRUE(essentialAirports.find(a3_1) != essentialAirports.end());
+
+    flightNetworkTest.resetFlightNetwork();
+    setup3();
+    system.setFlightNetwork(flightNetworkTest);
+
+    essentialAirports = system.essentialAirports();
+
+    EXPECT_EQ(essentialAirports.size(),0);
+
+    flightNetworkTest.resetFlightNetwork();
+    setup4();
+    system.setFlightNetwork(flightNetworkTest);
+
+    Airport a1_2("A","A","co1","ci1",Location{0.0,0.0});
+    Airport a2_2("B","B","co1","ci2",Location{1.0,1.0});
+    Airport a3_2("C","C","co2","ci3",Location{11.0,16.0});
+    Airport a4_2("D","D","co2","ci4",Location{11.0,18.0});
+    Airport a5_2("E","E","co2","ci3",Location{11.0,17.0});
+    Airport a6_2("F","F","co3","ci6",Location{5.0,24.0});
+
+    essentialAirports = system.essentialAirports();
+
+    EXPECT_EQ(essentialAirports.size(),2);
+    EXPECT_TRUE(essentialAirports.find(a2_2) != essentialAirports.end());
+    EXPECT_TRUE(essentialAirports.find(a4_2) != essentialAirports.end());
+}
+
 TEST(Best_Flight_Option, findMinDistDFS){
 
     AirTravelManSys system;

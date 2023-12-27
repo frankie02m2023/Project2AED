@@ -116,6 +116,7 @@ class FlightNetwork{
     unordered_set<NetworkAirport *, HashNetworkAirport, EqualityNetworkAirport> getFlightNetwork() const;
     bool addFlight(Airport departureAirport, Airport destinationAirport, Airline airline) const;
     bool removeFlight(Airport departureAirport,Airport destinationAirport, Airline airline) const;
+    void resetFlightNetwork();
 
 };
 

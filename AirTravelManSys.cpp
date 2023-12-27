@@ -10,6 +10,7 @@
 #include <utility>
 #include <cmath>
 #include <cfloat>
+#include <stack>
 
 using namespace std;
 
@@ -267,6 +268,9 @@ void AirTravelManSys::readAirportsDataFile() {
         Location location {latitude,longitude};
         Airport airport {code,name,country,city,location};
         flightNetwork.addNetworkAirport(airport);
+
+        //put airport in airports vector
+        airports.push_back(airport);
 
         //adds info to the cities hash table
         addInfoCityToAirport(city,airport);
@@ -786,6 +790,66 @@ void AirTravelManSys::topKAirportCapacity(int k) {
     }
 }
 
+void dfsForEssentialAirports(NetworkAirport* networkAirport, stack<Airport>& airportStack, unordered_set<Airport>& essentialAirports, int& i){
+    i++;
+    int children = 0;
+    networkAirport->setNum(i);
+    networkAirport->setLow(i);
+    airportStack.push(networkAirport->getAirport());
+    for(const auto& flight : networkAirport->getFlightsFromAirport()){
+        if(flight.getDestination()->getNum() == 0){
+            children++;
+            dfsForEssentialAirports(flight.getDestination(),airportStack,essentialAirports,i);
+            networkAirport->setLow(min(networkAirport->getLow(),flight.getDestination()->getLow()));
+            if(networkAirport->getNum() != 1 && flight.getDestination()->getLow() >= networkAirport->getNum()){
+                essentialAirports.insert(networkAirport->getAirport());
+            }
+        }
+        else if(flight.getDestination()->getNum() > 0){
+            networkAirport->setLow(min(networkAirport->getLow(),flight.getDestination()->getNum()));
+        }
+    }
+    airportStack.pop();
+    if(networkAirport->getNum() == 1 && children > 1){
+        essentialAirports.insert(networkAirport->getAirport());
+    }
+}
+
+void doubleNetworkFlights(unordered_set<NetworkAirport *, HashNetworkAirport, EqualityNetworkAirport>& flightNetwork){
+    for(auto networkAirport : flightNetwork){
+        for(const auto& flight : networkAirport->getFlightsFromAirport()){
+            flight.getDestination()->addFlight(networkAirport,flight.getAirLine());
+        }
+    }
+}
+
+void AirTravelManSys::reAddAirportsToFlightNetwork(){
+    for(const Airport& airport : airports){
+        flightNetwork.addNetworkAirport(airport);
+    }
+}
+
+
+unordered_set<Airport> AirTravelManSys::essentialAirports() {
+    int i = 0;
+    unordered_set<Airport> essentialAirports;
+    stack<Airport> airportStack;
+    Airline airline;
+    cleanVisitedState();
+    unordered_set<NetworkAirport *, HashNetworkAirport, EqualityNetworkAirport> copyFlightNetwork = flightNetwork.getFlightNetwork();
+    doubleNetworkFlights(copyFlightNetwork);
+    for(auto networkAirport : copyFlightNetwork){
+        if(networkAirport->getNum() == 0){
+            dfsForEssentialAirports(networkAirport,airportStack,essentialAirports,i);
+        }
+    }
+    flightNetwork.resetFlightNetwork();
+    reAddAirportsToFlightNetwork();
+    readFlightsDataFile();
+    return essentialAirports;
+}
+
+
 /** Gets all the airport in a city
  * Complexity: O(1)
  * @param city Name of the city
@@ -1122,6 +1186,50 @@ void AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, 
         }
     }
 }
+
+FlightNetwork AirTravelManSys::flightNetworkFilteredByDesiredAirlines(unordered_set<Airline> airlines) {
+    FlightNetwork filteredFlightNetwork;
+    for (auto networkAirport: flightNetwork.getFlightNetwork()) {
+        filteredFlightNetwork.addNetworkAirport(networkAirport->getAirport());
+    }
+    for (auto networkAirport: flightNetwork.getFlightNetwork()) {
+        for (const auto &flight: networkAirport->getFlightsFromAirport()) {
+            if (airlines.find(flight.getAirLine()) != airlines.end()) {
+                filteredFlightNetwork.addFlight(networkAirport->getAirport(), flight.getDestination()->getAirport(),
+                                                flight.getAirLine());
+            }
+        }
+    }
+    return filteredFlightNetwork;
+}
+
+FlightNetwork AirTravelManSys::flightNetworkFilteredByUndesiredAirlines(unordered_set<Airline> airlines) {
+    FlightNetwork filteredFlightNetwork;
+    for (auto networkAirport: flightNetwork.getFlightNetwork()) {
+        filteredFlightNetwork.addNetworkAirport(networkAirport->getAirport());
+    }
+    for (auto networkAirport: flightNetwork.getFlightNetwork()) {
+        for (const auto &flight: networkAirport->getFlightsFromAirport()) {
+            if (airlines.find(flight.getAirLine()) == airlines.end()) {
+                filteredFlightNetwork.addFlight(networkAirport->getAirport(), flight.getDestination()->getAirport(),
+                                                flight.getAirLine());
+            }
+        }
+    }
+    return filteredFlightNetwork;
+}
+
+void AirTravelManSys::bestFlightOptionFilteredByAirlines(const vector<NetworkAirport *> &sources,const vector<NetworkAirport *> &destinations, const unordered_set<Airline>& airlines, bool desired) {
+    FlightNetwork filteredFlightNetwork;
+    if(desired){
+        filteredFlightNetwork = flightNetworkFilteredByDesiredAirlines(airlines);
+    }
+    else{
+        filteredFlightNetwork = flightNetworkFilteredByUndesiredAirlines(airlines);
+    }
+    bestFlightOption(sources,destinations)
+}
+
 
 
 

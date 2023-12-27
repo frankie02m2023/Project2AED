@@ -55,12 +55,18 @@ public:
 
     void topKAirportCapacity(int k);
 
+    unordered_set<Airport> essentialAirports();
+
     void bestFlightOption(const vector<NetworkAirport*>& sources,const vector<NetworkAirport*>& destinations);
     void findMinDistDFS(NetworkAirport* source, NetworkAirport* destination, int& minDist, int& countDist);
     void findMinDistBFS(NetworkAirport* source, NetworkAirport* destination, int& minDist);
     void findFlightOptionsDFS(NetworkAirport* source, NetworkAirport* destination, vector<NetworkAirport*> flightOption, set<vector<NetworkAirport*>> &flightOptions, int dist);
     void findFlightOptionsBFS(NetworkAirport* source, NetworkAirport* destination,set<vector<NetworkAirport*>> &flightOptions, int dist);
     void buildFlightOption(ParentChild root, vector<ParentChild> parents, set<vector<NetworkAirport*>> &flightOptions);
+    void reAddAirportsToFlightNetwork();
+    FlightNetwork flightNetworkFilteredByDesiredAirlines(unordered_set<Airline> airlines);
+    FlightNetwork flightNetworkFilteredByUndesiredAirlines(unordered_set<Airline> airlines);
+    void bestFlightOptionFilteredByAirlines(const vector<NetworkAirport*>& sources, const vector<NetworkAirport*>& destinations,const unordered_set<Airline>& airlines, bool desired);
 
     const unordered_map<std::string, Airline> &getCodeToAirlines() const;
     const FlightNetwork &getFlightNetwork() const;
@@ -76,6 +82,7 @@ public:
     void cleanVisitedState();
 
 private:
+    std::vector<Airport> airports;
     std::unordered_map<std::string,vector<Airport>> cityToAirport;
     std::unordered_map<std::string,vector<Airport>> countryToAirport;
     std::unordered_map<std::string,Airport> codeToAirport;
