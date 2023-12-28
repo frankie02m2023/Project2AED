@@ -35,8 +35,9 @@ public:
     int numberOfAirlinesFromAirport();
     int numberOfFlights();
     int numberOfCountriesFromCity();
-    int numberOfDestinations();
+    int numberOfDestinationsDirect();
     int numberOfDestinationsInKStops();
+    int numberOfDestinationsInUnlimitedStops();
     int maximumTrip();
     int topKAirportTraffic();
     int essentialAirports();

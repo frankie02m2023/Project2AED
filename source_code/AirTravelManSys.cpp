@@ -1160,6 +1160,7 @@ void AirTravelManSys::buildFlightOption(ParentChild root, vector<ParentChild> pa
  *
  * @param sources
  * @param destinations
+ * @return Set of flight paths
  */
 set<vector<NetworkAirport *>> AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, const vector<NetworkAirport *>& destinations) {
     cleanVisitedState();
@@ -1186,6 +1187,7 @@ set<vector<NetworkAirport *>> AirTravelManSys::bestFlightOption(const vector<Net
 
 return flightOptions;
 }
+
 
 FlightNetwork AirTravelManSys::flightNetworkFilteredByDesiredAirlines(unordered_set<Airline> airlines) {
     FlightNetwork filteredFlightNetwork;
@@ -1226,9 +1228,11 @@ int AirTravelManSys::numberOfReachableAirportsFromAirport(const Airport &airport
     networkAirport->setVisited(true);
     vector<Airport> reachableAirports;
     q.push(networkAirport);
+
     while(!q.empty()){
         NetworkAirport* targetNetworkAirport = q.front();
         q.pop();
+
         for(const auto& flight : targetNetworkAirport->getFlightsFromAirport()){
             if(!flight.getDestination()->isVisited()){
                 flight.getDestination()->setVisited(true);
@@ -1237,6 +1241,7 @@ int AirTravelManSys::numberOfReachableAirportsFromAirport(const Airport &airport
             }
         }
     }
+
     return reachableAirports.size();
 }
 
@@ -1247,20 +1252,52 @@ int AirTravelManSys::numberOfReachableCitiesFromAirport(const Airport &airport) 
     networkAirport->setVisited(true);
     unordered_set<string> reachableCities;
     q.push(networkAirport);
+
     while(!q.empty()){
         NetworkAirport* targetNetworkAirport = q.front();
         q.pop();
+
         for(const auto& flight : targetNetworkAirport->getFlightsFromAirport()){
+
             if(!flight.getDestination()->isVisited()){
                 flight.getDestination()->setVisited(true);
                 q.push(flight.getDestination());
+
                 if(reachableCities.find(flight.getDestination()->getAirport().getCity()) == reachableCities.end()){
                     reachableCities.insert(flight.getDestination()->getAirport().getCity());
                 }
             }
         }
     }
+
     return reachableCities.size();
+}
+
+int AirTravelManSys::numberOfReachableCountriesFromAirport(const Airport &airport) {
+    this->cleanVisitedState();
+    queue<NetworkAirport*> q;
+    NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+    networkAirport->setVisited(true);
+    unordered_set<string> reachableCountries;
+    q.push(networkAirport);
+
+    while(!q.empty()){
+        NetworkAirport* targetNetworkAirport = q.front();
+        q.pop();
+
+        for(const auto& flight : targetNetworkAirport->getFlightsFromAirport()){
+            if(!flight.getDestination()->isVisited()){
+                flight.getDestination()->setVisited(true);
+                q.push(flight.getDestination());
+
+                if(reachableCountries.find(flight.getDestination()->getAirport().getCountry()) == reachableCountries.end()){
+                    reachableCountries.insert(flight.getDestination()->getAirport().getCountry());
+                }
+            }
+        }
+    }
+
+    return reachableCountries.size();
 }
 
 

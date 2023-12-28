@@ -119,14 +119,15 @@ int UI::networkStatisticsMenu() {
         cout << "4.Number of different countries a city flies to\n";
         cout << "5.Number of destinations from airport (cities, airports and countries)\n";
         cout << "6.Number of reachable destinations (airports, cities, countries) from an airport in k stops\n";
-        cout << "7.Maximum trip possible (greater amount of stops)\n";
-        cout << "8.Top k airports with the highest air traffic (in and out flights)\n";
-        cout << "9.Airports essential to the network\n";
-        cout << "10.Exit to the main Menu\n\n";
+        cout << "7.Number of reachable destinations (airports, cities, countries) from an airport in unlimited stops\n";
+        cout << "8.Maximum trip possible (greater amount of stops)\n";
+        cout << "9.Top k airports with the highest air traffic (in and out flights)\n";
+        cout << "10.Airports essential to the network\n";
+        cout << "11.Exit to the main Menu\n\n";
 
         int option;
 
-        int s = optionSelection(option, 1, 10); cout << '\n';
+        int s = optionSelection(option, 1, 11); cout << '\n';
 
         if(s != 0){
             cout << "Error found\n";
@@ -151,7 +152,7 @@ int UI::networkStatisticsMenu() {
                 break;
 
             case 5:
-                s = numberOfDestinations();
+                s = numberOfDestinationsDirect();
                 break;
 
             case 6:
@@ -159,18 +160,22 @@ int UI::networkStatisticsMenu() {
                 break;
 
             case 7:
-                s = maximumTrip();
+                s = numberOfDestinationsInUnlimitedStops();
                 break;
 
             case 8:
-                s = topKAirportTraffic();
+                s = maximumTrip();
                 break;
 
             case 9:
-                s = essentialAirports();
+                s = topKAirportTraffic();
                 break;
 
             case 10:
+                s = essentialAirports();
+                break;
+
+            case 11:
                 return 0;
 
             default:
@@ -487,7 +492,7 @@ int UI::numberOfCountriesFromCity() {
  *
  * @return If there was not any error 0. Else 1.
  */
-int UI::numberOfDestinations() {
+int UI::numberOfDestinationsDirect(){
     while(true) {
         cout << "1.Countries\n";
         cout << "2.Cities\n";
@@ -579,6 +584,50 @@ int UI::numberOfDestinationsInKStops() {
                 s = airportFinder(airport);
                 if(s == 1) break; //airport not found
                 cout << "Total Number of Airports from airport " << airport.getName() << " in " << stops << " stops: " << airTravelSys.numberOfReachableAirports(airport,stops) << "\n\n";
+                break;
+            case 4:
+                return 0;
+            default:
+                cout << "Error found\n";
+                return 1;
+        }
+    }
+}
+
+int UI::numberOfDestinationsInUnlimitedStops() {
+    while(true) {
+        cout << "1.Countries\n";
+        cout << "2.Cities\n";
+        cout << "3.Airports\n";
+        cout << "4.Return to the Network Statistics Menu\n\n";
+
+        int option;
+
+        int s = optionSelection(option, 1, 4); cout << '\n';
+
+        if (s != 0) {
+            cout << "Error found\n";
+            return s;
+        }
+
+        Airport airport;
+        switch (option) {
+            case 1:
+                s = airportFinder(airport);
+                if(s == 1) break; //airport not found
+                cout << "Total Number of Countries from airport " << airport.getName() << " in unlimited stops : " <<  airTravelSys.numberOfReachableCountriesFromAirport(airport) << "\n\n";
+                break;
+
+            case 2:
+                s = airportFinder(airport);
+                if(s == 1) break; //airport not found
+                cout << "Total Number of Cities from airport " << airport.getName() << " in unlimited stops : " <<  airTravelSys.numberOfReachableCitiesFromAirport(airport) << "\n\n";
+                break;
+
+            case 3:
+                s = airportFinder(airport);
+                if(s == 1) break; //airport not found
+                cout << "Total Number of Airports from airport " << airport.getName() << " in unlimited stops: " << airTravelSys.numberOfReachableAirportsFromAirport(airport) << "\n\n";
                 break;
             case 4:
                 return 0;
@@ -709,10 +758,11 @@ int UI::essentialAirports() {
                essentialAirports = airTravelSys.essentialAirports();
                cout << "Number of essential airports : " << essentialAirports.size() << '\n'; cout << '\n';
                cout << "Essential Airports: " << '\n';
-               for(auto airport : essentialAirports){
+               for(const auto& airport : essentialAirports){
                    cout << airport.getCode() << ':' << airport.getName() << ',' << airport.getCity() << ',' << airport.getCountry();
                    cout << '\n';
                }
+               cout << '\n';
                break;
 
 

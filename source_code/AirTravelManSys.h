@@ -44,6 +44,7 @@ public:
     int numberOfAirportsFromAirport(const Airport& airport) const;
     int numberOfReachableAirportsFromAirport(const Airport& airport);
     int numberOfReachableCitiesFromAirport(const Airport& airport);
+    int numberOfReachableCountriesFromAirport(const Airport& airport);
     int numberOfReachableAirports(const Airport& airport, int stops);
     int numberOfReachableCities(const Airport& airport, int stops);
     int numberOfReachableCountries(const Airport& airport, int stops);
