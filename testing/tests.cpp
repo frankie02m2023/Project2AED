@@ -614,6 +614,8 @@ TEST(Network_Statistics, numberOfReachableAirportsUnlimitedStops){
 
     EXPECT_EQ(numberOfReachableAirports1,7);
     EXPECT_EQ(numberOfReachableAirports2,5);
+
+    cleanSetup();
 }
 
 TEST(Network_Statistics, numberOfReachableCitiesUnlimitedStops){
@@ -643,6 +645,8 @@ TEST(Network_Statistics, numberOfReachableCitiesUnlimitedStops){
 
     EXPECT_EQ(numberOfReachableCities1,6);
     EXPECT_EQ(numberOfReachableCities2,4);
+
+    cleanSetup();
 }
 
 TEST(Network_Statistics, numberOfReachableAirports){
@@ -1197,6 +1201,8 @@ TEST(Best_Flight_Option, convertNameToAirport){
     NetworkAirport* networkAirport2 = system.getFlightNetwork().findAirport(airportTest2);
 
     EXPECT_EQ(networkAirport2, system.convertNameToAirport("test2",system.getFlightNetwork()));
+
+    cleanSetup();
 }
 
 TEST(Flight_Network_Filters,FilterByUndesiredAirlines){
@@ -1240,6 +1246,8 @@ TEST(Flight_Network_Filters,FilterByUndesiredAirlines){
     EXPECT_EQ(system.totalNumberOfFlights(),20);
     EXPECT_EQ(networkAirport3->getFlightsFromAirport().size(),3);
     EXPECT_EQ(networkAirport4->getFlightsFromAirport().size(),2);
+
+    cleanSetup();
 }
 
 TEST(Flight_Network_Filters,FilterByDesiredAirlines){
@@ -1283,6 +1291,8 @@ TEST(Flight_Network_Filters,FilterByDesiredAirlines){
     EXPECT_EQ(system.totalNumberOfFlights(),10);
     EXPECT_EQ(networkAirport3->getFlightsFromAirport().size(),1);
     EXPECT_EQ(networkAirport4->getFlightsFromAirport().size(),1);
+
+    cleanSetup();
 }
 
 

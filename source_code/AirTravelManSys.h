@@ -53,10 +53,6 @@ public:
     vector<NetworkAirport*> convertCityToAirports(const string& city, const FlightNetwork& flightNetwork);
     vector<NetworkAirport*> convertLocationToAirports(const double& latitude, const double& longitude, const FlightNetwork& flightNetwork);
 
-    NetworkAirport* convertNameToAirportInFilteredNetwork(const string& name, const FlightNetwork& flightNetwork);
-    NetworkAirport* convertCodeToAirportInFilteredNetwork(const string& code, const FlightNetwork& flightNetwork);
-    vector<NetworkAirport*> convertCityToAirportsInFilteredNetwork(const string& city, const FlightNetwork& flightNetwork);
-    vector<NetworkAirport*> convertLocationToAirportsInFilteredNetwork(const double& latitude, const double& longitude, const FlightNetwork& flightNetwork);
 
     int maxTrip(vector<pair<Airport,Airport>>& maxTripAirportPairs);
 
@@ -73,7 +69,6 @@ public:
     void reAddAirportsToFlightNetwork();
     FlightNetwork flightNetworkFilteredByDesiredAirlines(unordered_set<Airline> airlines);
     FlightNetwork flightNetworkFilteredByUndesiredAirlines(unordered_set<Airline> airlines);
-    void bestFlightOptionFilteredByAirlines(const vector<NetworkAirport*>& sources, const vector<NetworkAirport*>& destinations,const unordered_set<Airline>& airlines, bool desired, string searchType);
 
     const unordered_map<std::string, Airline> &getCodeToAirlines() const;
     const FlightNetwork &getFlightNetwork() const;
