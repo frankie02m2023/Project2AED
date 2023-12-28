@@ -42,22 +42,29 @@ public:
     int numberOfCountriesFromCity(const string& city) const;
     int numberOfCitiesFromAirport(const Airport& airport) const;
     int numberOfAirportsFromAirport(const Airport& airport) const;
+    int numberOfReachableAirportsFromAirport(const Airport& airport);
+    int numberOfReachableCitiesFromAirport(const Airport& airport);
     int numberOfReachableAirports(const Airport& airport, int stops);
     int numberOfReachableCities(const Airport& airport, int stops);
     int numberOfReachableCountries(const Airport& airport, int stops);
 
-    NetworkAirport* convertNameToAirport(const string& name);
-    NetworkAirport* convertCodeToAirport(const string& code);
-    vector<NetworkAirport*> convertCityToAirports(const string& city);
-    vector<NetworkAirport*> convertLocationToAirports(const string& latitude, const string& longitude);
+    NetworkAirport* convertNameToAirport(const string& name, const FlightNetwork& flightNetwork);
+    NetworkAirport* convertCodeToAirport(const string& code, const FlightNetwork& flightNetwork);
+    vector<NetworkAirport*> convertCityToAirports(const string& city, const FlightNetwork& flightNetwork);
+    vector<NetworkAirport*> convertLocationToAirports(const double& latitude, const double& longitude, const FlightNetwork& flightNetwork);
+
+    NetworkAirport* convertNameToAirportInFilteredNetwork(const string& name, const FlightNetwork& flightNetwork);
+    NetworkAirport* convertCodeToAirportInFilteredNetwork(const string& code, const FlightNetwork& flightNetwork);
+    vector<NetworkAirport*> convertCityToAirportsInFilteredNetwork(const string& city, const FlightNetwork& flightNetwork);
+    vector<NetworkAirport*> convertLocationToAirportsInFilteredNetwork(const double& latitude, const double& longitude, const FlightNetwork& flightNetwork);
 
     int maxTrip(vector<pair<Airport,Airport>>& maxTripAirportPairs);
 
-    void topKAirportCapacity(int k);
+    vector<NetworkAirport*> topKAirportCapacity(int k);
+
 
     unordered_set<Airport> essentialAirports();
-
-    void bestFlightOption(const vector<NetworkAirport*>& sources,const vector<NetworkAirport*>& destinations);
+    set<vector<NetworkAirport *>> bestFlightOption(const vector<NetworkAirport*>& sources,const vector<NetworkAirport*>& destinations);
     void findMinDistDFS(NetworkAirport* source, NetworkAirport* destination, int& minDist, int& countDist);
     void findMinDistBFS(NetworkAirport* source, NetworkAirport* destination, int& minDist);
     void findFlightOptionsDFS(NetworkAirport* source, NetworkAirport* destination, vector<NetworkAirport*> flightOption, set<vector<NetworkAirport*>> &flightOptions, int dist);
@@ -66,7 +73,7 @@ public:
     void reAddAirportsToFlightNetwork();
     FlightNetwork flightNetworkFilteredByDesiredAirlines(unordered_set<Airline> airlines);
     FlightNetwork flightNetworkFilteredByUndesiredAirlines(unordered_set<Airline> airlines);
-    void bestFlightOptionFilteredByAirlines(const vector<NetworkAirport*>& sources, const vector<NetworkAirport*>& destinations,const unordered_set<Airline>& airlines, bool desired);
+    void bestFlightOptionFilteredByAirlines(const vector<NetworkAirport*>& sources, const vector<NetworkAirport*>& destinations,const unordered_set<Airline>& airlines, bool desired, string searchType);
 
     const unordered_map<std::string, Airline> &getCodeToAirlines() const;
     const FlightNetwork &getFlightNetwork() const;
@@ -82,7 +89,7 @@ public:
     void cleanVisitedState();
 
 private:
-    std::vector<Airport> airports;
+    std::vector<Airport> Airports;
     std::unordered_map<std::string,vector<Airport>> cityToAirport;
     std::unordered_map<std::string,vector<Airport>> countryToAirport;
     std::unordered_map<std::string,Airport> codeToAirport;

@@ -270,7 +270,7 @@ void AirTravelManSys::readAirportsDataFile() {
         flightNetwork.addNetworkAirport(airport);
 
         //put airport in airports vector
-        airports.push_back(airport);
+        Airports.push_back(airport);
 
         //adds info to the cities hash table
         addInfoCityToAirport(city,airport);
@@ -774,22 +774,26 @@ bool compAirportByFlights(NetworkAirport* networkAirport1, NetworkAirport* netwo
  *  Complexity: O(nlog(n))
  * @param k  number of top airports
  */
-void AirTravelManSys::topKAirportCapacity(int k) {
+vector<NetworkAirport*> AirTravelManSys::topKAirportCapacity(int k) {
     vector<NetworkAirport*> networkAirports {flightNetwork.getFlightNetwork().begin(), flightNetwork.getFlightNetwork().end()};
     sort(networkAirports.begin(), networkAirports.end(), compAirportByFlights);
 
     if(k > networkAirports.size())
         k = networkAirports.size();
-    for(size_t i = 0; i < k; i++){
-        NetworkAirport* networkAirport = networkAirports.at(i);
 
-        cout << i + 1 << ". Airport name: " << networkAirport->getAirport().getName()
-            <<"; code: " << networkAirport->getAirport().getCode()
-            <<"; Capacity: " << networkAirport->getNumberOfFlightsFromAirport() + networkAirport->getNumberOfFlightsToAirport()
-            << endl;
-    }
+    vector<NetworkAirport*> subVector {networkAirports.begin(), networkAirports.begin() + k};
+
+    return subVector;
 }
 
+/** Auxiliary recursive function that does a dfs searches in order to help compute the articulation points of the network
+ *  Complexity: O(V + E) where V is the number of airports in the network and E the number of flights
+ * @param networkAirport pointer to the airport where the dfs search is meant to start
+ * @param airportStack auxiliary stack to store the airports that are traversed during the search
+ * @param essentialAirports unordered set that is passed to the method by reference and is used to store the essential airports of the network
+ * @param i auxiliary counter
+ * @return unordered set of the essential airports in the network
+ */
 void dfsForEssentialAirports(NetworkAirport* networkAirport, stack<Airport>& airportStack, unordered_set<Airport>& essentialAirports, int& i){
     i++;
     int children = 0;
@@ -815,6 +819,10 @@ void dfsForEssentialAirports(NetworkAirport* networkAirport, stack<Airport>& air
     }
 }
 
+/** Auxiliary  function that duplicates the flights in the flight system
+ *  Complexity: O(N^2)
+ * @param flightNetwork targetFlightNetwork
+ */
 void doubleNetworkFlights(unordered_set<NetworkAirport *, HashNetworkAirport, EqualityNetworkAirport>& flightNetwork){
     for(auto networkAirport : flightNetwork){
         for(const auto& flight : networkAirport->getFlightsFromAirport()){
@@ -824,12 +832,15 @@ void doubleNetworkFlights(unordered_set<NetworkAirport *, HashNetworkAirport, Eq
 }
 
 void AirTravelManSys::reAddAirportsToFlightNetwork(){
-    for(const Airport& airport : airports){
+    for(const Airport& airport : Airports){
         flightNetwork.addNetworkAirport(airport);
     }
 }
 
-
+/** Gets the essential airports in the flight network(articulation points)
+ *  Complexity: O(V + E) where V is the number of airports in the network and E the number of flights
+ * @return unordered set of the essential airports in the network
+ */
 unordered_set<Airport> AirTravelManSys::essentialAirports() {
     int i = 0;
     unordered_set<Airport> essentialAirports;
@@ -855,18 +866,18 @@ unordered_set<Airport> AirTravelManSys::essentialAirports() {
  * @param city Name of the city
  * @return Vector with all the airport found
  */
-vector<NetworkAirport*> AirTravelManSys::convertCityToAirports(const std::string& city) {
+vector<NetworkAirport*> AirTravelManSys::convertCityToAirports(const std::string& city, const FlightNetwork& flightNetwork1) {
     auto it = cityToAirport.find(city);
-    vector<Airport> airports;
+    vector<Airport> airports1;
     vector<NetworkAirport*> networkAirports;
     if(it == cityToAirport.end()){
         cout << "City not found" << endl;
         return networkAirports;
     }
     else{
-        airports = it->second;
-        for(const Airport& airport: airports){
-            NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+        airports1 = it->second;
+        for(const Airport& airport: airports1){
+            NetworkAirport* networkAirport = flightNetwork1.findAirport(airport);
             networkAirports.push_back(networkAirport);
         }
         return networkAirports;
@@ -908,21 +919,19 @@ double distanceCoordinates(double latitude, double longitude, Location airportLo
  * @param longitude Longitude of the location
  * @return  Vector with the airports found
  */
-vector<NetworkAirport*> AirTravelManSys::convertLocationToAirports(const std::string& latitude, const std::string& longitude) {
-    double DLatitude = stod(latitude);
-    double DLongitude = stod(longitude);
+vector<NetworkAirport*> AirTravelManSys::convertLocationToAirports(const double& latitude, const double& longitude, const FlightNetwork& flightNetwork1) {
     auto distance = DBL_MAX;
     vector<NetworkAirport*> networkAirports;
 
-    for(NetworkAirport* networkAirport: flightNetwork.getFlightNetwork()){
-        double airportDistance = distanceCoordinates(DLatitude, DLongitude, networkAirport->getAirport().getLocation());
+    for(NetworkAirport* networkAirport: flightNetwork1.getFlightNetwork()){
+        double airportDistance = distanceCoordinates(latitude, longitude, networkAirport->getAirport().getLocation());
         if(airportDistance < distance){
             distance = airportDistance;
         }
     }
 
-    for(NetworkAirport* networkAirport: flightNetwork.getFlightNetwork()) {
-        double airportDistance = distanceCoordinates(DLatitude, DLongitude, networkAirport->getAirport().getLocation());
+    for(NetworkAirport* networkAirport: flightNetwork1.getFlightNetwork()) {
+        double airportDistance = distanceCoordinates(latitude, longitude, networkAirport->getAirport().getLocation());
         if (airportDistance == distance) {
             networkAirports.push_back(networkAirport);
         }
@@ -935,7 +944,7 @@ vector<NetworkAirport*> AirTravelManSys::convertLocationToAirports(const std::st
  * @param code Code of the airport
  * @return  Airport found
  */
-NetworkAirport* AirTravelManSys::convertCodeToAirport(const std::string& code) {
+NetworkAirport* AirTravelManSys::convertCodeToAirport(const std::string& code, const FlightNetwork& flightNetwork1) {
     auto it = codeToAirport.find(code);
 
     if(it == codeToAirport.end()){
@@ -945,7 +954,7 @@ NetworkAirport* AirTravelManSys::convertCodeToAirport(const std::string& code) {
 
     else{
         Airport airport = codeToAirport.at(code);
-        NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+        NetworkAirport* networkAirport = flightNetwork1.findAirport(airport);
         return networkAirport;
     }
 }
@@ -955,8 +964,8 @@ NetworkAirport* AirTravelManSys::convertCodeToAirport(const std::string& code) {
  * @param name  Name of the airport to convert
  * @return  Airport found
  */
-NetworkAirport* AirTravelManSys::convertNameToAirport(const std::string& name) {
-    for(NetworkAirport* networkAirport : flightNetwork.getFlightNetwork()){
+NetworkAirport* AirTravelManSys::convertNameToAirport(const std::string& name, const FlightNetwork& flightNetwork1) {
+    for(NetworkAirport* networkAirport : flightNetwork1.getFlightNetwork()){
         if(networkAirport->getAirport().getName() == name){
             return networkAirport;
         }
@@ -1152,7 +1161,7 @@ void AirTravelManSys::buildFlightOption(ParentChild root, vector<ParentChild> pa
  * @param sources
  * @param destinations
  */
-void AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, const vector<NetworkAirport *>& destinations) {
+set<vector<NetworkAirport *>> AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, const vector<NetworkAirport *>& destinations) {
     cleanVisitedState();
     cleanProcessState();
 
@@ -1175,16 +1184,7 @@ void AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, 
         }
     }
 
-    //prints the results
-    int i = 1;
-    for(const vector<NetworkAirport*>& option: flightOptions){
-        cout << '\n';
-        cout << "Option " << i <<" : -------------" << endl;
-        i++;
-        for(NetworkAirport* networkAirport: option){
-            cout << "Airport code: " << networkAirport->getAirport().getCode() << "  Airport name: " << networkAirport->getAirport().getName() << endl;
-        }
-    }
+return flightOptions;
 }
 
 FlightNetwork AirTravelManSys::flightNetworkFilteredByDesiredAirlines(unordered_set<Airline> airlines) {
@@ -1219,15 +1219,48 @@ FlightNetwork AirTravelManSys::flightNetworkFilteredByUndesiredAirlines(unordere
     return filteredFlightNetwork;
 }
 
-void AirTravelManSys::bestFlightOptionFilteredByAirlines(const vector<NetworkAirport *> &sources,const vector<NetworkAirport *> &destinations, const unordered_set<Airline>& airlines, bool desired) {
-    FlightNetwork filteredFlightNetwork;
-    if(desired){
-        filteredFlightNetwork = flightNetworkFilteredByDesiredAirlines(airlines);
+int AirTravelManSys::numberOfReachableAirportsFromAirport(const Airport &airport) {
+    this->cleanVisitedState();
+    queue<NetworkAirport*> q;
+    NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+    networkAirport->setVisited(true);
+    vector<Airport> reachableAirports;
+    q.push(networkAirport);
+    while(!q.empty()){
+        NetworkAirport* targetNetworkAirport = q.front();
+        q.pop();
+        for(const auto& flight : targetNetworkAirport->getFlightsFromAirport()){
+            if(!flight.getDestination()->isVisited()){
+                flight.getDestination()->setVisited(true);
+                q.push(flight.getDestination());
+                reachableAirports.push_back(targetNetworkAirport->getAirport());
+            }
+        }
     }
-    else{
-        filteredFlightNetwork = flightNetworkFilteredByUndesiredAirlines(airlines);
+    return reachableAirports.size();
+}
+
+int AirTravelManSys::numberOfReachableCitiesFromAirport(const Airport &airport) {
+    this->cleanVisitedState();
+    queue<NetworkAirport*> q;
+    NetworkAirport* networkAirport = flightNetwork.findAirport(airport);
+    networkAirport->setVisited(true);
+    unordered_set<string> reachableCities;
+    q.push(networkAirport);
+    while(!q.empty()){
+        NetworkAirport* targetNetworkAirport = q.front();
+        q.pop();
+        for(const auto& flight : targetNetworkAirport->getFlightsFromAirport()){
+            if(!flight.getDestination()->isVisited()){
+                flight.getDestination()->setVisited(true);
+                q.push(flight.getDestination());
+                if(reachableCities.find(flight.getDestination()->getAirport().getCity()) == reachableCities.end()){
+                    reachableCities.insert(flight.getDestination()->getAirport().getCity());
+                }
+            }
+        }
     }
-    bestFlightOption(sources,destinations)
+    return reachableCities.size();
 }
 
 
