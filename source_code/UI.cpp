@@ -594,6 +594,11 @@ int UI::numberOfDestinationsInKStops() {
     }
 }
 
+/** Shows the Number of destinations (airport, countries or cities) in unlimited stops from an airport.
+ *  Complexity: Varies on the functions called and how many times some of them are called.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::numberOfDestinationsInUnlimitedStops() {
     while(true) {
         cout << "1.Countries\n";

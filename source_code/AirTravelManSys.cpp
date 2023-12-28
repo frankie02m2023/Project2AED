@@ -595,9 +595,9 @@ int AirTravelManSys::numberOfReachableAirports(const Airport &airport, int stops
     return counter;
 }
 
-/** Gets the number of reachable cities from a given airport in a maximum k number of stops
+/** Gets the number of reachable cities from a given airport in a maximum k number of stops.
  *  Complexity: O(n^2log(n))
- * @param airport airport we want to know the reachable airports
+ * @param airport airport we want to know the reachable cities
  * @param stops maximum number of stops
  * @return number of reachable cities
  */
@@ -653,9 +653,9 @@ int AirTravelManSys::numberOfReachableCities(const Airport &airport, int stops) 
     return counter;
 }
 
-/** Gets the number of reachable countries from a given airport in a maximum k number of stops
+/** Gets the number of reachable countries from a given airport in a maximum k number of stops.
  *  Complexity: O(n^2log(n))
- * @param airport airport we want to know the reachable airports
+ * @param airport airport we want to know the reachable countries
  * @param stops maximum number of stops
  * @return number of reachable countries
  */
@@ -709,6 +709,11 @@ int AirTravelManSys::numberOfReachableCountries(const Airport &airport, int stop
     return counter;
 }
 
+/** BFS used to help find the maximum distance between airports.
+ *  Complexity: O(n^2)
+ * @param networkAirport  Airport from where the visit starts
+ * @return Vector with a pairs  of airports  and distances from the airport source
+ */
 vector<pair<NetworkAirport*,int>> bfsAirportVisit(NetworkAirport *networkAirport){
     vector<pair<NetworkAirport*,int>> v;
     vector<pair<NetworkAirport*,int>> distanceToDestination;
@@ -717,19 +722,24 @@ vector<pair<NetworkAirport*,int>> bfsAirportVisit(NetworkAirport *networkAirport
     q.emplace(networkAirport,0);
     NetworkAirport* targetAirport;
     int distance;
+
     while(!q.empty()){
         targetAirport = q.front().first;
         distance = q.front().second;
         q.pop();
         v.emplace_back(targetAirport,distance);
+
         for(const auto& flight : targetAirport->getFlightsFromAirport()){
             if(!flight.getDestination()->isVisited()){
+
                 flight.getDestination()->setVisited(true);
                 q.emplace(flight.getDestination(),distance + 1);
             }
         }
     }
+
     for(auto pair : v){
+
         if(pair.second == distance){
             distanceToDestination.emplace_back(pair.first,pair.second);
         }
@@ -737,19 +747,30 @@ vector<pair<NetworkAirport*,int>> bfsAirportVisit(NetworkAirport *networkAirport
     return distanceToDestination;
 }
 
+/** Gets the maximum trip possible in the network.
+ *  Complexity: O(n^3)
+ * @param maxTripAirportPairs Vector with the pair of airports(source, destination) with the maximum trip value
+ * @return Maximum trip value
+ */
 int AirTravelManSys::maxTrip(vector<pair<Airport, Airport>>& maxTripAirportPairs) {
   int maxTrip = 0;
   vector<pair<NetworkAirport*,int>> distanceToDestination;
+
   for(auto networkAirport : flightNetwork.getFlightNetwork()){
       cleanVisitedState();
       cleanProcessState();
       distanceToDestination = bfsAirportVisit(networkAirport);
+
       if(!distanceToDestination.empty()){
+
           if(distanceToDestination.at(0).second >= maxTrip){
+
               if(distanceToDestination.at(0).second > maxTrip){
                   maxTripAirportPairs.clear();
               }
+
               maxTrip = distanceToDestination.at(0).second;
+
               for(auto pair : distanceToDestination){
                   maxTripAirportPairs.emplace_back(networkAirport->getAirport(),pair.first->getAirport());
               }
@@ -831,6 +852,9 @@ void doubleNetworkFlights(unordered_set<NetworkAirport *, HashNetworkAirport, Eq
     }
 }
 
+/** Auxiliary function that reAdds temporarily removed airports to the network
+ *  Complexity: O(n)
+ */
 void AirTravelManSys::reAddAirportsToFlightNetwork(){
     for(const Airport& airport : Airports){
         flightNetwork.addNetworkAirport(airport);
@@ -849,11 +873,14 @@ unordered_set<Airport> AirTravelManSys::essentialAirports() {
     cleanVisitedState();
     unordered_set<NetworkAirport *, HashNetworkAirport, EqualityNetworkAirport> copyFlightNetwork = flightNetwork.getFlightNetwork();
     doubleNetworkFlights(copyFlightNetwork);
+
     for(auto networkAirport : copyFlightNetwork){
         if(networkAirport->getNum() == 0){
             dfsForEssentialAirports(networkAirport,airportStack,essentialAirports,i);
         }
+
     }
+
     flightNetwork.resetFlightNetwork();
     reAddAirportsToFlightNetwork();
     readFlightsDataFile();
@@ -1189,13 +1216,22 @@ return flightOptions;
 }
 
 
+/** Filter the flights in order to only include certain airlines.
+ *  Complexity: O(n^2)
+ * @param airlines Set of desired airlines
+ * @return  Filtered flight network
+ */
 FlightNetwork AirTravelManSys::flightNetworkFilteredByDesiredAirlines(unordered_set<Airline> airlines) {
     FlightNetwork filteredFlightNetwork;
+
     for (auto networkAirport: flightNetwork.getFlightNetwork()) {
         filteredFlightNetwork.addNetworkAirport(networkAirport->getAirport());
     }
+
     for (auto networkAirport: flightNetwork.getFlightNetwork()) {
+
         for (const auto &flight: networkAirport->getFlightsFromAirport()) {
+
             if (airlines.find(flight.getAirLine()) != airlines.end()) {
                 filteredFlightNetwork.addFlight(networkAirport->getAirport(), flight.getDestination()->getAirport(),
                                                 flight.getAirLine());
@@ -1205,6 +1241,11 @@ FlightNetwork AirTravelManSys::flightNetworkFilteredByDesiredAirlines(unordered_
     return filteredFlightNetwork;
 }
 
+/** Filter the flights in order to exclude undesired airlines.
+ *  Complexity: O(n^2)
+ * @param airlines Set of undesired airlines
+ * @return  Filtered flight network
+ */
 FlightNetwork AirTravelManSys::flightNetworkFilteredByUndesiredAirlines(unordered_set<Airline> airlines) {
     FlightNetwork filteredFlightNetwork;
     for (auto networkAirport: flightNetwork.getFlightNetwork()) {
@@ -1221,6 +1262,11 @@ FlightNetwork AirTravelManSys::flightNetworkFilteredByUndesiredAirlines(unordere
     return filteredFlightNetwork;
 }
 
+/** Gets the number of reachable airports from a given airport in an unlimited number of stops
+ *  Complexity: O(n^2log(n))
+ * @param airport airport we want to know the reachable airports
+ * @return number of reachable airports
+ */
 int AirTravelManSys::numberOfReachableAirportsFromAirport(const Airport &airport) {
     this->cleanVisitedState();
     queue<NetworkAirport*> q;
@@ -1245,6 +1291,11 @@ int AirTravelManSys::numberOfReachableAirportsFromAirport(const Airport &airport
     return reachableAirports.size();
 }
 
+/** Gets the number of reachable cities from a given airport in an unlimited number of stops
+ *  Complexity: O(n^2log(n))
+ * @param airport airport we want to know the reachable cities
+ * @return number of reachable cities
+ */
 int AirTravelManSys::numberOfReachableCitiesFromAirport(const Airport &airport) {
     this->cleanVisitedState();
     queue<NetworkAirport*> q;
@@ -1273,6 +1324,11 @@ int AirTravelManSys::numberOfReachableCitiesFromAirport(const Airport &airport) 
     return reachableCities.size();
 }
 
+/** Gets the number of reachable countries from a given airport in an unlimited number of stops
+ *  Complexity: O(n^2log(n))
+ * @param airport airport we want to know the reachable countries
+ * @return number of reachable countries
+ */
 int AirTravelManSys::numberOfReachableCountriesFromAirport(const Airport &airport) {
     this->cleanVisitedState();
     queue<NetworkAirport*> q;
