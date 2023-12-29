@@ -712,7 +712,7 @@ int AirTravelManSys::numberOfReachableCountries(const Airport &airport, int stop
 }
 
 /** Gets the number of reachable airports from a given airport in an unlimited number of stops
- *  Complexity: O(n^2log(n))
+ *  Complexity: O(n^2)
  * @param airport airport we want to know the reachable airports
  * @return number of reachable airports
  */
@@ -905,7 +905,7 @@ vector<NetworkAirport*> AirTravelManSys::topKAirportCapacity(int k) {
 }
 
 /** Auxiliary recursive function that does a dfs searches in order to help compute the articulation points of the network
- *  Complexity: O(V + E) where V is the number of airports in the network and E the number of flights
+ *  Complexity: O(n^2)   (O(V + E) where V is the number of airports in the network and E the number of flights)
  * @param networkAirport pointer to the airport where the dfs search is meant to start
  * @param airportStack auxiliary stack to store the airports that are traversed during the search
  * @param essentialAirports unordered set that is passed to the method by reference and is used to store the essential airports of the network
@@ -918,23 +918,31 @@ void dfsForEssentialAirports(NetworkAirport* networkAirport, stack<Airport>& air
     networkAirport->setNum(i);
     networkAirport->setLow(i);
     airportStack.push(networkAirport->getAirport());
+
     for(const auto& flight : networkAirport->getFlightsFromAirport()){
+
         if(flight.getDestination()->getNum() == 0){
             children++;
             dfsForEssentialAirports(flight.getDestination(),airportStack,essentialAirports,i);
             networkAirport->setLow(min(networkAirport->getLow(),flight.getDestination()->getLow()));
+
             if(networkAirport->getNum() != 1 && flight.getDestination()->getLow() >= networkAirport->getNum()){
                 essentialAirports.insert(networkAirport->getAirport());
             }
         }
+
         else if(flight.getDestination()->getNum() > 0){
             networkAirport->setLow(min(networkAirport->getLow(),flight.getDestination()->getNum()));
         }
+
     }
+
     airportStack.pop();
+
     if(networkAirport->getNum() == 1 && children > 1){
         essentialAirports.insert(networkAirport->getAirport());
     }
+
 }
 
 /** Auxiliary  function that duplicates the flights in the flight system
@@ -959,7 +967,7 @@ void AirTravelManSys::reAddAirportsToFlightNetwork(){
 }
 
 /** Gets the essential airports in the flight network(articulation points)
- *  Complexity: O(V + E) where V is the number of airports in the network and E the number of flights
+ *  Complexity:  O(n^2) (O(V + E) where V is the number of airports in the network and E the number of flights)
  * @return unordered set of the essential airports in the network
  */
 unordered_set<Airport> AirTravelManSys::essentialAirports() {
@@ -972,6 +980,7 @@ unordered_set<Airport> AirTravelManSys::essentialAirports() {
     doubleNetworkFlights(copyFlightNetwork);
 
     for(auto networkAirport : copyFlightNetwork){
+
         if(networkAirport->getNum() == 0){
             dfsForEssentialAirports(networkAirport,airportStack,essentialAirports,i);
         }
@@ -1283,7 +1292,7 @@ void AirTravelManSys::buildFlightOption(ParentChild root, vector<ParentChild> pa
 }
 
 /** Finds the best flight path (minimum stops) with no filters
- *
+ *  Complexity: O(n^2) (O(n^4) only if we have a lot of possible sources and destinations)
  * @param sources
  * @param destinations
  * @return Set of flight paths
