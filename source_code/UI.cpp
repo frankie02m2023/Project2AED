@@ -248,6 +248,11 @@ int UI::bestFlightOptionsMenu() {
                 return 1;
         }
 
+        if (s != 0) {
+            cout << "Try again. Insert a valid option (airport, city, location)\n";
+            continue;
+        }
+
         cout << "Please insert the number corresponding to the criteria you want to select to choose your arrival location\n\n";
 
         cout << "1.Airport\n";
@@ -295,6 +300,11 @@ int UI::bestFlightOptionsMenu() {
                 return 1;
         }
 
+        if (s != 0) {
+            cout << "Try again. Insert a valid option (airport, city, location)\n";
+            continue;
+        }
+
         set<vector<NetworkAirport*>> flightOptions = airTravelSys.bestFlightOption(networkAirportsD, networkAirportsA);
         int i = 1;
         for(const vector<NetworkAirport*>& opt: flightOptions){
@@ -310,6 +320,11 @@ int UI::bestFlightOptionsMenu() {
     }
 }
 
+/** Menu used to choose the filter used in the best flight option with filters.
+*  Complexity: Varies on the functions called and how many times some of them are called.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::filtersMenu() {
     while(true) {
 
@@ -361,6 +376,11 @@ int UI::filtersMenu() {
     }
 }
 
+/** Best Flight Option with filters Menu were the options related to the choice of the criteria for calling the bestFlightOption method are chosen.
+*  Complexity: Varies on the functions called and how many times some of them are called.
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::bestFlightOptionsWithFiltersMenu(FlightNetwork& flightNetwork) {
     cout << "\n BEST FLIGHT OPTION WITH FILTERS\n\n";
 
@@ -412,6 +432,11 @@ int UI::bestFlightOptionsWithFiltersMenu(FlightNetwork& flightNetwork) {
                 return 1;
         }
 
+        if (s != 0) {
+            cout << "Try again. Insert a valid option (airport, city, location)\n";
+            continue;
+        }
+
         cout << "Please insert the number corresponding to the criteria you want to select to choose your arrival location\n\n";
 
         cout << "1.Airport\n";
@@ -458,6 +483,12 @@ int UI::bestFlightOptionsWithFiltersMenu(FlightNetwork& flightNetwork) {
                 cout << "Error found\n";
                 return 1;
         }
+
+        if (s != 0) {
+            cout << "Try again. Insert a valid option (airport, city, location)\n";
+            continue;
+        }
+
         set<vector<NetworkAirport*>> flightOptions = airTravelSys.bestFlightOptionInFilteredNetwork(networkAirportsD, networkAirportsA,flightNetwork);
         int i = 1;
         for(const vector<NetworkAirport*>& opt: flightOptions){
@@ -1136,6 +1167,11 @@ int UI::locationBuilder(Location &location) {
     return 0;
 }
 
+/** Submenu where the user chooses the target airlines to use in the filters..
+*  Complexity: O(1)
+ *
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::chooseTargetAirlines(unordered_set<Airline> &airlines) {
     cout << "Please enter the code of the airlines you wish to add to your filter:\n\n";
     int s;

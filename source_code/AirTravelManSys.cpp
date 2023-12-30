@@ -1109,7 +1109,7 @@ NetworkAirport* AirTravelManSys::convertNameToAirport(const std::string& name, c
     return nullptr;
 }
 
-/** Gets minimum distance/stops between two airport using a BFS approach.
+/** Gets minimum distance/stops between two airport using a DFS approach.
  *  Complexity: O(n^2)
  * @param source  Source of the flight
  * @param destination   Destination of the flight
@@ -1292,7 +1292,7 @@ void AirTravelManSys::buildFlightOption(ParentChild root, vector<ParentChild> pa
 }
 
 /** Finds the best flight path (minimum stops) with no filters
- *  Complexity: O(n^2) (O(n^4) only if we have a lot of possible sources and destinations)
+ *  Complexity: O(n^3) (O(n^4) only if we have a lot of possible sources and destinations)
  * @param sources
  * @param destinations
  * @return Set of flight paths
@@ -1376,6 +1376,13 @@ FlightNetwork AirTravelManSys::flightNetworkFilteredByUndesiredAirlines(unordere
     return filteredFlightNetwork;
 }
 
+/** Finds the best flight path (minimum stops) with filters
+ *  Complexity: O(n^3) (O(n^4) only if we have a lot of possible sources and destinations)
+ * @param sources
+ * @param destinations
+ * @param flightNetwork1 Filtered flightNetwork.
+ * @return Set of flight paths
+ */
 set<vector<NetworkAirport *>> AirTravelManSys::bestFlightOptionInFilteredNetwork(const vector<NetworkAirport *>& sources, const vector<NetworkAirport *>& destinations, FlightNetwork& flightNetwork1) {
     int maxMinDist = flightNetwork1.maxTrip();
     flightNetwork1.cleanVisitedState();
