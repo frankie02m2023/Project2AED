@@ -1,6 +1,7 @@
 //
 // Created by franc on 19/12/2023.
 //
+#include <queue>
 #include "FlightNetwork.h"
 
 /** @file FlightNetwork.cpp
@@ -93,5 +94,80 @@ bool FlightNetwork::removeFlight(Airport departureAirport,Airport destinationAir
 
 void FlightNetwork::resetFlightNetwork() {
     flightNetwork.clear();
+}
+
+void FlightNetwork::cleanProcessState() {
+    for(NetworkAirport* networkAirport: flightNetwork){
+        networkAirport->setProcessing(false);
+    }
+}
+
+void FlightNetwork::cleanVisitedState() {
+    for(NetworkAirport* networkAirport: flightNetwork){
+        networkAirport->setVisited(false);
+    }
+}
+
+/** BFS used to help find the maximum distance between airports.
+ *  Complexity: O(n^2)
+ * @param networkAirport  Airport from where the visit starts
+ * @return Vector with a pairs  of airports  and distances from the airport source
+ */
+int bfsAirportVisit1(NetworkAirport *networkAirport){
+    vector<pair<NetworkAirport*,int>> v;
+    int distanceToDestination;
+    networkAirport->setVisited(true);
+    queue<pair<NetworkAirport*,int>> q;
+    q.emplace(networkAirport,0);
+    NetworkAirport* targetAirport;
+    int distance;
+
+    while(!q.empty()){
+        targetAirport = q.front().first;
+        distance = q.front().second;
+        q.pop();
+        v.emplace_back(targetAirport,distance);
+
+        for(const auto& flight : targetAirport->getFlightsFromAirport()){
+            if(!flight.getDestination()->isVisited()){
+
+                flight.getDestination()->setVisited(true);
+                q.emplace(flight.getDestination(),distance + 1);
+            }
+        }
+    }
+
+    for(auto pair : v){
+
+        if(pair.second == distance){
+            distanceToDestination = distance;
+        }
+    }
+    return distanceToDestination;
+}
+
+/** Gets the maximum trip possible in a flight network.
+ *  Complexity: O(n^3)
+ * @param maxTripAirportPairs Vector with the pair of airports(source, destination) with the maximum trip value
+ * @return Maximum trip value
+ */
+int FlightNetwork::maxTrip() {
+    int maxTrip = 0;
+    int distanceToDestination;
+
+    for(auto networkAirport : flightNetwork){
+        cleanVisitedState();
+        cleanProcessState();
+        distanceToDestination = bfsAirportVisit1(networkAirport);
+
+
+            if(distanceToDestination >= maxTrip){
+
+                maxTrip = distanceToDestination;
+
+            }
+        }
+
+    return maxTrip;
 }
 

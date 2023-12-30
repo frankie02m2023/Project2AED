@@ -1148,7 +1148,7 @@ void AirTravelManSys::findMinDistDFS(NetworkAirport* source, NetworkAirport* des
  * @param destination   Destination of the flight
  * @param minDist   Minimum distance/stops found from the source to the destination
  */
-void AirTravelManSys::findMinDistBFS(NetworkAirport *source, NetworkAirport *destination, int &minDist) {
+void AirTravelManSys::findMinDistBFS(NetworkAirport *source, NetworkAirport *destination, int &minDist, int maxMinDist) {
 
     queue<pair<NetworkAirport*,int>> q;
     q.emplace(source,0);
@@ -1176,8 +1176,8 @@ void AirTravelManSys::findMinDistBFS(NetworkAirport *source, NetworkAirport *des
             }
         }
 
-        if(minDist == na.second + 1){
-            //Exist loop when min distance is found
+        if(minDist == na.second + 1 || na.second + 1 > maxMinDist){
+            // Exist loop when min distance is found or when distance exceeds the diameter of the network
             break;
         }
     }
@@ -1298,19 +1298,25 @@ void AirTravelManSys::buildFlightOption(ParentChild root, vector<ParentChild> pa
  * @return Set of flight paths
  */
 set<vector<NetworkAirport *>> AirTravelManSys::bestFlightOption(const vector<NetworkAirport *>& sources, const vector<NetworkAirport *>& destinations) {
+    int maxMinDist = flightNetwork.maxTrip();
     cleanVisitedState();
     cleanProcessState();
 
     int minDist = INT_MAX;
 
+
     //find the minimum distance between the airports
     for(NetworkAirport* source: sources){
         for(NetworkAirport* destination: destinations){
-            findMinDistBFS(source, destination,minDist);
+            findMinDistBFS(source, destination,minDist,maxMinDist);
         }
     }
 
     set<vector<NetworkAirport*>> flightOptions;
+
+    if(minDist > maxMinDist){
+        return flightOptions;
+    }
 
     //find the different flight options from the possible sources to the destination
     for(NetworkAirport* source: sources){
@@ -1368,6 +1374,37 @@ FlightNetwork AirTravelManSys::flightNetworkFilteredByUndesiredAirlines(unordere
         }
     }
     return filteredFlightNetwork;
+}
+
+set<vector<NetworkAirport *>> AirTravelManSys::bestFlightOptionInFilteredNetwork(const vector<NetworkAirport *>& sources, const vector<NetworkAirport *>& destinations, FlightNetwork& flightNetwork1) {
+    int maxMinDist = flightNetwork1.maxTrip();
+    flightNetwork1.cleanVisitedState();
+    flightNetwork1.cleanProcessState();
+
+    int minDist = INT_MAX;
+
+    //find the minimum distance between the airports
+    for(NetworkAirport* source: sources){
+        for(NetworkAirport* destination: destinations){
+            findMinDistBFS(source, destination,minDist,maxMinDist);
+        }
+    }
+
+    set<vector<NetworkAirport*>> flightOptions;
+
+    if(minDist > maxMinDist){
+        return flightOptions;
+    }
+
+    //find the different flight options from the possible sources to the destination
+    for(NetworkAirport* source: sources){
+        for(NetworkAirport* destination: destinations){
+            flightNetwork1.cleanVisitedState();
+            findFlightOptionsBFS(source, destination,flightOptions, minDist);
+        }
+    }
+
+    return flightOptions;
 }
 
 

@@ -117,6 +117,9 @@ class FlightNetwork{
     bool addFlight(Airport departureAirport, Airport destinationAirport, Airline airline) const;
     bool removeFlight(Airport departureAirport,Airport destinationAirport, Airline airline) const;
     void resetFlightNetwork();
+    void cleanProcessState();
+    void cleanVisitedState();
+    int maxTrip();
 
 };
 

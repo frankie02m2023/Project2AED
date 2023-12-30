@@ -13,6 +13,8 @@
 FlightNetwork flightNetworkTest;
 unordered_map<std::string, std::vector<Airport>> cityToAirportTest;
 unordered_map<std::string, Airport> codeToAirportTest;
+unordered_map<std::string, Airport> codeToAirportTest3;
+unordered_map<std::string, std::vector<Airport>> cityToAirportTest3;
 
 void setup1() {
 
@@ -179,6 +181,19 @@ void setup3(){
     Airline airlineTest3{"a3", "airline3", "ca3", "co3"};
     Airline airlineTest4{"a4", "airline4", "ca4", "co6"};
     Airline airlineTest5{"a5", "airline5", "ca5", "co3"};
+
+    codeToAirportTest3.insert({"A",airportTest1});
+    codeToAirportTest3.insert({"B",airportTest2});
+    codeToAirportTest3.insert({"C",airportTest3});
+    codeToAirportTest3.insert({"D",airportTest4});
+    codeToAirportTest3.insert({"E",airportTest5});
+    codeToAirportTest3.insert({"F",airportTest6});
+
+    cityToAirportTest3.insert({"ci1",{airportTest1}});
+    cityToAirportTest3.insert({"ci2",{airportTest2}});
+    cityToAirportTest3.insert({"ci3",{airportTest3,airportTest5}});
+    cityToAirportTest3.insert({"ci4",{airportTest4}});
+    cityToAirportTest3.insert({"ci6",{airportTest6}});
 
 
     flightNetworkTest.addFlight(airportTest1,airportTest2,airlineTest1);
@@ -963,7 +978,9 @@ TEST(Best_Flight_Option, findMinDistBFS){
     NetworkAirport* source = system.getFlightNetwork().findAirport(airport1);
     NetworkAirport* destination = system.getFlightNetwork().findAirport(airport2);
     int minDist = INT_MAX;
-    system.findMinDistBFS(source, destination,minDist);
+    int minMaxDist = flightNetworkTest.maxTrip();
+    system.cleanVisitedState();
+    system.findMinDistBFS(source, destination,minDist,minMaxDist);
 
     EXPECT_EQ(minDist,2);
 
@@ -971,7 +988,7 @@ TEST(Best_Flight_Option, findMinDistBFS){
     Airport airport3 {"t9", "test9", "co1", "ci7", Location{22.0, 9.0}};//test airport 9
     destination = system.getFlightNetwork().findAirport(airport3);
     minDist = INT_MAX;
-    system.findMinDistBFS(source, destination, minDist);
+    system.findMinDistBFS(source, destination, minDist,minMaxDist);
 
     EXPECT_EQ(1,minDist);
 
@@ -979,7 +996,7 @@ TEST(Best_Flight_Option, findMinDistBFS){
     Airport airport4 {"t7", "test7", "co4", "ci6", Location{30.0, 70.0}};//test airport7
     destination = system.getFlightNetwork().findAirport(airport4);
     minDist = INT_MAX;
-    system.findMinDistBFS(source,destination,minDist);
+    system.findMinDistBFS(source,destination,minDist,minMaxDist);
 
     EXPECT_EQ(2,minDist);
     cleanSetup();
@@ -1295,6 +1312,70 @@ TEST(Flight_Network_Filters,FilterByDesiredAirlines){
     cleanSetup();
 }
 
+TEST(Best_Flight_Option_With_Filters,bestFlightOptionWithFiltersUndesiredAirlines){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
 
+    setup3();
+
+    system.setFlightNetwork(flightNetworkTest);
+    system.setCodeToAirport(codeToAirportTest3);
+    system.setCityToAirport(cityToAirportTest3);
+
+    Airline airline1{"a1", "airline1", "ca1", "co2"};
+    Airline airline2{"a2", "airline2", "ca2", "co1"};
+    Airline airline3{"a3", "airline3", "ca3", "co3"};
+    Airline airline4{"a4", "airline4", "ca4", "co6"};
+    Airline airline5{"a5", "airline5", "ca5", "co3"};
+
+    unordered_set<Airline> airlines{airline2,airline5};
+
+    flightNetworkTest = system.flightNetworkFilteredByUndesiredAirlines(airlines);
+
+    NetworkAirport* departureAirport = system.convertCodeToAirport("A",flightNetworkTest);
+    NetworkAirport* destinationAirport = system.convertCodeToAirport("F",flightNetworkTest);
+    NetworkAirport* auxAirport = system.convertCodeToAirport("B",flightNetworkTest);
+
+    vector<NetworkAirport*> departureNetworkAirports{departureAirport};
+    vector<NetworkAirport*> destinationNetworkAirports{destinationAirport};
+
+    set<vector<NetworkAirport*>> bestFlightOptionsWithFilters = system.bestFlightOptionInFilteredNetwork(departureNetworkAirports,destinationNetworkAirports,flightNetworkTest);
+    vector<NetworkAirport*> expectedPath{departureAirport,auxAirport,destinationAirport};
+
+    EXPECT_EQ(bestFlightOptionsWithFilters.size(),1);
+    EXPECT_TRUE(bestFlightOptionsWithFilters.find(expectedPath) != bestFlightOptionsWithFilters.end());
+
+    cleanSetup();
+
+    setup1();
+
+    system.setFlightNetwork(flightNetworkTest);
+    system.setCodeToAirport(codeToAirportTest);
+    system.setCityToAirport(cityToAirportTest);
+
+    Airline airlineTest1{"at1", "airline1", "ca1", "co1"};
+    Airline airlineTest2{"at2", "airline2", "ca2", "co1"};
+    Airline airlineTest3{"at3", "airline3", "ca3", "co3"};
+    Airline airlineTest4{"at4", "airline4", "ca4", "co2"};
+    Airline airlineTest5{"at5", "airline5", "ca5", "co3"};
+
+    unordered_set<Airline> airlines2{airlineTest2,airlineTest5};
+    flightNetworkTest = system.flightNetworkFilteredByUndesiredAirlines(airlines2);
+
+    NetworkAirport* departureAirport2 = system.convertCodeToAirport("t1",flightNetworkTest);
+    NetworkAirport* destinationAirport2 = system.convertCodeToAirport("t5",flightNetworkTest);
+    NetworkAirport* auxAirport1 = system.convertCodeToAirport("t3",flightNetworkTest);
+
+    vector<NetworkAirport*> departureAirports2{departureAirport2};
+    vector<NetworkAirport*> destinationAirports2{destinationAirport2};
+
+    set<vector<NetworkAirport*>> bestFlightOptionsWithFilters2 = system.bestFlightOptionInFilteredNetwork(departureAirports2,destinationAirports2,flightNetworkTest);
+    vector<NetworkAirport*> expectedPath1{departureAirport2,auxAirport1,destinationAirport2};
+
+   EXPECT_EQ(bestFlightOptionsWithFilters2.size(),1);
+   EXPECT_TRUE(bestFlightOptionsWithFilters2.find(expectedPath1) != bestFlightOptionsWithFilters2.end());
+}
 
 

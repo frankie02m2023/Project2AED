@@ -88,7 +88,7 @@ int UI::mainMenu() {
             break;
 
         case 3:
-            s = bestFlightOptionsWithFiltersMenu();
+            s = filtersMenu();
             break;
 
         case 4:
@@ -310,8 +310,166 @@ int UI::bestFlightOptionsMenu() {
     }
 }
 
-int UI::bestFlightOptionsWithFiltersMenu() {
-    return 0;
+int UI::filtersMenu() {
+    while(true) {
+
+        cout << "\nFILTERS MENU\n\n";
+
+        cout << "Please insert the number corresponding to the filter that you wish to apply:\n\n";
+
+        cout << "1.Filter by desired airlines\n";
+
+        cout << "2.Remove undesired airlines\n";
+
+        cout << "3.Filter by a maximum number of airlines\n";
+
+        cout << "4.Return to the main menu\n\n";
+
+        int option;
+
+        int s = optionSelection(option, 1, 4);
+        cout << '\n';
+
+        if (s != 0) {
+            cout << "Error found\n";
+            return s;
+        }
+
+        FlightNetwork flightNetwork;
+        unordered_set<Airline> airlines;
+        int maxNumberOfAirlines;
+
+        switch (option) {
+            case 1:
+                s = chooseTargetAirlines(airlines);
+                flightNetwork = airTravelSys.flightNetworkFilteredByDesiredAirlines(airlines);
+                bestFlightOptionsWithFiltersMenu(flightNetwork);
+                break;
+            case 2:
+                s = chooseTargetAirlines(airlines);
+                flightNetwork = airTravelSys.flightNetworkFilteredByUndesiredAirlines(airlines);
+                bestFlightOptionsWithFiltersMenu(flightNetwork);
+                break;
+            case 3:
+                return 0;
+            case 4:
+                return 0;
+            default:
+                cout << "Error found\n";
+                return 1;
+        }
+    }
+}
+
+int UI::bestFlightOptionsWithFiltersMenu(FlightNetwork& flightNetwork) {
+    cout << "\n BEST FLIGHT OPTION WITH FILTERS\n\n";
+
+    while(true){
+        cout << "Please insert the number corresponding to the criteria you want to select to choose your departure location\n\n";
+
+        cout << "1.Airport\n";
+        cout << "2.City\n";
+        cout << "3.Location\n";
+        cout << "4.Return to the Filter Menu\n\n";
+
+        int option;
+        int s = optionSelection(option, 1, 4);
+        cout << '\n';
+
+        if (s != 0) {
+            cout << "Error found\n";
+            return s;
+        }
+
+        string cityNameD;
+        Airport airportD;
+        Location locationD;
+        vector<NetworkAirport *> networkAirportsD;
+        NetworkAirport *networkAirportD;
+        switch (option) {
+            case 1:
+                s = airportFinder(airportD);
+                networkAirportD = flightNetwork.findAirport(airportD);
+                networkAirportsD.push_back(networkAirportD);
+                break;
+
+            case 2:
+                s = cityFinder(cityNameD);
+                networkAirportsD = airTravelSys.convertCityToAirports(cityNameD,flightNetwork);
+                break;
+
+            case 3:
+                s = locationBuilder(locationD);
+                networkAirportsD = airTravelSys.convertLocationToAirports(locationD.getLatitude(),
+                                                                          locationD.getLongitude(),flightNetwork);
+                break;
+
+            case 4:
+                return 0;
+
+            default:
+                cout << "Error found\n";
+                return 1;
+        }
+
+        cout << "Please insert the number corresponding to the criteria you want to select to choose your arrival location\n\n";
+
+        cout << "1.Airport\n";
+        cout << "2.City\n";
+        cout << "3.Location\n";
+        cout << "4.Return to the Main Menu\n\n";
+
+
+        s = optionSelection(option, 1, 4);
+        cout << '\n';
+
+        if (s != 0) {
+            cout << "Error found\n";
+            return s;
+        }
+
+        string cityNameA;
+        Airport airportA;
+        Location locationA;
+        vector<NetworkAirport *> networkAirportsA;
+        NetworkAirport *networkAirportA;
+        switch (option) {
+            case 1:
+                s = airportFinder(airportA);
+                networkAirportA = flightNetwork.findAirport(airportA);
+                networkAirportsA.push_back(networkAirportA);
+                break;
+
+            case 2:
+                s = cityFinder(cityNameA);
+                networkAirportsA = airTravelSys.convertCityToAirports(cityNameA,flightNetwork);
+                break;
+
+            case 3:
+                s = locationBuilder(locationA);
+                networkAirportsA = airTravelSys.convertLocationToAirports(locationA.getLatitude(),
+                                                                          locationA.getLongitude(),flightNetwork);
+                break;
+
+            case 4:
+                return 0;
+
+            default:
+                cout << "Error found\n";
+                return 1;
+        }
+        set<vector<NetworkAirport*>> flightOptions = airTravelSys.bestFlightOptionInFilteredNetwork(networkAirportsD, networkAirportsA,flightNetwork);
+        int i = 1;
+        for(const vector<NetworkAirport*>& opt: flightOptions){
+            cout << '\n';
+            cout << "Option " << i <<" : -------------" << endl;
+            i++;
+            for(NetworkAirport* networkAirport: opt){
+                cout << "Airport code: " << networkAirport->getAirport().getCode() << "  Airport name: " << networkAirport->getAirport().getName() << endl;
+            }
+        }
+        return 0;
+    }
 }
 
 
@@ -768,7 +926,7 @@ int UI::essentialAirports() {
                    cout << '\n';
                }
                cout << '\n';
-               break;
+               return 0;
 
 
             case 2:
@@ -977,4 +1135,34 @@ int UI::locationBuilder(Location &location) {
     location.setLongitude(longitude);
     return 0;
 }
+
+int UI::chooseTargetAirlines(unordered_set<Airline> &airlines) {
+    cout << "Please enter the code of the airlines you wish to add to your filter:\n\n";
+    int s;
+    while(true){
+        cout << "Please insert an airline code or type EXIT or exit to return to the previous menu:\n";
+        string airlineCode;
+        Airline airline;
+        cin >> airlineCode;
+
+        if(airlineCode == "EXIT" || airlineCode == "exit"){
+            return 0;
+        }
+
+        if (std::cin.rdstate() & (std::ios::badbit | std::ios::eofbit)) {
+            std::cout << "Aborted\n";
+            return 1;
+        }
+
+        auto it = airTravelSys.getCodeToAirlines().find(airlineCode);
+        if(it == airTravelSys.getCodeToAirlines().end()){
+            cout << "Airline not found! Please try again.\n\n";
+        }
+        else{
+            airline = it->second;
+            airlines.insert(airline);
+        }
+    }
+}
+
 

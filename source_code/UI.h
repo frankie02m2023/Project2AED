@@ -27,7 +27,8 @@ public:
     int mainMenu();
     int networkStatisticsMenu();
     int bestFlightOptionsMenu();
-    int bestFlightOptionsWithFiltersMenu();
+    int filtersMenu();
+    int bestFlightOptionsWithFiltersMenu(FlightNetwork& flightNetwork);
 
     //Handlers
     //NetworkStatistics handlers
@@ -49,6 +50,9 @@ public:
     int cityFinder(string& name);
     int airlineFinderCode(Airline& airline);
     int locationBuilder(Location& location);
+    int chooseTargetAirlines(unordered_set<Airline>& airlines);
+    int chooseMaxNumberOfAirlines(int& number);
+
 private:
     AirTravelManSys airTravelSys;
 };
