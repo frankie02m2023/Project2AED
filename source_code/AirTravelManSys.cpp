@@ -1407,6 +1407,209 @@ set<vector<NetworkAirport *>> AirTravelManSys::bestFlightOptionInFilteredNetwork
     return flightOptions;
 }
 
+void AirTravelManSys::findMinDistDFSWithAirlineLimit(NetworkAirport* source, NetworkAirport* destination,int& minDist, int& countDist, int& airlineCount, const int& airlineLimit,Airline airline){
+    source->setVisited(true);
+
+
+    if(source->getAirport() == destination->getAirport()){
+        if(minDist > countDist){
+            minDist = countDist;
+        }
+    }
+
+    else{
+
+        for(auto it = source->getFlightsFromAirport().begin(); it != source->getFlightsFromAirport().end(); it++){
+            NetworkAirport* networkAirport = it->getDestination();
+
+            if(!networkAirport->isVisited()){
+                if(it->getAirLine() == airline){
+                    countDist++;
+                    findMinDistDFSWithAirlineLimit(networkAirport,destination,minDist,countDist,airlineCount,airlineLimit,airline);
+                }
+                else{
+                    if(airlineCount < airlineLimit){
+                        countDist++;
+                        int newAirlineCount = airlineCount + 1;
+                        Airline newAirline = it->getAirLine();
+                        findMinDistDFSWithAirlineLimit(networkAirport,destination,minDist,countDist,newAirlineCount,airlineLimit,newAirline);
+                    }
+                }
+            }
+        }
+
+    }
+    source->setVisited(false);
+    countDist--;
+}
+
+void AirTravelManSys::findFlightOptionsDFSWithAirlineLimit(NetworkAirport* source, NetworkAirport* destination, vector<pair<NetworkAirport*,Airline>> flightOption, set<vector<pair<NetworkAirport*,Airline>>> &flightOptions, int dist, int airlineCount, const int& airlineLimit, Airline airline){
+    source->setVisited(true);
+    flightOption.emplace_back(source,airline);
+
+    if(dist == 0){
+        if(destination->getAirport() == source->getAirport()){
+            flightOptions.insert(flightOption);
+        }
+    }
+    else if(dist < 0){
+        //stops the search
+    }
+    else{
+
+        for(auto it = source->getFlightsFromAirport().begin(); it != source->getFlightsFromAirport().end(); it++ ){
+            NetworkAirport* networkAirport = it->getDestination();
+
+            if(!networkAirport->isVisited()){
+                if(airline == it->getAirLine()){
+                    findFlightOptionsDFSWithAirlineLimit(networkAirport, destination,flightOption,flightOptions, dist - 1,airlineCount,airlineLimit,airline);
+                }
+                else{
+                    if(airlineCount < airlineLimit){
+                        Airline newAirline = it->getAirLine();
+                        int newAirlineCount = airlineCount + 1;
+                        findFlightOptionsDFSWithAirlineLimit(networkAirport, destination,flightOption,flightOptions, dist - 1,newAirlineCount,airlineLimit,newAirline);
+                    }
+                }
+            }
+        }
+    }
+    source->setVisited(false);
+}
+
+void AirTravelManSys::findMinDistBFSWithAirlineLimit(NetworkAirport *source, NetworkAirport *destination, int &minDist, const int &airlineLimit) {
+    queue<pair<pair<NetworkAirport*,Airline>,pair<int,int>>> q;
+    Airline airline{"FFFF","FFFF","FFFF","FFFF"};
+    q.emplace(make_pair(source,airline), make_pair(0,0));
+    source->setVisited(true);
+    while(!q.empty()){
+        NetworkAirport* targetAirport = q.front().first.first;
+        airline = q.front().first.second;
+        int distance = q.front().second.first;
+        int airlineCounter = q.front().second.second;
+        q.pop();
+        bool canBeDestAirport = false;
+        for(const auto& flight : targetAirport->getFlightsFromAirport()){
+            if(!flight.getDestination()->isVisited()){
+                if(flight.getAirLine() == airline){
+                    q.emplace(make_pair(flight.getDestination(),flight.getAirLine()), make_pair(distance,airlineCounter));
+                    flight.getDestination()->setVisited(true);
+                    canBeDestAirport = true;
+                }
+                else{
+                    if(airlineCounter < airlineLimit){
+                        q.emplace(make_pair(flight.getDestination(),flight.getAirLine()), make_pair(distance,airlineCounter + 1));
+                        flight.getDestination()->setVisited(true);
+                        canBeDestAirport = true;
+                    }
+                }
+                if(canBeDestAirport && flight.getDestination()->getAirport() == destination->getAirport()){
+                    minDist = distance;
+                }
+            }
+        }
+        if(minDist == distance + 1){
+            break;
+        }
+    }
+}
+
+void AirTravelManSys::findFlightOptionsBFSWithAirlineLimit(NetworkAirport *source, NetworkAirport *destination, set<vector<NetworkAirport *>> &flightOptions, int dist, int airlineLimit){
+    vector<ParentChild> parents;
+    queue<pair<ParentChild,pair<Airline,int>>> q; //pair parents index and child index and child source and distance with airline counter
+    ParentChild node = make_pair(make_pair(-1,0), make_pair(source,0));
+    Airline airline;
+    parents.emplace_back(node);
+    q.emplace(node, make_pair(airline,0));
+
+    int i = 0;
+    source->setVisited(true);
+
+    while(!q.empty()){
+        //BFS loop
+
+        ParentChild na = q.front().first;
+
+        airline = q.front().second.first;
+
+        int airlineCounter = q.front().second.second;
+
+
+        q.pop();
+
+
+        for(auto it = na.second.first->getFlightsFromAirport().begin(); it!= na.second.first->getFlightsFromAirport().end(); it++){
+            NetworkAirport* nb = it->getDestination();
+
+            if(!nb->isVisited()){
+                if(airline == it->getAirLine()){
+                    i++; //index for the parents vector
+                    int distance = na.second.second + 1; //distance from the source
+                    node = make_pair((make_pair(na.first.second,i)), make_pair(nb, distance)); //node(pair) to insert in the queue and parents vector
+                    q.emplace(node, make_pair(airline,airlineCounter));
+                    nb->setVisited(true);
+                    if(nb->getAirport() == destination->getAirport() && distance == dist){
+                        //found one flight option
+                        buildFlightOption(node,parents,flightOptions);
+                        nb->setVisited(false);
+                    }
+                    parents.push_back(node);
+                }
+                else{
+                    if(airlineCounter < airlineLimit){
+                        i++; //index for the parents vector
+                        int distance = na.second.second + 1; //distance from the source
+                        node = make_pair((make_pair(na.first.second,i)), make_pair(nb, distance)); //node(pair) to insert in the queue and parents vector
+                        q.emplace(node, make_pair(it->getAirLine(),airlineCounter + 1));
+                        nb->setVisited(true);
+                        if(nb->getAirport() == destination->getAirport() && distance == dist){
+                            //found one flight option
+                            buildFlightOption(node,parents,flightOptions);
+                            nb->setVisited(false);
+                        }
+                        parents.push_back(node);
+                    }
+                }
+            }
+        }
+        na.second.first->setVisited(false);
+        if(dist < na.second.second){
+            //every flight option in the minimum distance range was found
+            break;
+        }
+    }
+
+}
+
+set<vector<pair<NetworkAirport *,Airline>>> AirTravelManSys::bestFlightOptionWithAirlineLimit(const vector<NetworkAirport *> &sources,const vector<NetworkAirport *> &destinations, const int &airlineLimit) {
+    int maxMinDist = flightNetwork.maxTrip();
+    cleanVisitedState();
+    cleanProcessState();
+    int minDist = INT_MAX;
+    Airline mockAirline{"FFFF","FFFF","FFFF","FFFF"};
+    for(auto source : sources){
+        for(auto destination : destinations){
+            int countDist = 0;
+            int airlineCount = 0;
+            findMinDistDFSWithAirlineLimit(source,destination,minDist,countDist,airlineCount,airlineLimit,mockAirline);
+        }
+    }
+    set<vector<pair<NetworkAirport *,Airline>>> bestFlightOptions;
+    if(minDist == INT_MAX){
+        return bestFlightOptions;
+    }
+    for(auto source : sources){
+        for(auto destination : destinations){
+            vector<pair<NetworkAirport*,Airline>> flightOption;
+            int airlineCount = 0;
+            findFlightOptionsDFSWithAirlineLimit(source,destination,flightOption,bestFlightOptions,minDist,airlineCount,airlineLimit,mockAirline);
+        }
+    }
+
+    return bestFlightOptions;
+}
+
+
 
 
 

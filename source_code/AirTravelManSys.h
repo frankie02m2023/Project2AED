@@ -72,6 +72,11 @@ public:
     FlightNetwork flightNetworkFilteredByDesiredAirlines(unordered_set<Airline> airlines);
     FlightNetwork flightNetworkFilteredByUndesiredAirlines(unordered_set<Airline> airlines);
     set<vector<NetworkAirport *>> bestFlightOptionInFilteredNetwork(const vector<NetworkAirport *>& sources, const vector<NetworkAirport *>& destinations, FlightNetwork& flightNetwork1);
+    void findMinDistBFSWithAirlineLimit(NetworkAirport* source, NetworkAirport* destination, int& minDist,const int& airlineLimit);
+    void findMinDistDFSWithAirlineLimit(NetworkAirport* source, NetworkAirport* destination, int& minDist,int& countDist,int& airlineCount,const int& airlineLimit,Airline airline);
+    void findFlightOptionsDFSWithAirlineLimit(NetworkAirport* source, NetworkAirport* destination, vector<pair<NetworkAirport*,Airline>> flightOption, set<vector<pair<NetworkAirport*,Airline>>> &flightOptions, int dist, int airlineCount, const int& airlineLimit,Airline airline);
+    void findFlightOptionsBFSWithAirlineLimit(NetworkAirport *source, NetworkAirport *destination, set<vector<NetworkAirport *>> &flightOptions, int dist, int airlineLimit);
+    set<vector<pair<NetworkAirport *,Airline>>> bestFlightOptionWithAirlineLimit(const vector<NetworkAirport *>&sources, const vector<NetworkAirport *>& destinations, const int& airlineLimit);
 
     const unordered_map<std::string, Airline> &getCodeToAirlines() const;
     const FlightNetwork &getFlightNetwork() const;

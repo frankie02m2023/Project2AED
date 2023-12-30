@@ -50,4 +50,8 @@ bool Airline::operator==(const Airline& otherAirline) const {
     return code == otherAirline.code;
 }
 
+bool Airline::operator<(const Airline &otherAirline) const {
+    return code < otherAirline.code;
+}
+
 #endif

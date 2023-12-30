@@ -338,6 +338,8 @@ int UI::filtersMenu() {
         FlightNetwork flightNetwork;
         unordered_set<Airline> airlines;
         int maxNumberOfAirlines;
+        string num;
+        int limit;
 
         switch (option) {
             case 1:
@@ -351,7 +353,12 @@ int UI::filtersMenu() {
                 bestFlightOptionsWithFiltersMenu(flightNetwork);
                 break;
             case 3:
-                return 0;
+                cout << "Please type the maximum number of airlines you wish to travel in: ";
+                cin >> num;
+                cout << "\n\n";
+                limit = stoi(num);
+                s = chooseMaxNumberOfAirlines(limit);
+                break;
             case 4:
                 return 0;
             default:
@@ -1163,6 +1170,133 @@ int UI::chooseTargetAirlines(unordered_set<Airline> &airlines) {
             airlines.insert(airline);
         }
     }
+}
+
+int UI::chooseMaxNumberOfAirlines(int &limit) {
+    FlightNetwork flightNetwork = airTravelSys.getFlightNetwork();
+    if (limit > flightNetwork.maxTrip()) {
+        cout << "The limit you established for the number of airlines is too high! Please try again.\n\n";
+        return 0;
+    }
+    cout << "\n BEST FLIGHT OPTION\n\n";
+
+    cout
+            << "Please insert the number corresponding to the criteria you want to select to choose your departure location\n\n";
+
+    cout << "1.Airport\n";
+    cout << "2.City\n";
+    cout << "3.Location\n";
+    cout << "4.Return to the Main Menu\n\n";
+
+    int option;
+
+    int s = optionSelection(option, 1, 4);
+    cout << '\n';
+
+    if (s != 0) {
+        cout << "Error found\n";
+        return s;
+    }
+
+    string cityNameD;
+    Airport airportD;
+    Location locationD;
+    vector<NetworkAirport *> networkAirportsD;
+    NetworkAirport *networkAirportD;
+    switch (option) {
+        case 1:
+            s = airportFinder(airportD);
+            networkAirportD = airTravelSys.getFlightNetwork().findAirport(airportD);
+            networkAirportsD.push_back(networkAirportD);
+            break;
+
+        case 2:
+            s = cityFinder(cityNameD);
+            networkAirportsD = airTravelSys.convertCityToAirports(cityNameD, airTravelSys.getFlightNetwork());
+            break;
+
+        case 3:
+            s = locationBuilder(locationD);
+            networkAirportsD = airTravelSys.convertLocationToAirports(locationD.getLatitude(),
+                                                                      locationD.getLongitude(),
+                                                                      airTravelSys.getFlightNetwork());
+            break;
+
+        case 4:
+            return 0;
+
+        default:
+            cout << "Error found\n";
+            return 1;
+    }
+
+    cout
+            << "Please insert the number corresponding to the criteria you want to select to choose your arrival location\n\n";
+
+    cout << "1.Airport\n";
+    cout << "2.City\n";
+    cout << "3.Location\n";
+    cout << "4.Return to the Main Menu\n\n";
+
+
+    s = optionSelection(option, 1, 4);
+    cout << '\n';
+
+    if (s != 0) {
+        cout << "Error found\n";
+        return s;
+    }
+
+    string cityNameA;
+    Airport airportA;
+    Location locationA;
+    vector<NetworkAirport *> networkAirportsA;
+    NetworkAirport *networkAirportA;
+    switch (option) {
+        case 1:
+            s = airportFinder(airportA);
+            networkAirportA = airTravelSys.getFlightNetwork().findAirport(airportA);
+            networkAirportsA.push_back(networkAirportA);
+            break;
+
+        case 2:
+            s = cityFinder(cityNameA);
+            networkAirportsA = airTravelSys.convertCityToAirports(cityNameA, airTravelSys.getFlightNetwork());
+            break;
+
+        case 3:
+            s = locationBuilder(locationA);
+            networkAirportsA = airTravelSys.convertLocationToAirports(locationA.getLatitude(),
+                                                                      locationA.getLongitude(),
+                                                                      airTravelSys.getFlightNetwork());
+            break;
+
+        case 4:
+            return 0;
+
+        default:
+            cout << "Error found\n";
+            return 1;
+
+
+    }
+    set<vector<pair<NetworkAirport*,Airline>>> bestFlightOptions = airTravelSys.bestFlightOptionWithAirlineLimit(networkAirportsD,networkAirportsA,limit);
+    int i = 1;
+    int j = 1;
+    for(auto flightOption : bestFlightOptions){
+        cout << '\n';
+        cout << "Option " << i <<" : -------------" << endl;
+        i++;
+        for(auto pair : flightOption){
+            if(j != 1){
+                cout << "Airline code: " << pair.second.getCode() << "Airline name: " << pair.second.getName() << endl;
+            }
+            cout << "Airport code:  " << pair.first->getAirport().getCode() <<  " Airport name: " << pair.first->getAirport().getCode() << endl;
+            j++;
+        }
+        j = 1;
+    }
+    return 0;
 }
 
 

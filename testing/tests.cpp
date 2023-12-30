@@ -318,6 +318,45 @@ void setup5(){
     flightNetworkTest.addFlight(airportTest8,airportTest7,airlineTest4);
 }
 
+void setup6(){
+    Airport airportTest1("a1","a1","co1","ci1",Location{1.0,2.0});
+    Airport airportTest2("a2","a2","co2","ci2",Location{4.0,5.0});
+    Airport airportTest3("a3","a3","co2","ci3",Location{16.0,16.0});
+    Airport airportTest4("a4","a4","co2","ci4",Location{17.0,24.0});
+    Airport airportTest5("a5","a5","co3","ci5",Location{50.0,12.0});
+
+    flightNetworkTest.addNetworkAirport(airportTest1);
+    flightNetworkTest.addNetworkAirport(airportTest2);
+    flightNetworkTest.addNetworkAirport(airportTest3);
+    flightNetworkTest.addNetworkAirport(airportTest4);
+    flightNetworkTest.addNetworkAirport(airportTest5);
+
+    Airline airlineTest1{"a1", "airline1", "ca1", "co1"};
+    Airline airlineTest2{"a2", "airline2", "ca2", "co2"};
+    Airline airlineTest3{"a3", "airline3", "ca3", "co3"};
+
+    flightNetworkTest.addFlight(airportTest1,airportTest2,airlineTest2);
+    flightNetworkTest.addFlight(airportTest1,airportTest2,airlineTest3);
+    flightNetworkTest.addFlight(airportTest1,airportTest5,airlineTest1);
+    flightNetworkTest.addFlight(airportTest1,airportTest4,airlineTest3);
+
+    flightNetworkTest.addFlight(airportTest2,airportTest1,airlineTest2);
+    flightNetworkTest.addFlight(airportTest2,airportTest1,airlineTest3);
+    flightNetworkTest.addFlight(airportTest2,airportTest3,airlineTest1);
+    flightNetworkTest.addFlight(airportTest2,airportTest5,airlineTest1);
+    flightNetworkTest.addFlight(airportTest2,airportTest4,airlineTest1);
+
+    flightNetworkTest.addFlight(airportTest3,airportTest2,airlineTest1);
+    flightNetworkTest.addFlight(airportTest3,airportTest2,airlineTest3);
+
+    flightNetworkTest.addFlight(airportTest4,airportTest2,airlineTest1);
+    flightNetworkTest.addFlight(airportTest4,airportTest1,airlineTest3);
+
+    flightNetworkTest.addFlight(airportTest5,airportTest1,airlineTest1);
+    flightNetworkTest.addFlight(airportTest5,airportTest2,airlineTest1);
+
+}
+
 
 
 void cleanSetup(){
@@ -1376,6 +1415,98 @@ TEST(Best_Flight_Option_With_Filters,bestFlightOptionWithFiltersUndesiredAirline
 
    EXPECT_EQ(bestFlightOptionsWithFilters2.size(),1);
    EXPECT_TRUE(bestFlightOptionsWithFilters2.find(expectedPath1) != bestFlightOptionsWithFilters2.end());
+}
+
+TEST(Best_Flight_Option_With_Filters,FindMinDistanceWithAirlineLimit){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    setup6();
+
+    system.setFlightNetwork(flightNetworkTest);
+
+    Airport airportTest1("a1","a1","co1","ci1",Location{1.0,2.0});
+    Airport airportTest2("a2","a2","co2","ci2",Location{4.0,5.0});
+    Airport airportTest3("a3","a3","co2","ci3",Location{16.0,16.0});
+    Airport airportTest4("a4","a4","co2","ci4",Location{17.0,24.0});
+    Airport airportTest5("a5","a5","co3","ci5",Location{50.0,12.0});
+
+    NetworkAirport* source = system.getFlightNetwork().findAirport(airportTest1);
+    NetworkAirport* destination = system.getFlightNetwork().findAirport(airportTest3);
+    int airlineLimit = 1;
+    int airlineCount = 0;
+    int minDist = INT_MAX;
+    int countDist = 0;
+    Airline airline{"FFFF","FFFF","FFFF","FFFF"};
+    system.cleanVisitedState();
+
+    system.findMinDistDFSWithAirlineLimit(source,destination,minDist,countDist,airlineCount,airlineLimit,airline);
+
+    EXPECT_EQ(minDist,3);
+
+    source = system.getFlightNetwork().findAirport(airportTest5);
+    destination = system.getFlightNetwork().findAirport(airportTest4);
+    airlineLimit = 3;
+    airlineCount = 0;
+    minDist = INT_MAX;
+    countDist = 0;
+    Airline airline1{"FFFF","FFFF","FFFF","FFFF"};
+    system.cleanVisitedState();
+
+    system.findMinDistDFSWithAirlineLimit(source,destination,minDist,countDist,airlineCount,airlineLimit,airline1);
+
+    EXPECT_EQ(minDist,2);
+}
+
+TEST(Best_Flight_Option_With_Filters,Best_Flight_Options_With_Airline_Limit){
+    AirTravelManSys system;
+    system.readAirlinesDataFile();
+    system.readAirportsDataFile();
+    system.readFlightsDataFile();
+
+    setup6();
+
+    system.setFlightNetwork(flightNetworkTest);
+
+    Airport airportTest1("a1","a1","co1","ci1",Location{1.0,2.0});
+    Airport airportTest2("a2","a2","co2","ci2",Location{4.0,5.0});
+    Airport airportTest3("a3","a3","co2","ci3",Location{16.0,16.0});
+    Airport airportTest4("a4","a4","co2","ci4",Location{17.0,24.0});
+    Airport airportTest5("a5","a5","co3","ci5",Location{50.0,12.0});
+
+    NetworkAirport* source = system.getFlightNetwork().findAirport(airportTest1);
+    NetworkAirport* destination = system.getFlightNetwork().findAirport(airportTest3);
+
+    vector<NetworkAirport*> sources{source};
+    vector<NetworkAirport*> destinations{destination};
+    int airlineLimit = 1;
+
+    NetworkAirport* networkAirport1 = system.getFlightNetwork().findAirport(airportTest1);
+    NetworkAirport* networkAirport5 = system.getFlightNetwork().findAirport(airportTest5);
+    NetworkAirport* networkAirport2 = system.getFlightNetwork().findAirport(airportTest2);
+    NetworkAirport* networkAirport3 = system.getFlightNetwork().findAirport(airportTest3);
+
+    Airline airlineTest1{"a1", "airline1", "ca1", "co1"};
+    Airline airlineTest2{"a2", "airline2", "ca2", "co2"};
+    Airline airlineTest3{"a3", "airline3", "ca3", "co3"};
+    Airline mockAirline{"FFFF","FFFF","FFFF","FFFF"};
+
+    vector<pair<NetworkAirport*,Airline>> option;
+    option.emplace_back(networkAirport1,mockAirline);
+    option.emplace_back(networkAirport5,airlineTest1);
+    option.emplace_back(networkAirport2,airlineTest1);
+    option.emplace_back(networkAirport3,airlineTest1);
+
+    set<vector<pair<NetworkAirport*,Airline>>> flightOptionsTest;
+    flightOptionsTest.insert(option);
+
+    set<vector<pair<NetworkAirport*,Airline>>> flightOptions = system.bestFlightOptionWithAirlineLimit(sources,destinations,airlineLimit);
+
+
+    EXPECT_EQ(flightOptions.size(),1);
+    EXPECT_TRUE(flightOptions.find(option) != flightOptions.end());
 }
 
 

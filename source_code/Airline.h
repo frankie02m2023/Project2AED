@@ -38,6 +38,7 @@ class Airline{
     string getCallSign() const;
     string getCountry() const;
     bool operator==(const Airline& otherAirline) const;
+    bool operator<(const Airline& otherAirline) const;
 };
 
 namespace std
