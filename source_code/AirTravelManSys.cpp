@@ -1414,6 +1414,16 @@ set<vector<NetworkAirport *>> AirTravelManSys::bestFlightOptionInFilteredNetwork
     return flightOptions;
 }
 
+/** Finds the minimum flight distance(stops) when exists a limit number of airlines using a DFS approach.
+ *  Complexity: O(n^2)
+ * @param source Source airport.
+ * @param destination Destination airport.
+ * @param minDist Minimum distance value.
+ * @param countDist Value of the distance
+ * @param airlineCount Number of airlines
+ * @param airlineLimit Maximum number of airlines
+ * @param airline Reference airline
+ */
 void AirTravelManSys::findMinDistDFSWithAirlineLimit(NetworkAirport* source, NetworkAirport* destination,int& minDist, int& countDist, int& airlineCount, const int& airlineLimit,Airline airline){
     source->setVisited(true);
 
@@ -1450,6 +1460,19 @@ void AirTravelManSys::findMinDistDFSWithAirlineLimit(NetworkAirport* source, Net
     countDist--;
 }
 
+/** Finds the various flight options when exists a airline limit using a DFS approach.
+ *  Complexity: O(n^2)
+ *
+ * @param source Source airport
+ * @param destination Destination airport
+ * @param flightOption Flight option discovered
+ * @param flightOptions Flight Options discovered
+ * @param dist Distance
+ * @param airlineCount Number of airlines
+ * @param airlineLimit Limit number of airlines
+ * @param airline Reference airline
+ */
+
 void AirTravelManSys::findFlightOptionsDFSWithAirlineLimit(NetworkAirport* source, NetworkAirport* destination, vector<pair<NetworkAirport*,Airline>> flightOption, set<vector<pair<NetworkAirport*,Airline>>> &flightOptions, int dist, int airlineCount, const int& airlineLimit, Airline airline){
     source->setVisited(true);
     flightOption.emplace_back(source,airline);
@@ -1484,6 +1507,13 @@ void AirTravelManSys::findFlightOptionsDFSWithAirlineLimit(NetworkAirport* sourc
     source->setVisited(false);
 }
 
+/** Finds the minimum flight distance(stops) when exists a limit number of airlines using a BFS approach (not functional).
+ *  Complexity: O(n^2)
+ * @param source Source airport.
+ * @param destination Destination airport.
+ * @param minDist Minimum distance value.
+ * @param airlineLimit Maximum number of airlines
+ */
 void AirTravelManSys::findMinDistBFSWithAirlineLimit(NetworkAirport *source, NetworkAirport *destination, int &minDist, const int &airlineLimit) {
     queue<pair<pair<NetworkAirport*,Airline>,pair<int,int>>> q;
     Airline airline{"FFFF","FFFF","FFFF","FFFF"};
@@ -1521,6 +1551,15 @@ void AirTravelManSys::findMinDistBFSWithAirlineLimit(NetworkAirport *source, Net
     }
 }
 
+/** Finds the various flight options when exists a airline limit using a BFS approach (not functional).
+ *  Complexity: O(n^2)
+ *
+ * @param source Source airport
+ * @param destination Destination airport
+ * @param flightOptions Flight Options discovered
+ * @param dist Distance
+ * @param airlineLimit Limit number of airlines
+ */
 void AirTravelManSys::findFlightOptionsBFSWithAirlineLimit(NetworkAirport *source, NetworkAirport *destination, set<vector<NetworkAirport *>> &flightOptions, int dist, int airlineLimit){
     vector<ParentChild> parents;
     queue<pair<ParentChild,pair<Airline,int>>> q; //pair parents index and child index and child source and distance with airline counter
@@ -1588,6 +1627,13 @@ void AirTravelManSys::findFlightOptionsBFSWithAirlineLimit(NetworkAirport *sourc
 
 }
 
+/** Finds the best flight path (minimum stops) with an airline limit (not functional).
+ *  Complexity: O(n^3) (O(n^4) only if we have a lot of possible sources and destinations)
+ * @param sources
+ * @param destinations
+ * @param flightNetwork1 Filtered flightNetwork.
+ * @return Set of flight paths
+ */
 set<vector<pair<NetworkAirport *,Airline>>> AirTravelManSys::bestFlightOptionWithAirlineLimit(const vector<NetworkAirport *> &sources,const vector<NetworkAirport *> &destinations, const int &airlineLimit) {
     int maxMinDist = flightNetwork.maxTrip();
     cleanVisitedState();

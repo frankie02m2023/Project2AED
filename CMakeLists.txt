@@ -21,7 +21,6 @@ set(SOURCE_FILES source_code/main.cpp
         source_code/Airline.cpp
         source_code/Location.h
         source_code/Location.cpp
-        source_code/Graph.h
         source_code/Flight.cpp
         source_code/NetworkAirports.cpp
         source_code/FlightNetwork.h

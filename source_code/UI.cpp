@@ -1208,6 +1208,13 @@ int UI::chooseTargetAirlines(unordered_set<Airline> &airlines) {
     }
 }
 
+/** Chooses the best flight option considering a maximum number of airlines defined by the user.
+ *  Varies between on the functions called and how many times some of them are called.
+ *
+ *
+ * @param limit Limit number of airlines.
+ * @return If there was not any error 0. Else 1.
+ */
 int UI::chooseMaxNumberOfAirlines(int &limit) {
     FlightNetwork flightNetwork = airTravelSys.getFlightNetwork();
     if (limit > flightNetwork.maxTrip()) {
