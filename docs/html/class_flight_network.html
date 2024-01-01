@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Project 2 AED: FlightNetwork Class Reference</title>
+<title>Projeto 2 AED: FlightNetwork Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,8 +21,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Project 2 AED
+   <div id="projectname">Projeto 2 AED
    </div>
+   <div id="projectbrief">Air Travel Flight Management System</div>
   </td>
  </tr>
  </tbody>
@@ -92,6 +93,17 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a0de3bea731928d4b750a4adb3470ac17"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa2970d0365abdd8e14ddb663066f52e3" id="r_aa2970d0365abdd8e14ddb663066f52e3"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_flight_network.html#aa2970d0365abdd8e14ddb663066f52e3">removeFlight</a> (<a class="el" href="class_airport.html">Airport</a> departureAirport, <a class="el" href="class_airport.html">Airport</a> destinationAirport, <a class="el" href="class_airline.html">Airline</a> airline) const</td></tr>
 <tr class="separator:aa2970d0365abdd8e14ddb663066f52e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a203fedbdddae96295da4765076d460e5" id="r_a203fedbdddae96295da4765076d460e5"><td class="memItemLeft" align="right" valign="top"><a id="a203fedbdddae96295da4765076d460e5" name="a203fedbdddae96295da4765076d460e5"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>resetFlightNetwork</b> ()</td></tr>
+<tr class="separator:a203fedbdddae96295da4765076d460e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afce044e6a263344605f5f99908be358b" id="r_afce044e6a263344605f5f99908be358b"><td class="memItemLeft" align="right" valign="top"><a id="afce044e6a263344605f5f99908be358b" name="afce044e6a263344605f5f99908be358b"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>cleanProcessState</b> ()</td></tr>
+<tr class="separator:afce044e6a263344605f5f99908be358b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6446d1efcbc4a047feb96e0acb855f0f" id="r_a6446d1efcbc4a047feb96e0acb855f0f"><td class="memItemLeft" align="right" valign="top"><a id="a6446d1efcbc4a047feb96e0acb855f0f" name="a6446d1efcbc4a047feb96e0acb855f0f"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>cleanVisitedState</b> ()</td></tr>
+<tr class="separator:a6446d1efcbc4a047feb96e0acb855f0f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afeb4efae3bbf78d428dd696871370631" id="r_afeb4efae3bbf78d428dd696871370631"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_flight_network.html#afeb4efae3bbf78d428dd696871370631">maxTrip</a> ()</td></tr>
+<tr class="separator:afeb4efae3bbf78d428dd696871370631"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Where are preformed functions related to the FlightsNetwork/graph. Stores the flightNetwork (all the NetworkAirports/vertexes). </p>
@@ -204,6 +216,30 @@ Public Member Functions</h2></td></tr>
       </table>
 </div><div class="memdoc">
 <p>Gets the flight network Complexity: O(1) </p><dl class="section return"><dt>Returns</dt><dd>flight network </dd></dl>
+
+</div>
+</div>
+<a id="afeb4efae3bbf78d428dd696871370631" name="afeb4efae3bbf78d428dd696871370631"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afeb4efae3bbf78d428dd696871370631">&#9670;&#160;</a></span>maxTrip()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int FlightNetwork::maxTrip </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Gets the maximum trip possible in a flight network. Complexity: O(n^3) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">maxTripAirportPairs</td><td>Vector with the pair of airports(source, destination) with the maximum trip value </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Maximum trip value </dd></dl>
 
 </div>
 </div>

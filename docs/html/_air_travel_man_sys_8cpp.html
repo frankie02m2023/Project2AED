@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Project 2 AED: source_code/AirTravelManSys.cpp File Reference</title>
+<title>Projeto 2 AED: source_code/AirTravelManSys.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -21,8 +21,9 @@
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">Project 2 AED
+   <div id="projectname">Projeto 2 AED
    </div>
+   <div id="projectbrief">Air Travel Flight Management System</div>
   </td>
  </tr>
  </tbody>
@@ -89,20 +90,49 @@ $(function() {
 <code>#include &lt;utility&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
 <code>#include &lt;cfloat&gt;</code><br />
+<code>#include &lt;stack&gt;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a117341b5832f15b7c0d9114d7524b8c8" id="r_a117341b5832f15b7c0d9114d7524b8c8"><td class="memItemLeft" align="right" valign="top"><a id="a117341b5832f15b7c0d9114d7524b8c8" name="a117341b5832f15b7c0d9114d7524b8c8"></a>
-vector&lt; pair&lt; <a class="el" href="class_network_airport.html">NetworkAirport</a> *, int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>bfsAirportVisit</b> (<a class="el" href="class_network_airport.html">NetworkAirport</a> *networkAirport)</td></tr>
+<tr class="memitem:a117341b5832f15b7c0d9114d7524b8c8" id="r_a117341b5832f15b7c0d9114d7524b8c8"><td class="memItemLeft" align="right" valign="top">vector&lt; pair&lt; <a class="el" href="class_network_airport.html">NetworkAirport</a> *, int &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_air_travel_man_sys_8cpp.html#a117341b5832f15b7c0d9114d7524b8c8">bfsAirportVisit</a> (<a class="el" href="class_network_airport.html">NetworkAirport</a> *networkAirport)</td></tr>
 <tr class="separator:a117341b5832f15b7c0d9114d7524b8c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae466b25da34a87b89e1467657bd95af2" id="r_ae466b25da34a87b89e1467657bd95af2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_air_travel_man_sys_8cpp.html#ae466b25da34a87b89e1467657bd95af2">compAirportByFlights</a> (<a class="el" href="class_network_airport.html">NetworkAirport</a> *networkAirport1, <a class="el" href="class_network_airport.html">NetworkAirport</a> *networkAirport2)</td></tr>
 <tr class="separator:ae466b25da34a87b89e1467657bd95af2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaca7455c90cfed647488b838a3d085b5" id="r_aaca7455c90cfed647488b838a3d085b5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_air_travel_man_sys_8cpp.html#aaca7455c90cfed647488b838a3d085b5">dfsForEssentialAirports</a> (<a class="el" href="class_network_airport.html">NetworkAirport</a> *networkAirport, stack&lt; <a class="el" href="class_airport.html">Airport</a> &gt; &amp;airportStack, unordered_set&lt; <a class="el" href="class_airport.html">Airport</a> &gt; &amp;essentialAirports, int &amp;i)</td></tr>
+<tr class="separator:aaca7455c90cfed647488b838a3d085b5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a17c4149d2f7b130099c180dd9519b755" id="r_a17c4149d2f7b130099c180dd9519b755"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_air_travel_man_sys_8cpp.html#a17c4149d2f7b130099c180dd9519b755">doubleNetworkFlights</a> (unordered_set&lt; <a class="el" href="class_network_airport.html">NetworkAirport</a> *, <a class="el" href="struct_hash_network_airport.html">HashNetworkAirport</a>, <a class="el" href="struct_equality_network_airport.html">EqualityNetworkAirport</a> &gt; &amp;flightNetwork)</td></tr>
+<tr class="separator:a17c4149d2f7b130099c180dd9519b755"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeab440cdb79a8e6e5a9576e50c792128" id="r_aeab440cdb79a8e6e5a9576e50c792128"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_air_travel_man_sys_8cpp.html#aeab440cdb79a8e6e5a9576e50c792128">distanceCoordinates</a> (double latitude, double longitude, <a class="el" href="class_location.html">Location</a> airportLocation)</td></tr>
 <tr class="separator:aeab440cdb79a8e6e5a9576e50c792128"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of <a class="el" href="class_air_travel_man_sys.html">AirTravelManSys</a> class. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
+<a id="a117341b5832f15b7c0d9114d7524b8c8" name="a117341b5832f15b7c0d9114d7524b8c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a117341b5832f15b7c0d9114d7524b8c8">&#9670;&#160;</a></span>bfsAirportVisit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">vector&lt; pair&lt; <a class="el" href="class_network_airport.html">NetworkAirport</a> *, int &gt; &gt; bfsAirportVisit </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_network_airport.html">NetworkAirport</a> *&#160;</td>
+          <td class="paramname"><em>networkAirport</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>BFS used to help find the maximum distance between airports. Complexity: O(n^2) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">networkAirport</td><td><a class="el" href="class_airport.html">Airport</a> from where the visit starts </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Vector with a pairs of airports and distances from the airport source </dd></dl>
+
+</div>
+</div>
 <a id="ae466b25da34a87b89e1467657bd95af2" name="ae466b25da34a87b89e1467657bd95af2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae466b25da34a87b89e1467657bd95af2">&#9670;&#160;</a></span>compAirportByFlights()</h2>
 
@@ -136,6 +166,56 @@ vector&lt; pair&lt; <a class="el" href="class_network_airport.html">NetworkAirpo
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>comparison between the number of flights </dd></dl>
+
+</div>
+</div>
+<a id="aaca7455c90cfed647488b838a3d085b5" name="aaca7455c90cfed647488b838a3d085b5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaca7455c90cfed647488b838a3d085b5">&#9670;&#160;</a></span>dfsForEssentialAirports()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void dfsForEssentialAirports </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_network_airport.html">NetworkAirport</a> *&#160;</td>
+          <td class="paramname"><em>networkAirport</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">stack&lt; <a class="el" href="class_airport.html">Airport</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>airportStack</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">unordered_set&lt; <a class="el" href="class_airport.html">Airport</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>essentialAirports</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>i</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Auxiliary recursive function that does a dfs searches in order to help compute the articulation points of the network Complexity: O(n^2) (O(V + E) where V is the number of airports in the network and E the number of flights) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">networkAirport</td><td>pointer to the airport where the dfs search is meant to start </td></tr>
+    <tr><td class="paramname">airportStack</td><td>auxiliary stack to store the airports that are traversed during the search </td></tr>
+    <tr><td class="paramname">essentialAirports</td><td>unordered set that is passed to the method by reference and is used to store the essential airports of the network </td></tr>
+    <tr><td class="paramname">i</td><td>auxiliary counter </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>unordered set of the essential airports in the network </dd></dl>
 
 </div>
 </div>
@@ -179,6 +259,30 @@ vector&lt; pair&lt; <a class="el" href="class_network_airport.html">NetworkAirpo
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Distance </dd></dl>
+
+</div>
+</div>
+<a id="a17c4149d2f7b130099c180dd9519b755" name="a17c4149d2f7b130099c180dd9519b755"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a17c4149d2f7b130099c180dd9519b755">&#9670;&#160;</a></span>doubleNetworkFlights()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void doubleNetworkFlights </td>
+          <td>(</td>
+          <td class="paramtype">unordered_set&lt; <a class="el" href="class_network_airport.html">NetworkAirport</a> *, <a class="el" href="struct_hash_network_airport.html">HashNetworkAirport</a>, <a class="el" href="struct_equality_network_airport.html">EqualityNetworkAirport</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>flightNetwork</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Auxiliary function that duplicates the flights in the flight system Complexity: O(N^2) </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">flightNetwork</td><td>targetFlightNetwork </td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
