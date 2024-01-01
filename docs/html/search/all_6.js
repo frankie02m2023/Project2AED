@@ -21,6 +21,5 @@ var searchData=
   ['getnum_18',['getNum',['../class_network_airport.html#a7daccb9a00a5d3f41e912486d78cec47',1,'NetworkAirport']]],
   ['getnumberofflightsfromairport_19',['getNumberOfFlightsFromAirport',['../class_network_airport.html#a1403729888aaabed7959c699a375432b',1,'NetworkAirport']]],
   ['getnumberofflightstoairport_20',['getNumberOfFlightsToAirport',['../class_network_airport.html#a8b213cfc5d047fe1fbcea103489268f2',1,'NetworkAirport']]],
-  ['globalnumbers_21',['globalNumbers',['../class_u_i.html#a91f64647f866dffda82bc19963267ad9',1,'UI']]],
-  ['graph_22',['Graph',['../class_graph.html',1,'']]]
+  ['globalnumbers_21',['globalNumbers',['../class_u_i.html#a91f64647f866dffda82bc19963267ad9',1,'UI']]]
 ];
