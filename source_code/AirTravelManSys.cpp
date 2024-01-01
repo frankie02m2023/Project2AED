@@ -1393,6 +1393,7 @@ set<vector<NetworkAirport *>> AirTravelManSys::bestFlightOptionInFilteredNetwork
     //find the minimum distance between the airports
     for(NetworkAirport* source: sources){
         for(NetworkAirport* destination: destinations){
+            flightNetwork1.cleanVisitedState();
             findMinDistBFS(source, destination,minDist,maxMinDist);
         }
     }
