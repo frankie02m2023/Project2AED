@@ -1308,6 +1308,7 @@ set<vector<NetworkAirport *>> AirTravelManSys::bestFlightOption(const vector<Net
     //find the minimum distance between the airports
     for(NetworkAirport* source: sources){
         for(NetworkAirport* destination: destinations){
+            cleanVisitedState();
             findMinDistBFS(source, destination,minDist,maxMinDist);
         }
     }
@@ -1506,126 +1507,6 @@ void AirTravelManSys::findFlightOptionsDFSWithAirlineLimit(NetworkAirport* sourc
         }
     }
     source->setVisited(false);
-}
-
-/** Finds the minimum flight distance(stops) when exists a limit number of airlines using a BFS approach (not functional).
- *  Complexity: O(n^2)
- * @param source Source airport.
- * @param destination Destination airport.
- * @param minDist Minimum distance value.
- * @param airlineLimit Maximum number of airlines
- */
-void AirTravelManSys::findMinDistBFSWithAirlineLimit(NetworkAirport *source, NetworkAirport *destination, int &minDist, const int &airlineLimit) {
-    queue<pair<pair<NetworkAirport*,Airline>,pair<int,int>>> q;
-    Airline airline{"FFFF","FFFF","FFFF","FFFF"};
-    q.emplace(make_pair(source,airline), make_pair(0,0));
-    source->setVisited(true);
-    while(!q.empty()){
-        NetworkAirport* targetAirport = q.front().first.first;
-        airline = q.front().first.second;
-        int distance = q.front().second.first;
-        int airlineCounter = q.front().second.second;
-        q.pop();
-        bool canBeDestAirport = false;
-        for(const auto& flight : targetAirport->getFlightsFromAirport()){
-            if(!flight.getDestination()->isVisited()){
-                if(flight.getAirLine() == airline){
-                    q.emplace(make_pair(flight.getDestination(),flight.getAirLine()), make_pair(distance,airlineCounter));
-                    flight.getDestination()->setVisited(true);
-                    canBeDestAirport = true;
-                }
-                else{
-                    if(airlineCounter < airlineLimit){
-                        q.emplace(make_pair(flight.getDestination(),flight.getAirLine()), make_pair(distance,airlineCounter + 1));
-                        flight.getDestination()->setVisited(true);
-                        canBeDestAirport = true;
-                    }
-                }
-                if(canBeDestAirport && flight.getDestination()->getAirport() == destination->getAirport()){
-                    minDist = distance;
-                }
-            }
-        }
-        if(minDist == distance + 1){
-            break;
-        }
-    }
-}
-
-/** Finds the various flight options when exists a airline limit using a BFS approach (not functional).
- *  Complexity: O(n^2)
- *
- * @param source Source airport
- * @param destination Destination airport
- * @param flightOptions Flight Options discovered
- * @param dist Distance
- * @param airlineLimit Limit number of airlines
- */
-void AirTravelManSys::findFlightOptionsBFSWithAirlineLimit(NetworkAirport *source, NetworkAirport *destination, set<vector<NetworkAirport *>> &flightOptions, int dist, int airlineLimit){
-    vector<ParentChild> parents;
-    queue<pair<ParentChild,pair<Airline,int>>> q; //pair parents index and child index and child source and distance with airline counter
-    ParentChild node = make_pair(make_pair(-1,0), make_pair(source,0));
-    Airline airline;
-    parents.emplace_back(node);
-    q.emplace(node, make_pair(airline,0));
-
-    int i = 0;
-    source->setVisited(true);
-
-    while(!q.empty()){
-        //BFS loop
-
-        ParentChild na = q.front().first;
-
-        airline = q.front().second.first;
-
-        int airlineCounter = q.front().second.second;
-
-
-        q.pop();
-
-
-        for(auto it = na.second.first->getFlightsFromAirport().begin(); it!= na.second.first->getFlightsFromAirport().end(); it++){
-            NetworkAirport* nb = it->getDestination();
-
-            if(!nb->isVisited()){
-                if(airline == it->getAirLine()){
-                    i++; //index for the parents vector
-                    int distance = na.second.second + 1; //distance from the source
-                    node = make_pair((make_pair(na.first.second,i)), make_pair(nb, distance)); //node(pair) to insert in the queue and parents vector
-                    q.emplace(node, make_pair(airline,airlineCounter));
-                    nb->setVisited(true);
-                    if(nb->getAirport() == destination->getAirport() && distance == dist){
-                        //found one flight option
-                        buildFlightOption(node,parents,flightOptions);
-                        nb->setVisited(false);
-                    }
-                    parents.push_back(node);
-                }
-                else{
-                    if(airlineCounter < airlineLimit){
-                        i++; //index for the parents vector
-                        int distance = na.second.second + 1; //distance from the source
-                        node = make_pair((make_pair(na.first.second,i)), make_pair(nb, distance)); //node(pair) to insert in the queue and parents vector
-                        q.emplace(node, make_pair(it->getAirLine(),airlineCounter + 1));
-                        nb->setVisited(true);
-                        if(nb->getAirport() == destination->getAirport() && distance == dist){
-                            //found one flight option
-                            buildFlightOption(node,parents,flightOptions);
-                            nb->setVisited(false);
-                        }
-                        parents.push_back(node);
-                    }
-                }
-            }
-        }
-        na.second.first->setVisited(false);
-        if(dist < na.second.second){
-            //every flight option in the minimum distance range was found
-            break;
-        }
-    }
-
 }
 
 /** Finds the best flight path (minimum stops) with an airline limit (not functional).
